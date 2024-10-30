@@ -1,55 +1,132 @@
 [
-  {
-    "id": "_pb_users_auth_",
-    "name": "users",
-    "type": "auth",
-    "system": false,
-    "schema": [],
-    "indexes": [],
-    "listRule": "id = @request.auth.id",
-    "viewRule": "id = @request.auth.id",
-    "createRule": "",
-    "updateRule": "id = @request.auth.id",
-    "deleteRule": "id = @request.auth.id",
-    "options": {
-      "allowEmailAuth": true,
-      "allowOAuth2Auth": true,
-      "allowUsernameAuth": true,
-      "exceptEmailDomains": null,
-      "manageRule": null,
-      "minPasswordLength": 5,
-      "onlyEmailDomains": null,
-      "onlyVerified": false,
-      "requireEmail": false
-    }
-  },
-  {
-    "id": "6t8g1s10mf2zczx",
-    "name": "projects",
-    "type": "base",
-    "system": false,
-    "schema": [
-      {
+    {
+        "id": "_pb_users_auth_",
+        "name": "users",
+        "type": "auth",
         "system": false,
-        "id": "djsenslq",
-        "name": "name",
-        "type": "text",
-        "required": false,
-        "presentable": false,
-        "unique": false,
+        "schema": [],
+        "indexes": [],
+        "listRule": "id = @request.auth.id",
+        "viewRule": "id = @request.auth.id",
+        "createRule": "",
+        "updateRule": "id = @request.auth.id",
+        "deleteRule": "id = @request.auth.id",
         "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
+            "allowEmailAuth": true,
+            "allowOAuth2Auth": true,
+            "allowUsernameAuth": true,
+            "exceptEmailDomains": null,
+            "manageRule": null,
+            "minPasswordLength": 5,
+            "onlyEmailDomains": null,
+            "onlyVerified": false,
+            "requireEmail": false
         }
-      }
-    ],
-    "indexes": [],
-    "listRule": null,
-    "viewRule": null,
-    "createRule": "",
-    "updateRule": null,
-    "deleteRule": null,
-    "options": {}
-  }
+    },
+    {
+        "id": "zqucn4409kyw2wv",
+        "name": "events",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "system": false,
+                "id": "su7b8m1g",
+                "name": "name",
+                "type": "text",
+                "required": true,
+                "presentable": false,
+                "unique": false,
+                "options": {
+                    "min": null,
+                    "max": null,
+                    "pattern": ""
+                }
+            },
+            {
+                "system": false,
+                "id": "02q053oy",
+                "name": "owner",
+                "type": "relation",
+                "required": false,
+                "presentable": false,
+                "unique": false,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": null
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": "",
+        "viewRule": "",
+        "createRule": "",
+        "updateRule": "@request.auth.id = owner",
+        "deleteRule": null,
+        "options": {}
+    },
+    {
+        "id": "6t8g1s10mf2zczx",
+        "name": "projects",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "system": false,
+                "id": "djsenslq",
+                "name": "name",
+                "type": "text",
+                "required": false,
+                "presentable": false,
+                "unique": false,
+                "options": {
+                    "min": null,
+                    "max": null,
+                    "pattern": ""
+                }
+            },
+            {
+                "system": false,
+                "id": "zcx0abv1",
+                "name": "event",
+                "type": "relation",
+                "required": false,
+                "presentable": false,
+                "unique": false,
+                "options": {
+                    "collectionId": "zqucn4409kyw2wv",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": null
+                }
+            },
+            {
+                "system": false,
+                "id": "vxfobvbz",
+                "name": "owner",
+                "type": "relation",
+                "required": false,
+                "presentable": false,
+                "unique": false,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": null
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": null,
+        "viewRule": null,
+        "createRule": "",
+        "updateRule": "@request.auth.id = owner",
+        "deleteRule": null,
+        "options": {}
+    }
 ]
