@@ -1,10 +1,12 @@
 <script>
     import { pb } from '$lib/pocketbase';
     import { toast, Toaster } from "svelte-sonner";
+    /** @type {{ [key: string]: any }} */
+    let { ...rest } = $props();
 
-    let isLoading = false;
-    let username = '';
-    let password = '';
+    let isLoading = $state(false);
+    let username = $state('');
+    let password = $state('');
 
     async function login() {
         isLoading = true;
@@ -36,10 +38,17 @@
             isLoading = false;
         }
     }
+
+    function preventDefault(fn) {
+		return function (event) {
+			event.preventDefault();
+			fn.call(this, event);
+		};
+	}
 </script>
 
-<div class="grid gap-6" {...$$restProps}>
-    <form on:submit|preventDefault={login}>
+<div class="grid gap-6" {...rest}>
+    <form onsubmit={preventDefault(login)}>
         <div class="grid gap-2">
             <div class="grid gap-1">
                 <label class="sr-only" for="username">Username</label>
@@ -64,7 +73,7 @@
             <div class="flex justify-center">
                 <button
                     type="button"
-                    on:click={login}
+                    onclick={login}
                     disabled={isLoading}
                     class="mx-2"
                 >
@@ -75,7 +84,7 @@
                 </button>
                 <button
                     type="button"
-                    on:click={signUp}
+                    onclick={signUp}
                     disabled={isLoading}
                     class="mx-2"
                 >

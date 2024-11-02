@@ -2,7 +2,7 @@
     import { pb } from '$lib/pocketbase';
     import { toast } from 'svelte-sonner';
     import { currentUser } from '$lib/pocketbase';
-    let eventName = '';
+    let eventName = $state('');
 
     async function createEvent() {
         try {

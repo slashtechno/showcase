@@ -1,6 +1,5 @@
 import PocketBase from 'pocketbase';
 import { writable } from 'svelte/store';
-import { toast } from 'svelte-sonner';
 import { env } from '$env/dynamic/public'; 
 
 // Connect to the PocketBase server
