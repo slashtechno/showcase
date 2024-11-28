@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "showcase"
+version = "0.1.0"
+description = ""
+authors = ["slashtechno <77907286+slashtechno@users.noreply.github.com>"]
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.5"
+uvicorn = {extras = ["standard"], version = "^0.32.1"}
+pyairtable = "^3.0.0"
+dynaconf = "^3.2.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
