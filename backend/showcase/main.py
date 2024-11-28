@@ -1,6 +1,8 @@
-from showcase.db import events
+from showcase.db import events, Event
+from showcase import db
 
-from fastapi import FastAPI
+
+from fastapi import FastAPI, HTTPException
 import uvicorn
 
 
@@ -14,3 +16,12 @@ if __name__ == "__main__":
 @app.get("/events")
 def get_events():
     return events.all()
+
+@app.post("/events")
+def create_event(event: Event):
+    event.owner = [db.user.get_user_record_id_by_email(event.owner)]
+    if event.owner is None:
+        raise HTTPException(status_code=404, detail="Owner not found")
+    print(event.model_dump())
+    return events.create(event.model_dump(
+    ))

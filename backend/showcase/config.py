@@ -22,6 +22,10 @@ settings.validators.register(
             "airtable_events_table_id",
             must_exist=True,
         ),
+        Validator(
+            "airtable_users_table_id",
+            must_exist=True,
+        ),
     ],
 )
 
