@@ -12,6 +12,8 @@ fastapi = {extras = ["standard"], version = "^0.115.5"}
 uvicorn = {extras = ["standard"], version = "^0.32.1"}
 pyairtable = "^3.0.0"
 dynaconf = "^3.2.6"
+pyjwt = "^2.10.1"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 
 
 [build-system]
