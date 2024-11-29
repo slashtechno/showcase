@@ -1,8 +1,10 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import List, Optional, Union
 
 
 class Event(BaseModel):
     name: str
     description: Optional[str] = None
-    owner: Optional[str] = "nevertrusttheclient@example.com"
+    # Owner is inferred from the current user (token)
+    # owner: Optional[List[str]] = None
+    owner: Optional[Union[str, List[str]]] = None
