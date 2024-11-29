@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = "^0.115.5"
+fastapi = {extras = ["standard"], version = "^0.115.5"}
 uvicorn = {extras = ["standard"], version = "^0.32.1"}
 pyairtable = "^3.0.0"
 dynaconf = "^3.2.6"
