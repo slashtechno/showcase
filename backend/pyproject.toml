@@ -16,6 +16,9 @@ pyjwt = "^2.10.1"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 
 
+[tool.poetry.group.dev.dependencies]
+aiosmtpd = "^1.4.6"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
