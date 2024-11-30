@@ -14,6 +14,6 @@ def get_user_record_id_by_email(email: str) -> Optional[str]:
     #     if '404' in str(e):  # Check specifically for 404 error
     #         return None
     #     raise  # Re-raise other HTTP errors
-    formula = match({'Email': email})
+    formula = match({'email': email})
     records = users_table.all(formula=formula)
     return records[0]['id'] if records else None
