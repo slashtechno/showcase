@@ -123,7 +123,7 @@ async def protected_route(current_user: Annotated[dict, Depends(get_current_user
 if __name__ == "__main__":
     # create a dev JWT
     debug_token = create_access_token(
-        data={"sub":  DEBUG_EMAIL},
+        data={"sub": DEBUG_EMAIL},
         expires_delta=timedelta(days=365),  # Token valid for 1 year
         token_type="access",
     )

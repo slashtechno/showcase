@@ -6,7 +6,7 @@ settings = Dynaconf(
     load_dotenv=True,
     settings_files=["settings.toml", ".secrets.toml"],
     merge_enabled=True,
-    environments=True
+    environments=True,
 )
 settings.validators.register(
     validators=[

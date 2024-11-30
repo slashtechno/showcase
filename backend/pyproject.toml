@@ -18,7 +18,11 @@ passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 
 [tool.poetry.group.dev.dependencies]
 aiosmtpd = "^1.4.6"
+ruff = "^0.8.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+lint.extend-select= ["FIX002"]

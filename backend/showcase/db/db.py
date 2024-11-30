@@ -1,18 +1,25 @@
 from pyairtable import Api, Table
+
 # from pyairtable.formulas import match
 from showcase import settings
 
 
-
 tables: dict[str, Table] = {}
+
 
 def get_table(api: Api, base_id: str, table_id: str) -> Table:
     return api.table(base_id, table_id)
 
+
 def main():
     api = Api(api_key=settings.airtable_token)
     global tables
-    tables['events'] = get_table(api, settings.airtable_base_id, settings.airtable_events_table_id)
-    tables['users'] = get_table(api, settings.airtable_base_id, settings.airtable_users_table_id)
+    tables["events"] = get_table(
+        api, settings.airtable_base_id, settings.airtable_events_table_id
+    )
+    tables["users"] = get_table(
+        api, settings.airtable_base_id, settings.airtable_users_table_id
+    )
+
 
 main()

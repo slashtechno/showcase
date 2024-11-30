@@ -40,7 +40,6 @@ settings.validators.register(
             "airtable_table_name",
             must_exist=True,
         ),
-
         # Optional settings
         Validator(
             "leading_help_text",
