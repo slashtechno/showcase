@@ -9,7 +9,7 @@ from pydantic import BaseModel
 import jwt
 from jwt.exceptions import PyJWTError
 
-router = APIRouter()
+router = APIRouter(tags=["auth"])
 
 # TODO: Use Dynaconf for this (settings.toml for the algorithm and expiration time; .secrets.toml for the secret key)
 SECRET_KEY = "secret-key"

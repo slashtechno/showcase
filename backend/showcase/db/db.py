@@ -20,6 +20,9 @@ def main():
     tables["users"] = get_table(
         api, settings.airtable_base_id, settings.airtable_users_table_id
     )
+    tables["projects"] = get_table(
+        api, settings.airtable_base_id, settings.airtable_projects_table_id
+    )
 
 
 main()

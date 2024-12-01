@@ -9,13 +9,31 @@ from showcase.routers.auth import get_current_user
 from showcase import db
 from showcase.db import Event, events
 
-router = APIRouter(prefix="/events")
+router = APIRouter(prefix="/events", tags=["events"]) 
 
 
 @router.get("/")
 def get_events():
     """Get a list of all events"""
     return events.all()
+
+@router.get("/attending")
+def get_attending_events(current_user: Annotated[dict, Depends(get_current_user)]):
+    """
+    Get a list of all events that the current user is attending.
+    """
+    user_id = db.user.get_user_record_id_by_email(current_user["email"])
+    attending_events = []
+    for event in events.all():
+        if user_id in event["fields"].get("attendees", []) or user_id in event["fields"].get("owner", []):
+            attending_events.append(event)
+
+    okay_fields = ["name", "description"]
+    to_return = [{
+        "id": event["id"],
+        **{field: event["fields"].get(field) for field in okay_fields}
+    } for event in attending_events]
+    return to_return
 
 
 @router.post("/")
