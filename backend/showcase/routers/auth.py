@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
-import smtplib
-from email.mime.text import MIMEText
+# import smtplib
+# from email.mime.text import MIMEText
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, status, Depends
@@ -19,7 +19,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 DEBUG_EMAIL = "angad+debug@hackclub.com"
 
 
-# TODO: replace this with the proper Airtable model
 class User(BaseModel):
     email: str
 
@@ -48,20 +47,20 @@ async def send_magic_link(email: str):
     token = create_access_token(
         data=token_data, expires_delta=timedelta(minutes=15), token_type="magic_link"
     )
-    magic_link = f"http://localhost:8000/verify?token={token}"
-    from_email = "showcase@showcase"
-    msg = MIMEText(
-        f"Click the link to verify: {magic_link}\nIt will expire in 15 minutes."
-    )
-    msg["Subject"] = "Login to Showcase"
-    msg["From"] = from_email
-    msg["To"] = email
 
-    # this email doesn't go through, probably because of the residential IP address
-    # it still displays the message in the console, though
+    # magic_link = f"http://localhost:8000/verify?token={token}"
+    # from_email = "showcase@showcase"
+    # msg = MIMEText(
+    #     f"Click the link to verify: {magic_link}\nIt will expire in 15 minutes."
+    # )
+    # msg["Subject"] = "Login to Showcase"
+    # msg["From"] = from_email
+    # msg["To"] = email
     # python -m aiosmtpd -n -l localhost:1025
-    with smtplib.SMTP("localhost", 1025) as server:
-        server.sendmail(from_email, email, msg.as_string())
+    # with smtplib.SMTP("localhost", 1025) as server:
+    #     server.sendmail(from_email, email, msg.as_string())
+
+    print(f"Token for {email}: {token}")
 
 
 @router.post("/request-login")

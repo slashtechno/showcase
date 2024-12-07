@@ -2,9 +2,12 @@ from fastapi import APIRouter
 from typing import Annotated, Self, Set
 from fastapi import Depends, HTTPException, Query
 from pyairtable.formulas import match
+from pyairtable.api.types import RecordDict
 from secrets import token_urlsafe
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, Field, model_validator
+from pydantic.json_schema import SkipJsonSchema
+
 from requests import HTTPError
 
 # from showcase import db
@@ -12,13 +15,14 @@ from showcase.routers.auth import get_current_user
 from showcase import db
 from showcase.db import Event, events
 
-router = APIRouter(prefix="/events", tags=["events"]) 
+router = APIRouter(prefix="/events", tags=["events"])
 
 
 @router.get("/")
 def get_events():
     """Get a list of all events"""
     return events.all()
+
 
 @router.get("/attending")
 def get_attending_events(current_user: Annotated[dict, Depends(get_current_user)]):
@@ -29,15 +33,20 @@ def get_attending_events(current_user: Annotated[dict, Depends(get_current_user)
     attending_events = []
     # TODO: Just check the "owned_events" and "attending_events" fields instead of iterating through all events
     for event in events.all():
-        if user_id in event["fields"].get("attendees", []) or user_id in event["fields"].get("owner", []):
+        if user_id in event["fields"].get("attendees", []) or user_id in event[
+            "fields"
+        ].get("owner", []):
             attending_events.append(event)
 
     # TODO: Replace this with Pydantic
     okay_fields = ["name", "description"]
-    to_return = [{
-        "id": event["id"],
-        **{field: event["fields"].get(field) for field in okay_fields}
-    } for event in attending_events]
+    to_return = [
+        {
+            "id": event["id"],
+            **{field: event["fields"].get(field) for field in okay_fields},
+        }
+        for event in attending_events
+    ]
     return to_return
 
 
@@ -87,41 +96,67 @@ def attend_event(
         },
     )
 
+
 # Voting! The client should POST to /events/{event_id}/vote with their top 3 favorite projects, in no particular order. If there are less than 20 projects in the event, only accept the top 2
 
-# ... signifies that the field is required: https://docs.pydantic.dev/latest/concepts/models/#required-fields
+
 class Vote(BaseModel):
-    event_id : str = Field(..., description="The ID of the event to vote in.")
+    # ... signifies that the field is required: https://docs.pydantic.dev/latest/concepts/models/#required-fields
+    event_id: str = Field(..., description="The ID of the event to vote in.")
     # Sets prevent duplicates so they're perfect for this use case
-    projects: Set[str] = Field(..., min_items=2, max_items=3, description="In no particular order, the top 3 (or 2 if there are less than 20 projects) projects that the user is voting for.")
+    projects: Set[str] = Field(
+        ...,
+        min_items=2,
+        max_items=3,
+        description="In no particular order, the top 3 (or 2 if there are less than 20 projects) projects that the user is voting for.",
+    )
+    event: SkipJsonSchema[RecordDict] = None
 
+    # ~~Putting this in kwargs instead so Swagger doesn't show it~~ shows `"additionalProp1":{}` for some reason
     # https://docs.pydantic.dev/latest/api/config/#pydantic.config.ConfigDict.extra
-    model_config = ConfigDict(extra="allow")
+    # model_config: SkipJsonSchema[ConfigDict] = ConfigDict(extra="allow")
 
-
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def validate_projects(self) -> Self:
         try:
             self.event = db.events.get(self.event_id)
         except HTTPError as e:
-            raise HTTPException(status_code=404, detail="Event not found") if e.response.status_code == 404 else e
+            raise (
+                HTTPException(status_code=404, detail="Event not found")
+                if e.response.status_code == 404
+                else e
+            )
         if len(self.projects) < 2:
-            raise HTTPException(status_code=400, detail="At least 2 projects are required")
+            raise HTTPException(
+                status_code=400, detail="At least 2 projects are required"
+            )
         elif len(self.projects) < 3 and len(self.event["fields"]["projects"]) >= 20:
-            raise HTTPException(status_code=400, detail="3 projects are required for events with 20 or more projects")
+            raise HTTPException(
+                status_code=400,
+                detail="3 projects are required for events with 20 or more projects",
+            )
         elif len(self.projects) > 3:
-            raise HTTPException(status_code=400, detail="At most 3 projects are allowed")
-        
+            raise HTTPException(
+                status_code=400, detail="At most 3 projects are allowed"
+            )
+
         # Ensure that the projects exist, they match the event, and the string starts with 'rec'
         for project_id in self.projects:
             try:
                 project = db.projects.get(project_id)
             except HTTPError as e:
-                raise HTTPException(status_code=404, detail="Project not found") if e.response.status_code == 404 else e
+                raise (
+                    HTTPException(status_code=404, detail="Project not found")
+                    if e.response.status_code == 404
+                    else e
+                )
             if project["fields"]["event"][0] != self.event_id:
-                raise HTTPException(status_code=400, detail="Project does not belong to event")
+                raise HTTPException(
+                    status_code=400, detail="Project does not belong to event"
+                )
         return self
-    
+
+
 # @router.post("/{event_id}/vote")
 @router.post("/vote")
 def vote(vote: Vote, current_user: Annotated[dict, Depends(get_current_user)]):
@@ -129,14 +164,31 @@ def vote(vote: Vote, current_user: Annotated[dict, Depends(get_current_user)]):
     Vote for the top 3 projects in an event. The client must provide the event ID and a list of the top 3 projects. If there are less than 20 projects in the event, only the top 2 projects are required.
     """
 
-    # TODO: Ensure that the user has not already voted
+    user = db.users.get(db.user.get_user_record_id_by_email(current_user["email"]))
+
+    if vote.event_id in user["fields"].get("votes", []):
+        raise HTTPException(status_code=400, detail="User has already voted in event")
 
     # Update the votes (increment the `points` field of the nominated projects by 1)
     for project_id in vote.projects:
         try:
             project = db.projects.get(project_id)
-            db.projects.update(project_id, {"points": project["fields"].get("points", 0) + 1})
+            db.projects.update(
+                project_id, {"points": project["fields"].get("points", 0) + 1}
+            )
         except HTTPError as e:
-            raise HTTPException(status_code=404, detail="Project not found") if e.response.status_code == 404 else e
+            raise (
+                HTTPException(status_code=404, detail="Project not found")
+                if e.response.status_code == 404
+                else e
+            )
+
+    # Update the user's votes
+    db.users.update(
+        user["id"],
+        {
+            "votes": user["fields"].get("votes", []) + [vote.event_id],
+        },
+    )
 
     return {"message": "Vote successful"}

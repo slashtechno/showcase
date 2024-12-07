@@ -22,4 +22,5 @@ for path in routers_dir.glob("*.py"):
             app.include_router(getattr(module, "router"))
 
 if __name__ == "__main__":
+    # Go to http://localhost:8000/docs to see the Swagger UI
     uvicorn.run(app, host="0.0.0.0", port=8000)
