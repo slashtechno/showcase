@@ -3,6 +3,8 @@ from datetime import datetime, timedelta, timezone
 # from email.mime.text import MIMEText
 from typing import Annotated
 
+from showcase import settings
+
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
@@ -11,10 +13,11 @@ from jwt.exceptions import PyJWTError
 
 router = APIRouter(tags=["auth"])
 
-# TODO: Use Dynaconf for this (settings.toml for the algorithm and expiration time; .secrets.toml for the secret key)
-SECRET_KEY = "secret-key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = settings.jwt_secret
+ALGORITHM = settings.jwt_algorithm
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.jwt_expire_minutes
+MAGIC_LINK_EXPIRE_MINUTES = 15
+
 
 DEBUG_EMAIL = "angad+debug@hackclub.com"
 
@@ -36,7 +39,7 @@ def create_access_token(
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=MAGIC_LINK_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

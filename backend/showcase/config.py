@@ -25,6 +25,18 @@ settings.validators.register(
             "airtable_users_table_id",
             must_exist=True,
         ),
+        Validator(
+            "jwt_secret",
+            must_exist=True,
+        ),
+        Validator(
+            "jwt_algorithm",
+            default="HS256",
+        ),
+        Validator(
+            "jwt_expire_minutes",
+            default=30,
+        ),
     ],
 )
 

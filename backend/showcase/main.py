@@ -23,4 +23,5 @@ for path in routers_dir.glob("*.py"):
 
 if __name__ == "__main__":
     # Go to http://localhost:8000/docs to see the Swagger UI
+    # or http://localhost:8000/redoc to see the specification
     uvicorn.run(app, host="0.0.0.0", port=8000)
