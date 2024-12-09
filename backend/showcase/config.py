@@ -1,5 +1,4 @@
 from dynaconf import Dynaconf, Validator
-import re
 
 settings = Dynaconf(
     envvar_prefix="SHOWCASE",

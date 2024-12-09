@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Path
 from typing import Annotated, Self, Set
 from fastapi import Depends, HTTPException, Query
 from pyairtable.formulas import match
@@ -13,15 +13,16 @@ from requests import HTTPError
 # from showcase import db
 from showcase.routers.auth import get_current_user
 from showcase import db
-from showcase.db import Event, events
+from showcase.db import Event
 
 router = APIRouter(prefix="/events", tags=["events"])
 
 
+# Probably should either disable in production or just replace this with /attending
 @router.get("/")
 def get_events():
     """Get a list of all events"""
-    return events.all()
+    return db.events.all()
 
 
 @router.get("/attending")
@@ -32,7 +33,7 @@ def get_attending_events(current_user: Annotated[dict, Depends(get_current_user)
     user_id = db.user.get_user_record_id_by_email(current_user["email"])
     attending_events = []
     # TODO: Just check the "owned_events" and "attending_events" fields instead of iterating through all events
-    for event in events.all():
+    for event in db.events.all():
         if user_id in event["fields"].get("attendees", []) or user_id in event[
             "fields"
         ].get("owner", []):
@@ -67,7 +68,7 @@ def create_event(
     event.join_code = token_urlsafe(8)
 
     # print(event.model_dump())
-    return events.create(event.model_dump())
+    return db.events.create(event.model_dump())
 
 
 @router.post("/attend")
@@ -79,7 +80,7 @@ def attend_event(
     Attend an event. The client must supply a join code that matches the event's join code.
     """
     # Accomplish this by trying to match the join code against the table and if nothing matches, return a 404
-    event = events.first(formula=match({"join_code": join_code}))
+    event = db.events.first(formula=match({"join_code": join_code}))
     if event is None:
         raise HTTPException(status_code=404, detail="Event not found")
     # If the event is found, add the current user to the attendees list
@@ -88,7 +89,7 @@ def attend_event(
         "fields"
     ].get("attendees", []):
         raise HTTPException(status_code=400, detail="User already attending event")
-    events.update(
+    db.events.update(
         event["id"],
         {
             "attendees": event["fields"].get("attendees", [])
@@ -108,6 +109,7 @@ class Vote(BaseModel):
         ...,
         min_items=2,
         max_items=3,
+        title="Nominees",
         description="In no particular order, the top 3 (or 2 if there are less than 20 projects) projects that the user is voting for.",
     )
     event: SkipJsonSchema[RecordDict] = None
@@ -192,3 +194,30 @@ def vote(vote: Vote, current_user: Annotated[dict, Depends(get_current_user)]):
     )
 
     return {"message": "Vote successful"}
+
+
+@router.get("/{event_id}/leaderboard")
+def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]):
+    """
+    Get the leaderboard for an event. The leaderboard is a list of projects in the event, sorted by the number of votes they have received.
+    """
+    event = db.events.get(event_id)
+    # projects = [project for project in event["fields"].get("projects", [])]
+    projects = []
+    for project_id in event["fields"].get("projects", []):
+        try:
+            project = db.projects.get(project_id)
+            projects.append(project)
+        except HTTPError as e:
+            if e.response.status_code == 404:
+                print(f"WARNING: Project {project_id} not found when getting leaderboard for event {event_id}")
+            else:
+                raise e
+
+    # Sort the projects by the number of votes they have received
+    projects.sort(key=lambda project: project["fields"].get("points", 0), reverse=True)
+
+    # Not sure if it's best to return a list of project IDs or the project objects
+    # return [project["id"] for project in projects]
+    # A dict should work... for now
+    return [{"id": project["id"], "name": project["fields"]["name"], "points": project["fields"].get("points", 0)} for project in projects]
