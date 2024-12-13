@@ -1,11 +1,11 @@
 import { writable } from "svelte/store";
 
-interface User {
+type User = {
     email: string;
     token: string;
-}
+};
 
-export const user = writable<User | null>({
+export const user = writable<User>({
     email: "",
     token: ""
 });

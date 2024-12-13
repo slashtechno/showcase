@@ -2,7 +2,9 @@
     import { ApiClient } from '$lib/api/client';
     import { toast, Toaster } from "svelte-sonner";
     import { onMount } from "svelte";
-    /** @type {{ [key: string]: any }} */
+    import { user } from "$lib/stores";
+
+    // rest is the extra props passed to the component
     let { ...rest } = $props();
 
     let isLoading = $state(false);
@@ -29,7 +31,8 @@
         isLoading = true;
         try {
             const response = await apiClient.verifyToken(token);
-            apiClient.token = response.access_token;
+            // Might be good to make the token verification also return the email
+            user.set({token: response.access_token });
             // Store the token in localStorage
             localStorage.setItem('token', response.access_token);
             toast('Login successful');

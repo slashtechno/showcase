@@ -63,7 +63,7 @@ async def send_magic_link(email: str):
     # with smtplib.SMTP("localhost", 1025) as server:
     #     server.sendmail(from_email, email, msg.as_string())
 
-    print(f"Token for {email}: {token}")
+    print(f"Token for {email}: {token} | magic_link: http://localhost:5173/login?token={token}")
 
 
 @router.post("/request-login")
@@ -119,7 +119,7 @@ async def get_current_user(
 
 @router.get("/protected-route")
 async def protected_route(current_user: Annotated[dict, Depends(get_current_user)]):
-    return {"message": f"Hello, {current_user['email']}"}
+    return {"email": current_user["email"]}
 
 
 if __name__ == "__main__":

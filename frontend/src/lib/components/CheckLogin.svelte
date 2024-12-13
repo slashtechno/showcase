@@ -1,35 +1,44 @@
-<script lang="js">
-    import { onMount } from "svelte";
-    import {ApiClient} from "$lib/api/client";
-    import { user } from '$lib/stores';
+<!-- <svelte:options runes /> -->
+<script lang="ts">
+    import { onDestroy, onMount } from "svelte";
+    import {api} from "$lib";
+    import {user} from "$lib/stores";
+    import type { Unsubscriber } from "svelte/store";
 
-    const apiClient = new ApiClient();
+    let unsubscribe: Unsubscriber;
+    let tokenVerified = false;
 
     function signOut() {
-        // Clear token from API client
-        apiClient.token = null;
         // Clear auth state
-        user.set({ email: null, token: null });
+        user.set({ email: '', token: '' });
         // Remove token from localStorage
         localStorage.removeItem('token');
     }
 
     onMount(() => {
-        // Check for existing token in localStorage
-        const savedToken = localStorage.getItem('token');
-        if (savedToken) {
-            // At the moment, /verify is for converting a magic link but /protected-route can be used for verifying a token
-                        
-            apiClient.verifyAuth(savedToken).then((response) => {
-                user.set({token: savedToken, email: response.email});
-                console.log('User is signed in');
-            }).catch((err) => {
-                console.log('Token is invalid', err);
-                signOut();
-            });
-        } else {
-            console.log('No token found');
-        }
+
+        // Subscribe to user store
+        unsubscribe = user.subscribe((value) => {
+            if (value.token && !tokenVerified) {
+                // Check if token is valid
+                api.verifyAuth(value.token).then((response) => {
+                    console.log('Token is valid');
+                    localStorage.setItem('token', value.token);
+                    user.set({email: response.email, token: value.token});
+                    tokenVerified = true;
+                }).catch((err) => {
+                    console.log('Token is invalid', err);
+                    signOut();
+                });
+            } else {
+                console.log('No token found');
+            }
+        });
+    });
+
+    onDestroy(() => {
+        // Unsubscribe from user store
+        unsubscribe();
     });
 </script>
 
@@ -39,7 +48,7 @@
         <p>
             You're signed in as <strong>{$user.email}</strong>.
         </p>
-        <button class="mt-2" on:click={signOut}>Sign out</button>
+        <button class="mt-2" onclick={signOut}>Sign out</button>
     </div>
 {:else}
     <div class="flex justify-center my-4">

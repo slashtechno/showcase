@@ -7,6 +7,7 @@
     // Function to create a new event
     async function createEvent() {
         try {
+            // TODO: Add description and other fields
             const event = { name: eventName };
             await apiClient.createEvent(event);
             toast('Event created successfully');

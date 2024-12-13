@@ -1,10 +1,10 @@
-import { Project, Vote } from "./types";
+import type { Project, Vote } from "./types";
 // @ts-ignore
 import { env } from '$env/dynamic/public';
 import { user } from '../stores';
 import { derived } from "svelte/store";
 
-const API_BASE = env.PUBLIC_API_URL 
+const API_BASE: string = env.PUBLIC_API_URL 
 
 export class ApiClient {
     private currentToken: string | null = null;
@@ -53,7 +53,7 @@ export class ApiClient {
         return response.json();
     }
 
-    async verifyToken(token: string) {
+    async verifyToken(token: string): Promise<{ access_token: string, token_type: string }> {
         const response = await this.fetch(`/verify?token=${token}`);
         user.set({ token: token, email: "" });
         return response.json();
@@ -120,8 +120,11 @@ export class ApiClient {
         return response.json();
     }
 
-    async verifyAuth() {
+    // This returns an object with the sole property of "email", on success
+    async verifyAuth(token: string): Promise<{ email: string }> {
         const response = await this.fetch('/protected-route');
         return response.json();
     }
 }
+
+export const api = new ApiClient();
