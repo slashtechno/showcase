@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "command": "npm run dev",
+            "name": "Run development server",
+            "request": "launch",
+            "type": "node-terminal",
+            "cwd": "${workspaceFolder}/frontend"
+        }, 
+        {
+            "command": "npm run build",
+            "name": "Run build",
+            "request": "launch",
+            "type": "node-terminal",
+            "cwd": "${workspaceFolder}/frontend"
+        },
+        {
+            "name": "Python Debugger: FastAPI",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "showcase.main:app",
+                "--reload"
+            ],
+            "cwd": "${workspaceFolder}/backend",
+            // "jinja": true
+        }
+    ],
+    "compounds": [
+        {
+            "name": "dev",
+            "configurations": [
+                "Run development server",
+                "Python Debugger: FastAPI"
+            ]
+        }
+    ]
+}

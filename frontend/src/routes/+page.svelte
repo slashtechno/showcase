@@ -16,10 +16,10 @@
         <CreateEvent />
     </section>
 
-    <section class="p-4 border rounded-lg shadow-sm">
+    <!-- <section class="p-4 border rounded-lg shadow-sm">
         <h2 class="text-xl font-semibold mb-4">Create Project</h2>
         <CreateProject />
-    </section>
+    </section> -->
 
     <section class="p-4 border rounded-lg shadow-sm">
         <div class="mb-4">

@@ -1,24 +1,23 @@
 <script>
-    import { pb } from '$lib/pocketbase';
+    import { ApiClient } from '$lib/api/client';
     import { toast } from 'svelte-sonner';
-    import { currentUser } from '$lib/pocketbase';
     let eventName = $state('');
+    const apiClient = new ApiClient();
 
+    // Function to create a new event
     async function createEvent() {
         try {
-            const data = {
-                name: eventName,
-                owner: $currentUser.id // Include the owner's ID
-            };
-            await pb.collection('events').create(data);
-            toast.success('Event created successfully!');
-            eventName = ''; // Reset the input field
-        } catch (error) {
-            console.error('Error creating event:', error);
-            toast.error('Failed to create event: ' + error.message);
+            const event = { name: eventName };
+            await apiClient.createEvent(event);
+            toast('Event created successfully');
+        } catch (err) {
+            console.error(err);
+            toast(JSON.stringify(err));
         }
     }
 </script>
 
+<!-- Event name input field -->
 <input type="text" bind:value={eventName} placeholder="Enter event name" />
+<!-- Create Event button -->
 <button onclick={createEvent}>Create Event</button>
