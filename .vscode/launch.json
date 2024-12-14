@@ -6,7 +6,7 @@
             "name": "Run development server",
             "request": "launch",
             "type": "node-terminal",
-            "cwd": "${workspaceFolder}/frontend"
+            "cwd": "${workspaceFolder}/frontend",
         }, 
         {
             "command": "npm run build",

@@ -9,7 +9,7 @@ class Project(BaseModel):
     repo: HttpUrl
     description: Optional[str] = None
     
-    owner: Annotated[SkipJsonSchema[str | List[str]], Field(frozen=False, exclude=True)] = None
+    owner: Annotated[SkipJsonSchema[List[str]], Field()] = None
     event: List[str] | str 
     # join_code: SkipJsonSchema[str] = None
 

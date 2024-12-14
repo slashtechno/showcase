@@ -1,4 +1,4 @@
-import type { Project, Vote, Event } from "./types";
+import type { Project, Vote, EventCreationPayload, Event, UserEvents } from "./types";
 // @ts-ignore
 import { env } from '$env/dynamic/public';
 import { user } from '../stores';
@@ -66,7 +66,8 @@ export class ApiClient {
         return response.json();
     }
 
-    async createEvent(event: Event) {
+    // At the moment this just returns whatever Airtable returns when it creates a new record
+    async createEvent(event: EventCreationPayload): Promise<Object> {
         const response = await this.fetch('/events/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -75,7 +76,7 @@ export class ApiClient {
         return response.json();
     }
 
-    async getAttendingEvents() {
+    async getAttendingEvents(): Promise<UserEvents> {
         const response = await this.fetch('/events/attending');
         return response.json();
     }

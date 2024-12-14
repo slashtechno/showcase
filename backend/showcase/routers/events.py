@@ -13,7 +13,7 @@ from requests import HTTPError
 # from showcase import db
 from showcase.routers.auth import get_current_user
 from showcase import db
-from showcase.db import Event
+from showcase.db import EventCreationPayload, ComplexEvent, UserEvents, Event
 
 router = APIRouter(prefix="/events", tags=["events"])
 
@@ -26,49 +26,70 @@ def get_events():
 
 
 @router.get("/attending")
-def get_attending_events(current_user: Annotated[dict, Depends(get_current_user)]):
+def get_attending_events(
+    current_user: Annotated[dict, Depends(get_current_user)],
+) -> UserEvents:
     """
     Get a list of all events that the current user is attending.
     """
     user_id = db.user.get_user_record_id_by_email(current_user["email"])
-    attending_events = []
-    # TODO: Just check the "owned_events" and "attending_events" fields instead of iterating through all events
-    for event in db.events.all():
-        if user_id in event["fields"].get("attendees", []) or user_id in event[
-            "fields"
-        ].get("owner", []):
-            attending_events.append(event)
+    if user_id is None:
+        raise HTTPException(status_code=500, detail="User not found")
+    user = db.users.get(user_id)
 
-    # TODO: Replace this with Pydantic
-    okay_fields = ["name", "description"]
-    to_return = [
-        {
-            "id": event["id"],
-            **{field: event["fields"].get(field) for field in okay_fields},
-        }
-        for event in attending_events
+
+    # Eventually it might be better to return a user object. Otherwise, the client that the event owner is using would need to fetch the user. Since user emails probably shouldn't be public with just a record ID as a parameter, we would need to check if the person calling GET /users?user=ID has an event wherein that user ID is present. To avoid all this, the user object could be returned.
+    owned_events = [
+        ComplexEvent.model_validate({"id": event["id"], **event["fields"]})
+        for event in [
+            db.events.get(event_id)
+            for event_id in user["fields"].get("owned_events", [])
+        ]
     ]
-    return to_return
+    attending_events = [
+        Event.model_validate({"id": event["id"], **event["fields"]})
+        for event in [
+            db.events.get(event_id)
+            for event_id in db.users.get(user_id)["fields"].get("attending_events", [])
+        ]
+    ]
+
+    return UserEvents(owned_events=owned_events, attending_events=attending_events)
 
 
 @router.post("/")
 def create_event(
-    event: Event, current_user: Annotated[dict, Depends(get_current_user)]
+    event: EventCreationPayload, current_user: Annotated[dict, Depends(get_current_user)]
 ):
     """
     Create a new event. The current user is automatically added as an owner of the event.
     """
     # No matter what email the user provides, the owner is always the current user
     event.owner = [db.user.get_user_record_id_by_email(current_user["email"])]
-    # If any owner is None, raise a 404
-    if any(owner is None for owner in event.owner):
-        raise HTTPException(status_code=404, detail="Owner not found")
+    # If the owner is not found, return a 404. Since there might eventually be multiple owners, just check if any of them are None
+    if None in event.owner:
+        raise HTTPException(status_code=404, detail="User not found")
 
     # Generate a join code
     event.join_code = token_urlsafe(8)
 
-    # print(event.model_dump())
     return db.events.create(event.model_dump())
+
+
+    # The issue with the approach below was that ComplexEvent requires an ID, which isn't available until the event is created. It might be better to just do it and reoplace model_validate with model_construct to prevent validation errors
+    # return db.events.create(
+    #     ComplexEvent.model_validate(
+    #         {
+    #             # Use information the user provided
+    #             **event.model_dump(),
+    #             # Add the owner and join code
+    #             "owner": owner,
+    #             "join_code": join_code,
+    #         }
+    #     ).model_dump(
+    #         exclude_unset=True
+    #     )  
+    # )
 
 
 @router.post("/attend")
@@ -210,7 +231,9 @@ def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]):
             projects.append(project)
         except HTTPError as e:
             if e.response.status_code == 404:
-                print(f"WARNING: Project {project_id} not found when getting leaderboard for event {event_id}")
+                print(
+                    f"WARNING: Project {project_id} not found when getting leaderboard for event {event_id}"
+                )
             else:
                 raise e
 
@@ -220,4 +243,11 @@ def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]):
     # Not sure if it's best to return a list of project IDs or the project objects
     # return [project["id"] for project in projects]
     # A dict should work... for now
-    return [{"id": project["id"], "name": project["fields"]["name"], "points": project["fields"].get("points", 0)} for project in projects]
+    return [
+        {
+            "id": project["id"],
+            "name": project["fields"]["name"],
+            "points": project["fields"].get("points", 0),
+        }
+        for project in projects
+    ]
