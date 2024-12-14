@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
     import { ApiClient } from '$lib/api/client';
     import { toast } from 'svelte-sonner';
     let eventName = $state('');
+    let eventDescription = $state('');
     const apiClient = new ApiClient();
 
     // Function to create a new event
@@ -18,7 +19,25 @@
     }
 </script>
 
-<!-- Event name input field -->
-<input type="text" bind:value={eventName} placeholder="Enter event name" />
-<!-- Create Event button -->
-<button onclick={createEvent}>Create Event</button>
+<div class="p-4 max-w-md mx-auto">
+    <!-- Event name input field -->
+    <input 
+        type="text" 
+        bind:value={eventName} 
+        placeholder="Enter event name" 
+        class="mb-2 p-2 border rounded w-full" 
+    />
+    <!-- Event description field -->
+    <textarea 
+        bind:value={eventDescription} 
+        placeholder="Enter event description" 
+        class="mb-2 p-2 border rounded w-full" 
+    ></textarea>
+    <!-- Create Event button -->
+    <button 
+        onclick={createEvent} 
+        class="p-2 bg-blue-500 text-white rounded w-full"
+    >
+        Create Event
+    </button>
+</div>

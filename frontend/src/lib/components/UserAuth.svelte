@@ -3,6 +3,7 @@
     import { toast, Toaster } from "svelte-sonner";
     import { onMount } from "svelte";
     import { user } from "$lib/stores";
+    import {goto} from '$app/navigation';
 
     // rest is the extra props passed to the component
     let { ...rest } = $props();
@@ -32,6 +33,7 @@
         try {
             const response = await apiClient.verifyToken(token);
             // Might be good to make the token verification also return the email
+            console.debug('Setting token', response.access_token);
             user.set({token: response.access_token });
             // Store the token in localStorage
             localStorage.setItem('token', response.access_token);
@@ -51,6 +53,9 @@
         const token = urlParams.get('token');
         if (token) {
             verifyToken(token);
+            // Redirect to home page
+            // Eventually it would be better to just make the login page display a signout button or something else since otherwise, going to it without a token (or with an invalid token) would just will just display the login form again
+            goto('/');
         }
     });
 

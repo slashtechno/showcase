@@ -1,4 +1,4 @@
-import type { Project, Vote } from "./types";
+import type { Project, Vote, Event } from "./types";
 // @ts-ignore
 import { env } from '$env/dynamic/public';
 import { user } from '../stores';
@@ -15,6 +15,7 @@ export class ApiClient {
         this.unsubscribe = derived(user, $user => $user?.token)
             .subscribe(token => {
                 this.currentToken = token ?? null;
+                console.debug('Token updated in ApiClient:', this.currentToken);
             });
     }
 
