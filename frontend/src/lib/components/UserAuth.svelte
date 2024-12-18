@@ -1,5 +1,5 @@
 <script>
-    import { ApiClient } from '$lib/api/client';
+    import { api } from "$lib/api/client";
     import { toast, Toaster } from "svelte-sonner";
     import { onMount } from "svelte";
     import { user } from "$lib/stores";
@@ -10,14 +10,13 @@
 
     let isLoading = $state(false);
     let email = $state('');
-    const apiClient = new ApiClient();
 
     // Function to handle login
     async function login() {
         isLoading = true;
         try {
             // Request magic link for the provided email
-            const response = await apiClient.requestLogin(email);
+            const response = await api.requestLogin(email);
             toast(`Magic link sent to ${email}`);
         } catch (err) {
             console.error(err);
@@ -31,12 +30,12 @@
     async function verifyToken(token) {
         isLoading = true;
         try {
-            const response = await apiClient.verifyToken(token);
+            const response = await api.verifyToken(token);
             // Might be good to make the token verification also return the email
-            console.debug('Setting token', response.access_token);
             user.set({token: response.access_token });
             // Store the token in localStorage
             localStorage.setItem('token', response.access_token);
+            console.log('Token passed, set, and verified successfully', response);
             toast('Login successful');
         } catch (err) {
             console.error(err);

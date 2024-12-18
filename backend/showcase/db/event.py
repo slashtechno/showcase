@@ -27,4 +27,5 @@ class ComplexEvent(Event):
 class UserEvents(BaseModel):
     """Return information regarding what the events the user owns and what events they are attending. If they are only attending an event, don't return sensitive information like participants."""
     owned_events: List[ComplexEvent]
-    attending_events: List[EventCreationPayload]
+    # This was just the creation payload earlier and I was wondering why the ID wasn't being returned...
+    attending_events: List[Event] 

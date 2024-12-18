@@ -54,6 +54,7 @@ def get_attending_events(
         ]
     ]
 
+
     return UserEvents(owned_events=owned_events, attending_events=attending_events)
 
 
@@ -94,7 +95,7 @@ def create_event(
 
 @router.post("/attend")
 def attend_event(
-    join_code: Annotated[str, Query(description="A unique code used to join an event")],
+        join_code: Annotated[str, Query(description="A unique code used to join an event")],
     current_user: Annotated[dict, Depends(get_current_user)],
 ):
     """

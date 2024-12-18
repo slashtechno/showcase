@@ -7,6 +7,7 @@ import { derived } from "svelte/store";
 const API_BASE: string = env.PUBLIC_API_URL 
 
 export class ApiClient {
+    public tokenSet = false;
     private currentToken: string | null = null;
     private unsubscribe: () => void;
 
@@ -16,6 +17,10 @@ export class ApiClient {
             .subscribe(token => {
                 this.currentToken = token ?? null;
                 console.debug('Token updated in ApiClient:', this.currentToken);
+                // if token is not empty, set tokenSet to true
+                if (this.currentToken) {
+                    this.tokenSet = true;
+                }
             });
     }
 
@@ -56,7 +61,6 @@ export class ApiClient {
 
     async verifyToken(token: string): Promise<{ access_token: string, token_type: string }> {
         const response = await this.fetch(`/verify?token=${token}`);
-        user.set({ token: token, email: "" });
         return response.json();
     }
 
@@ -123,7 +127,8 @@ export class ApiClient {
     }
 
     // This returns an object with the sole property of "email", on success
-    async verifyAuth(token: string): Promise<{ email: string }> {
+    async verifyAuth(): Promise<{ email: string }> {
+        console.log('Verifying auth with token:', this.currentToken);
         const response = await this.fetch('/protected-route');
         return response.json();
     }

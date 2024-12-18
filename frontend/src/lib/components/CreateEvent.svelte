@@ -1,16 +1,16 @@
 <script lang="ts">
-    import { ApiClient } from '$lib/api/client';
+    import { api } from "$lib/api/client";
     import { toast } from 'svelte-sonner';
+    // TODO: Use the object instead of individual variables
     let eventName = $state('');
     let eventDescription = $state('');
-    const apiClient = new ApiClient();
 
     // Function to create a new event
     async function createEvent() {
         try {
             // TODO: Add description and other fields
             const event = { name: eventName };
-            await apiClient.createEvent(event);
+            await api.createEvent(event);
             toast('Event created successfully');
         } catch (err) {
             console.error(err);

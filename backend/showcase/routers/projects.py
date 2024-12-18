@@ -23,7 +23,7 @@ def create_project(project: db.Project, current_user: Annotated[dict, Depends(ge
     # No matter what email the user provides, the owner is always the current user
     project.owner = [db.user.get_user_record_id_by_email(current_user["email"])]
 
-    if project.event is str:
+    if isinstance(project.event, str):
         project.event = [project.event]
 
     # If the event does not exist, raise a 404
@@ -46,7 +46,7 @@ def create_project(project: db.Project, current_user: Annotated[dict, Depends(ge
 
 @router.get("/{project_id}")
 # The regex here is to ensure that the path parameter starts with "rec" and is followed by any number of alphanumeric characters
-def get_project(project_id: Annotated[str, Path(pattern="^rec\w*$")]):
+def get_project(project_id: Annotated[str, Path(pattern=r"^rec\w*$")]):
     project = db.projects.get(project_id)
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")

@@ -21,7 +21,7 @@ export interface OwnedEvent extends Event {
 
 export interface UserEvents {
     owned_events: OwnedEvent[];
-    attending_events: EventCreationPayload[];
+    attending_events: Event[];
 }
 
 export interface Project {

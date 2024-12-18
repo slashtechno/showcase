@@ -1,4 +1,4 @@
-from pydantic import BaseModel, HttpUrl, Field
+from pydantic import BaseModel, HttpUrl, Field, StringConstraints
 from pydantic.json_schema import SkipJsonSchema
 from typing import Annotated, List, Optional
 
@@ -10,7 +10,10 @@ class Project(BaseModel):
     description: Optional[str] = None
     
     owner: Annotated[SkipJsonSchema[List[str]], Field()] = None
-    event: List[str] | str 
+    # https://docs.pydantic.dev/latest/api/types/#pydantic.types.constr--__tabbed_1_2
+    event: List[str] | Annotated[str, StringConstraints(
+            pattern=r'^rec\w*$'
+        )]
     # join_code: SkipJsonSchema[str] = None
 
     def model_dump(self, *args, **kwargs):
