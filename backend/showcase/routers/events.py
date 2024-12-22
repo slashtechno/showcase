@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Path
-from typing import Annotated, Self, Set
+from typing import Annotated, Self, Set, Union
 from fastapi import Depends, HTTPException, Query
 from pyairtable.formulas import match
 from pyairtable.api.types import RecordDict
@@ -18,14 +18,39 @@ from showcase.db import EventCreationPayload, ComplexEvent, UserEvents, Event
 router = APIRouter(prefix="/events", tags=["events"])
 
 
-# Probably should either disable in production or just replace this with /attending
+# @router.get("/")
+# def get_events():
+#     """Get a list of all events"""
+#     return db.events.all()
+
+@router.get("/{event_id}")
+def get_event(
+    event_id: Annotated[str, Path(title="Event ID")],
+    current_user: Annotated[dict, Depends(get_current_user)],
+) -> Union[ComplexEvent, Event]:
+    """
+    Get an event by its ID. If the user owns it, return a complex event. Otherwise, return a regular event.
+    """
+
+    user_id = db.user.get_user_record_id_by_email(current_user["email"])
+    if user_id is None:
+        raise HTTPException(status_code=500, detail="User not found")
+    
+    user = db.users.get(user_id)
+    event = db.events.get(event_id)
+
+    if event is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    if user["id"] in event["fields"].get("owner", []):
+        return ComplexEvent.model_validate({"id": event["id"], **event["fields"]})
+    elif user["id"] in event["fields"].get("attendees", []):
+        return Event.model_validate({"id": event["id"], **event["fields"]})
+    else:
+        raise HTTPException(status_code=403, detail="User does not have access to event")
+
+# Used to be /attending
 @router.get("/")
-def get_events():
-    """Get a list of all events"""
-    return db.events.all()
-
-
-@router.get("/attending")
 def get_attending_events(
     current_user: Annotated[dict, Depends(get_current_user)],
 ) -> UserEvents:

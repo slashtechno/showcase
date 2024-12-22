@@ -64,11 +64,6 @@ export class ApiClient {
         return response.json();
     }
 
-    // Events endpoints
-    async getEvents() {
-        const response = await this.fetch('/events/');
-        return response.json();
-    }
 
     // At the moment this just returns whatever Airtable returns when it creates a new record
     async createEvent(event: EventCreationPayload): Promise<Object> {
@@ -81,7 +76,7 @@ export class ApiClient {
     }
 
     async getAttendingEvents(): Promise<UserEvents> {
-        const response = await this.fetch('/events/attending');
+        const response = await this.fetch('/events');
         return response.json();
     }
 
@@ -128,7 +123,6 @@ export class ApiClient {
 
     // This returns an object with the sole property of "email", on success
     async verifyAuth(): Promise<{ email: string }> {
-        console.log('Verifying auth with token:', this.currentToken);
         const response = await this.fetch('/protected-route');
         return response.json();
     }
