@@ -2,10 +2,11 @@
 
 <script lang="ts">
     import CreateEvent from "$lib/components/CreateEvent.svelte";
-    import { onMount } from "svelte";  
-    import {api} from "$lib/api/client";
+    import { onMount } from "svelte";
+    import { api } from "$lib/api/client";
     import type { UserEvents } from "$lib/api/types";
     import { toast } from "svelte-sonner";
+    import { goto } from "$app/navigation";
 
     let events: UserEvents = $state({ owned_events: [], attending_events: [] });
 
@@ -13,13 +14,11 @@
         try {
             events = await api.getAttendingEvents();
         } catch (error) {
-            console.error('Error fetching events:', error);
-            toast.error('Failed to load events.');
+            console.error("Error fetching events:", error);
+            toast.error("Failed to load events.");
         }
     });
-    
 </script>
-
 
 <div class="space-y-8 p-4">
     <section class="p-4 border rounded-lg shadow-sm">
@@ -31,8 +30,14 @@
         <ul>
             {#each events.owned_events as event}
                 <li class="py-2">
-                    <span class="font-medium">{event.name}</span>
-                    <span class="ml-4 text-gray-600">Join Code: {event.join_code}</span>
+                    <a
+                        href={`/events/${event.id}`}
+                        class="font-medium text-blue-600 hover:underline"
+                        >{event.name}</a
+                    >
+                    <span class="ml-4 text-gray-600"
+                        >Join Code: {event.join_code}</span
+                    >
                 </li>
             {/each}
         </ul>
@@ -42,8 +47,13 @@
         <ul>
             {#each events.attending_events as event}
                 <li class="py-2">
-                    <span class="font-medium">{event.name}</span>
+                    <a
+                        href={`/events/${event.id}`}
+                        class="font-medium text-blue-600 hover:underline"
+                        >{event.name}</a
+                    >
                 </li>
             {/each}
+        </ul>
     </section>
 </div>

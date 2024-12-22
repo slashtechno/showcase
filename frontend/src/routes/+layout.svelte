@@ -28,7 +28,6 @@
             const token = value.token;
             if (api.tokenSet && !tokenVerified) {
                 api.verifyAuth().then((response) => {
-                    console.log('Token is valid');
                     localStorage.setItem('token', token);
                     user.set({ email: response.email, token: token });
                     console.debug('Token verified, setting user in store', token);

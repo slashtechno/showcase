@@ -1,8 +1,10 @@
-import type { Project, Vote, EventCreationPayload, Event, UserEvents } from "./types";
+import type { Project, Vote, EventCreationPayload, Event, UserEvents, OwnedEvent } from "./types";
 // @ts-ignore
 import { env } from '$env/dynamic/public';
 import { user } from '../stores';
 import { derived } from "svelte/store";
+import { error } from '@sveltejs/kit';
+
 
 const API_BASE: string = env.PUBLIC_API_URL 
 
@@ -43,7 +45,8 @@ export class ApiClient {
         }
         const response = await fetch(url, options);
         if (!response.ok) {
-            throw new Error(`API error: ${response.statusText}`);
+            // throw new Error(`API error: ${response.statusText}`);
+            error(response.status, response.statusText);
         }
         return response;
     }
@@ -79,6 +82,12 @@ export class ApiClient {
         const response = await this.fetch('/events');
         return response.json();
     }
+
+    async getEvent(eventId: string): Promise<Event|OwnedEvent> {
+        const response = await this.fetch(`/events/${eventId}`);
+        return response.json();
+    }
+
 
     async attendEvent(joinCode: string) {
         const response = await this.fetch(`/events/attend?join_code=${joinCode}`, {
