@@ -1,7 +1,7 @@
 import type { Project, Vote, EventCreationPayload, Event, UserEvents, OwnedEvent } from "./types";
 // @ts-ignore
 import { env } from '$env/dynamic/public';
-import { user } from '../stores';
+import { user } from '../user.svelte';
 import { derived } from "svelte/store";
 import { error } from '@sveltejs/kit';
 
@@ -9,7 +9,6 @@ import { error } from '@sveltejs/kit';
 const API_BASE: string = env.PUBLIC_API_URL 
 
 export class ApiClient {
-    public tokenSet = false;
     private currentToken: string | null = null;
     private unsubscribe: () => void;
 
@@ -19,10 +18,6 @@ export class ApiClient {
             .subscribe(token => {
                 this.currentToken = token ?? null;
                 console.debug('Token updated in ApiClient:', this.currentToken);
-                // if token is not empty, set tokenSet to true
-                if (this.currentToken) {
-                    this.tokenSet = true;
-                }
             });
     }
 

@@ -1,38 +1,17 @@
 <script lang="ts">
     import CreateProject from '$lib/components/CreateProject.svelte';
-    import { user } from '$lib/stores';
+    import { user, signOut} from '$lib/user.svelte';
     import { onDestroy, onMount } from 'svelte';
     import type { Unsubscriber } from 'svelte/store';
 
+
     let unsubscribe: Unsubscriber;
-    let isLoggedIn = false;
-
-    function signOut() {
-        console.log('Signing out (button clicked)');
-        user.set({ email: '', token: '' });
-        localStorage.removeItem('token');
-    }
-
-    onMount(() => {
-        unsubscribe = user.subscribe(($user) => {
-            isLoggedIn = !!$user.email;
-            if (!isLoggedIn && localStorage.getItem('token')) {
-                user.set({ email: "", token: localStorage.getItem('token')! });
-            }
-        });
-    });
-
-    onDestroy(() => {
-        if (unsubscribe) {
-            unsubscribe();
-        }
-    });
 </script>
 
 <div class="space-y-8 p-4">
     <section class="p-4 border rounded-lg shadow-sm">
         <h2 class="text-xl font-semibold mb-4">Login</h2>
-        {#if isLoggedIn}
+        {#if $user.isLoggedIn}
             <div class="my-4">
                 <h2>Hey!</h2>
                 <p>

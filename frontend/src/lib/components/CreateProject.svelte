@@ -2,7 +2,7 @@
     import { api } from "$lib/api/client";
     import { toast } from 'svelte-sonner';
     import type { Project, Event } from "$lib/api/types";
-    import { user } from "$lib/stores";
+    import { user } from "$lib/user.svelte";
     import { get } from 'svelte/store';
 
     let project: Project = $state({
