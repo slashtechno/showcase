@@ -10,5 +10,9 @@
 <div class="text-center">
     <h1 class="text-2xl font-semibold">{data.name}</h1>
     <p class="text-gray-600">{data.description}</p>
+    <!-- Link to /events/{data.id}/rank -->
 </div>
-
+<!-- Center the button -->
+<div class="flex justify-center">
+    <a href={`/events/${data.id}/rank`} class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Rank Projects</a>
+</div>
