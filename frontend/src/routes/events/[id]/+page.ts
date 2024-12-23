@@ -1,14 +1,15 @@
 import { error, redirect} from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import { api } from '$lib/api/client';
+import { api } from '$lib/api/client.svelte';
 import type { Event, OwnedEvent } from '$lib/api/types';
+import { user } from '$lib/user.svelte';
 
 export const load: PageLoad = async ({ params }) => {
     if (!params.id) {
         throw error(400, 'no id provided');
     }
 
-    if (!api.tokenSet) {
+    if (!user.isAuthenticated) {
         throw error(401, 'Unauthorized');
         // return redirect(302, '/login');
     }

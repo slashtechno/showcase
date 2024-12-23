@@ -3,7 +3,7 @@
 <script lang="ts">
     import CreateEvent from "$lib/components/CreateEvent.svelte";
     import { onMount } from "svelte";
-    import { api } from "$lib/api/client";
+    import { api } from "$lib/api/client.svelte";
     import type { UserEvents } from "$lib/api/types";
     import { toast } from "svelte-sonner";
     import { goto } from "$app/navigation";

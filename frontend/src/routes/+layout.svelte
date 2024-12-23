@@ -3,9 +3,8 @@
     import { Toaster } from 'svelte-sonner';
     let { children } = $props();
     
-    import { initializeAuth } from "$lib/CheckAuth.svelte";
+    import CheckAuth from '$lib/components/CheckAuth.svelte';
 
-    initializeAuth();
 </script>
 
 <nav class="bg-gray-400 p-4 text-center">
@@ -14,3 +13,5 @@
 {@render children()}
 <!-- All pages should be able to show toasts -->
 <Toaster />
+<!--  Check for auth on all pages -->
+<CheckAuth />

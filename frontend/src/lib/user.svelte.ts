@@ -4,10 +4,15 @@ type User = {
     isAuthenticated: boolean;
 };
 
-export const user = $state<User>({
+export const user: User = $state({
     email: "",
     token: "",
-    isAuthenticated: false
+    isAuthenticated: false,
+    set user(value: User) {
+        Object.assign(user, value);
+    }
+
+    
 });
 
 export function signOut() {

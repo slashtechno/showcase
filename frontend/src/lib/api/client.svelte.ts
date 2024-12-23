@@ -9,35 +9,20 @@ import { error } from '@sveltejs/kit';
 const API_BASE: string = env.PUBLIC_API_URL 
 
 export class ApiClient {
-    private currentToken: string | null = null;
-    private unsubscribe: () => void;
 
-    constructor() {
-        // Subscribe to user store changes
-        this.unsubscribe = derived(user, $user => $user?.token)
-            .subscribe(token => {
-                this.currentToken = token ?? null;
-                console.debug('Token updated in ApiClient:', this.currentToken);
-            });
-    }
-
-    // Call this when ApiClient is no longer needed
-    destroy() {
-        // Clean up subscription to prevent memory leaks
-        if (this.unsubscribe) {
-            this.unsubscribe();
-        }
-    }
 
     private async fetch(endpoint: string, options: RequestInit = {}) {
         const url = `${API_BASE}${endpoint}`;
         
-        if (this.currentToken) {
+        // if (user.isAuthenticated) {
+        // Add Authorization header only if it's not already present
+        if (!options.headers || !('Authorization' in options.headers)) {
             options.headers = {
                 ...options.headers,
-                'Authorization': `Bearer ${this.currentToken}`
+                'Authorization': `Bearer ${user.token}`
             };
         }
+        // }
         const response = await fetch(url, options);
         if (!response.ok) {
             // throw new Error(`API error: ${response.statusText}`);
@@ -126,8 +111,13 @@ export class ApiClient {
     }
 
     // This returns an object with the sole property of "email", on success
-    async verifyAuth(): Promise<{ email: string }> {
-        const response = await this.fetch('/protected-route');
+    async verifyAuth(token: string): Promise<{ email: string }> {
+        const response = await this.fetch('/protected-route', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Test': `Bearer ${token}`
+            }
+        });
         return response.json();
     }
 }

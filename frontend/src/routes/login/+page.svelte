@@ -1,5 +1,5 @@
 <script>
-    import { api } from "$lib/api/client";
+    import { api } from "$lib/api/client.svelte";
     import { toast, Toaster } from "svelte-sonner";
     import { onMount } from "svelte";
     import { user } from "$lib/user.svelte";
@@ -31,7 +31,9 @@
         isLoading = true;
         try {
             const response = await api.verifyToken(token);
-            user.set({ email: response.email, token: response.access_token, isAuthenticated: true });
+            user.email = response.email;
+            user.token = response.access_token;
+            user.isAuthenticated = true;
             // Store the token in localStorage
             localStorage.setItem('token', response.access_token);
             console.log('Token passed, set, and verified successfully', response);

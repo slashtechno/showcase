@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { api } from "$lib/api/client";
+    import { api } from "$lib/api/client.svelte";
     import { toast } from 'svelte-sonner';
     // TODO: Use the object instead of individual variables
     let eventName = $state('');

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { api } from "$lib/api/client";
+    import { api } from "$lib/api/client.svelte";
     import { toast } from 'svelte-sonner';
     import type { Project, Event } from "$lib/api/types";
     import { user } from "$lib/user.svelte";
