@@ -21,7 +21,7 @@
                 <p>
                     You're signed in as <strong>{user.email}</strong>.
                 </p>
-                <button class="mt-2" onclick={signOut}>Sign out</button>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2" onclick={signOut}>Sign out</button>
             </div>
         {:else}
             <div class="flex justify-center my-4">
