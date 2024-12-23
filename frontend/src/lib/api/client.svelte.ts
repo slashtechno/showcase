@@ -42,7 +42,7 @@ export class ApiClient {
         return response.json();
     }
 
-    async verifyToken(token: string): Promise<{ access_token: string, token_type: string }> {
+    async verifyToken(token: string): Promise<{ access_token: string, token_type: string, email: string }> {
         const response = await this.fetch(`/verify?token=${token}`);
         return response.json();
     }
@@ -59,7 +59,7 @@ export class ApiClient {
     }
 
     async getAttendingEvents(): Promise<UserEvents> {
-        const response = await this.fetch('/events');
+        const response = await this.fetch('/events/');
         return response.json();
     }
 

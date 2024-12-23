@@ -8,11 +8,6 @@ export const user: User = $state({
     email: "",
     token: "",
     isAuthenticated: false,
-    set user(value: User) {
-        Object.assign(user, value);
-    }
-
-    
 });
 
 export function signOut() {

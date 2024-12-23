@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { api } from "$lib/api/client.svelte";
     import { toast, Toaster } from "svelte-sonner";
     import { onMount } from "svelte";
@@ -27,7 +27,7 @@
     }
 
     // Function to handle verification link
-    async function verifyToken(token) {
+    async function verifyToken(token: string) {
         isLoading = true;
         try {
             const response = await api.verifyToken(token);
@@ -52,65 +52,74 @@
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         if (token) {
+            console.log('Token found in URL:', token);
             verifyToken(token);
-            // Redirect to home page
-            // Eventually it would be better to just make the login page display a signout button or something else since otherwise, going to it without a token (or with an invalid token) would just will just display the login form again
-            goto('/');
         }
     });
 
-    // Prevent default form submission
-    function preventDefault(fn) {
-        return function (event) {
-            event.preventDefault();
-            fn.call(this, event);
-        };
-    }
+    // Prevent default form submission (not needed it seems)
+    // https://svelte.dev/docs/svelte/svelte-legacy#preventDefault
+    // https://svelte.dev/docs/svelte/v5-migration-guide#Breaking-changes-in-runes-mode-Touch-and-wheel-events-are-passive
+    // function preventDefault(fn) {
+    //     return function (event) {
+    //         event.preventDefault();
+    //         fn.call(this, event);
+    //     };
+    // }
 </script>
 
 
 <div class="grid gap-6 max-w-sm mx-auto p-6" {...rest}>
-    <div class="text-center">
-        <h2 class="text-2xl font-bold mb-2">Welcome</h2>
-        <p class="text-gray-600 mb-4">Sign in with your email to continue</p>
-    </div>
-
-    <form onsubmit={preventDefault(login)} class="space-y-4">
-        <div class="grid gap-2">
-            <div class="grid gap-1.5">
-                <label class="text-sm font-medium" for="email">
-                    Email address
-                </label>
-                <input
-                    id="email"
-                    placeholder="name@example.com"
-                    type="email"
-                    autocomplete="off"
-                    disabled={isLoading}
-                    bind:value={email}
-                    class="w-full px-3 py-2 border rounded-md"
-                />
-                <p class="text-sm text-gray-500">
-                    We'll send you a magic link to sign in
-                </p>
-            </div>
-            <div class="flex justify-center mt-4">
-                <button
-                    type="button"
-                    onclick={login}
-                    disabled={isLoading}
-                    class="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-                >
-                    {#if isLoading}
-                        <span class="loader mr-2"></span>
-                    {/if}
-                    Sign In with Email
-                </button>
-            </div>
+    {#if user.isAuthenticated}
+        <div class="text-center">
+            <h2 class="text-2xl font-bold mb-2">You are logged in as {user.email}</h2>
+            <!-- <button class="mt-4 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700" onclick={() => goto('/')}>
+                Go back to Home
+            </button> -->
         </div>
-    </form>
+    {:else}
+        <div class="text-center">
+            <h2 class="text-2xl font-bold mb-2">Welcome</h2>
+            <p class="text-gray-600 mb-4">Sign in with your email to continue</p>
+        </div>
 
-    <div class="text-center mt-4">
-        <a href="/" class="text-sm text-blue-600 hover:text-blue-800">← Back to Home</a>
-    </div>
+        <form onsubmit={login} class="space-y-4">
+        <!-- <form onsubmit={preventDefault(login)} class="space-y-4"> -->
+            <div class="grid gap-2">
+                <div class="grid gap-1.5">
+                    <label class="text-sm font-medium" for="email">
+                        Email address
+                    </label>
+                    <input
+                        id="email"
+                        placeholder="name@example.com"
+                        type="email"
+                        autocomplete="off"
+                        disabled={isLoading}
+                        bind:value={email}
+                        class="w-full px-3 py-2 border rounded-md"
+                    />
+                    <p class="text-sm text-gray-500">
+                        We'll send you a magic link to sign in
+                    </p>
+                </div>
+                <div class="flex justify-center mt-4">
+                    <button
+                        type="button"
+                        onclick={login}
+                        disabled={isLoading}
+                        class="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                    >
+                        {#if isLoading}
+                            <span class="loader mr-2"></span>
+                        {/if}
+                        Sign In with Email
+                    </button>
+                </div>
+            </div>
+        </form>
+        {/if}
+        <div class="text-center mt-4">
+            <a href="/" class="text-sm text-blue-600 hover:text-blue-800">← Back to Home</a>
+        </div>
 </div>

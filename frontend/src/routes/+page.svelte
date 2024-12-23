@@ -5,8 +5,11 @@
     import { onDestroy, onMount } from 'svelte';
     import type { Unsubscriber } from 'svelte/store';
 
-
     let unsubscribe: Unsubscriber;
+
+    onMount(() => {
+            console.log($state.snapshot(user));
+    });
 </script>
 
 <div class="space-y-8 p-4">

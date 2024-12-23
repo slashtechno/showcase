@@ -91,7 +91,7 @@ async def verify_token(token: str):
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
         token_type="access",
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer", "email": email}
 
 
 security = HTTPBearer()
@@ -123,10 +123,16 @@ async def protected_route(current_user: Annotated[dict, Depends(get_current_user
 
 
 if __name__ == "__main__":
-    # create a dev JWT
-    debug_token = create_access_token(
+    # create a dev access JWT and  a magic link JWT
+    debug_access = create_access_token(
         data={"sub": DEBUG_EMAIL},
         expires_delta=timedelta(days=365),  # Token valid for 1 year
         token_type="access",
     )
-    print(debug_token)
+    debug_verify = create_access_token(
+        data={"sub": DEBUG_EMAIL},
+        expires_delta=timedelta(days=365),  # Token valid for 1 year
+        token_type="magic_link",
+    )
+    # print the access token on one line and on the next line the magic link
+    print(f"Access token for {DEBUG_EMAIL}: {debug_access}\nMagic link: http://localhost:5173/login?token={debug_verify}")
