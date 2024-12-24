@@ -14,6 +14,7 @@ pyairtable = "^3.0.0"
 dynaconf = "^3.2.6"
 pyjwt = "^2.10.1"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+sendgrid = "^6.11.0"
 
 
 [tool.poetry.group.dev.dependencies]

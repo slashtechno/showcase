@@ -11,6 +11,9 @@ from pydantic import BaseModel
 import jwt
 from jwt.exceptions import PyJWTError
 
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
 router = APIRouter(tags=["auth"])
 
 SECRET_KEY = settings.jwt_secret
@@ -51,17 +54,21 @@ async def send_magic_link(email: str):
         data=token_data, expires_delta=timedelta(minutes=15), token_type="magic_link"
     )
 
-    # magic_link = f"http://localhost:8000/verify?token={token}"
-    # from_email = "showcase@showcase"
-    # msg = MIMEText(
-    #     f"Click the link to verify: {magic_link}\nIt will expire in 15 minutes."
-    # )
-    # msg["Subject"] = "Login to Showcase"
-    # msg["From"] = from_email
-    # msg["To"] = email
-    # python -m aiosmtpd -n -l localhost:1025
-    # with smtplib.SMTP("localhost", 1025) as server:
-    #     server.sendmail(from_email, email, msg.as_string())
+    # TODO: Add a setting for the frontend URL
+    magic_link = f"http://localhost:5173/login?token={token}"
+
+    message = Mail(
+        from_email=settings.sendgrid_from_email,
+        to_emails=email,
+        subject="Magic link for Showcase",
+        html_content=f"Click <a href='{magic_link}'>here</a> to log in to Showcase",
+    )
+
+    try:
+        sg = SendGridAPIClient(settings.sendgrid_api_key)  
+        _ = sg.send(message)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to send auth email")      
 
     print(f"Token for {email}: {token} | magic_link: http://localhost:5173/login?token={token}")
 
