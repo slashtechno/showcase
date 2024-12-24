@@ -96,8 +96,12 @@ def create_event(
     if None in event.owner:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # Generate a join code
-    event.join_code = token_urlsafe(8)
+    # Generate a unique join code by continuously generating a new one until it doesn't match any existing join codes
+    while True:
+        join_code = token_urlsafe(8)
+        if not db.events.first(formula=match({"join_code": join_code})):
+            event.join_code = join_code
+            break
 
     return db.events.create(event.model_dump())
 
