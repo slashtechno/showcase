@@ -1,17 +1,18 @@
 <script lang="ts">
     import { api } from "$lib/api/client.svelte";
     import { toast } from 'svelte-sonner';
-    import type { Project, Event } from "$lib/api/types";
+    import type {  Event, ProjectCreationPayload } from "$lib/api/types";
     import { user } from "$lib/user.svelte";
     import { get } from 'svelte/store';
 
-    let project: Project = $state({
+    let project: ProjectCreationPayload = $state({
         name: "",
+        readme: "https://example.com",
+        repo: "",
+        image_url: "",
         description: "",
         // TODO: Allow these fields to be changed
-        readme: "https://example.com",
-        repo: "https://example.com",
-        event: "",
+        event: [""],
     })
     let events: Event[] = $state([]);
     let fetchedEvents = false;
@@ -19,6 +20,7 @@
     // https://svelte.dev/tutorial/svelte/inspecting-state
     // $inspect(project.event).with(console.debug);
     // $inspect(events);
+    $inspect(project)
 
 
     async function fetchEvents() {
@@ -35,7 +37,6 @@
 
     async function createProject() {
         try {
-            console.log('Creating project:', project);
             await api.createProject(project);
             toast('Project created successfully');
         } catch (err) {
@@ -59,8 +60,20 @@
         placeholder="Some cool description" 
         class="mb-2 p-2 border rounded w-full" 
     ></textarea>
+    <input 
+        type="text"
+        bind:value={project.image_url}
+        placeholder="Image URL (such as a raw GitHub link or a #cdn link)"
+        class="mb-2 p-2 border rounded w-full"
+    />
+    <input 
+        type="text"
+        bind:value={project.repo}
+        placeholder="Repository URL (such as a GitHub link)"
+        class="mb-2 p-2 border rounded w-full"
+    />
     <!-- Dropdown to select event -->
-    <select bind:value={project.event} class="mb-2 p-2 border rounded w-full" onfocus={() => {if (!fetchedEvents) fetchEvents();}}>
+    <select bind:value={project.event[0]} class="mb-2 p-2 border rounded w-full" onfocus={() => {if (!fetchedEvents) fetchEvents();}}>
         <option value="" disabled selected>Select an event</option>
         {#each events as event}
             <option value={event.id}>{event.name}</option>

@@ -9,7 +9,7 @@
     async function createEvent() {
         try {
             // TODO: Add description and other fields
-            const event = { name: eventName };
+            const event = { name: eventName, description: eventDescription };
             await api.createEvent(event);
             toast('Event created successfully');
         } catch (err) {

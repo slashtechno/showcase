@@ -1,9 +1,20 @@
 <script lang="ts">
     import type { Project } from '$lib/api/types';
-    export let project: Project;
-    export let isSelected: boolean;
-    export let toggle: () => void;
-    export let selectable: boolean = false;
+    interface Props {
+        project: Project;
+        isSelected: boolean;
+        toggle: () => void;
+        selectable?: boolean;
+    }
+
+    let {
+        project,
+        isSelected,
+        toggle,
+        selectable = false
+    }: Props = $props();
+
+    // $inspect(project);
 </script>
 
 <button
@@ -14,7 +25,10 @@
     aria-pressed={isSelected}
     disabled={!selectable}
 >
-    <img src="https://lorempic.com/640/480" alt="Project" class="w-full h-32 object-cover mb-4" />
-    <h2 class="text-lg font-semibold">{project.name}</h2>
+    <!-- <img src="https://lorempic.com/640/480" alt="Project" class="w-full h-32 object-cover mb-4" /> -->
+    <img src={project.image_url} alt="Project" class="w-full h-32 object-cover mb-4" />
+    <h2 class="text-lg font-semibold">
+        <a href={project.repo} target="_blank" class="text-blue-500 hover:underline">{project.name}</a>
+    </h2>
     <p class="text-gray-600">{project.description}</p>
 </button>

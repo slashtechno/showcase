@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Path
-from typing import Annotated, Self, Set, Union
+from typing import Annotated, Self, Set, Union, List
 from fastapi import Depends, HTTPException, Query
 from pyairtable.formulas import match
 from pyairtable.api.types import RecordDict
@@ -14,6 +14,7 @@ from requests import HTTPError
 from showcase.routers.auth import get_current_user
 from showcase import db
 from showcase.db import EventCreationPayload, ComplexEvent, UserEvents, Event
+from showcase.db.project import Project
 
 router = APIRouter(prefix="/events", tags=["events"])
 
@@ -264,24 +265,23 @@ def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]):
 
     # Sort the projects by the number of votes they have received
     projects.sort(key=lambda project: project["fields"].get("points", 0), reverse=True)
-
-    # Not sure if it's best to return a list of project IDs or the project objects
-    # return [project["id"] for project in projects]
-    # A dict should work... for now
-    return [
-        {
-            "id": project["id"],
-            "name": project["fields"]["name"],
-            "points": project["fields"].get("points", 0),
-        }
-        for project in projects
-    ]
+    
+    projects = [Project.model_validate({"id": project["id"], **project["fields"]}) for project in projects]
+    return projects
 
 @router.get("/{event_id}/projects")
-def get_event_projects(event_id: Annotated[str, Path(title="Event ID")]):
+def get_event_projects(event_id: Annotated[str, Path(title="Event ID")]) -> List[Project]:
     """
     Get the projects for a specific event.
     """
-    event = db.events.get(event_id)
-    projects = [db.projects.get(project_id) for project_id in event["fields"].get("projects", [])]
+    try: 
+        event = db.events.get(event_id)
+    except HTTPError as e:
+        raise (
+            HTTPException(status_code=404, detail="Event not found")
+            if e.response.status_code == 404
+            else e
+        )
+
+    projects = [Project.model_validate({"id": project["id"], **project["fields"]}) for project in [db.projects.get(project_id) for project_id in event["fields"].get("projects", [])]]
     return projects

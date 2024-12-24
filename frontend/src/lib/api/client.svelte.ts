@@ -1,4 +1,4 @@
-import type { Project, Vote, EventCreationPayload, Event, UserEvents, OwnedEvent } from "./types";
+import type { Project, Vote, EventCreationPayload, Event, UserEvents, OwnedEvent, ProjectCreationPayload } from "./types";
 // @ts-ignore
 import { env } from '$env/dynamic/public';
 import { user } from '../user.svelte';
@@ -85,7 +85,7 @@ export class ApiClient {
         return response.json();
     }
 
-    async getLeaderboard(eventId: string): Promise<[{id: string, name: string, points: number}]> {
+    async getLeaderboard(eventId: string): Promise<[Project]> {
         const response = await this.fetch(`/events/${eventId}/leaderboard`);
         return response.json();
     }
@@ -102,7 +102,7 @@ export class ApiClient {
         return response.json();
     } 
 
-    async createProject(project: Project) {
+    async createProject(project: ProjectCreationPayload) {
         const response = await this.fetch('/projects/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -111,7 +111,7 @@ export class ApiClient {
         return response.json();
     }
 
-    async getProject(projectId: string) {
+    async getProject(projectId: string): Promise<Project> {
         const response = await this.fetch(`/projects/${projectId}`);
         return response.json();
     }

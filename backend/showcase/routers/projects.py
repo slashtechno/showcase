@@ -1,21 +1,17 @@
 from typing import Annotated
+from requests import HTTPError
 from showcase import db
 from fastapi import APIRouter, Depends, HTTPException, Path
 from pyairtable.formulas import EQ, RECORD_ID
 from showcase.routers.auth import get_current_user
+from showcase.db.project import Project
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 
 
-# TODO: Only get projects if they are in an event that the user is attending
-@router.get("/")
-def get_projects():
-    return db.projects.all()
-
-
 # It's up to the client to provide the event record ID
 @router.post("/")
-def create_project(project: db.Project, current_user: Annotated[dict, Depends(get_current_user)]):
+def create_project(project: db.ProjectCreationPayload, current_user: Annotated[dict, Depends(get_current_user)]):
     """
     Create a new project. The current user is automatically added as an owner of the project.
     """
@@ -47,9 +43,12 @@ def create_project(project: db.Project, current_user: Annotated[dict, Depends(ge
 @router.get("/{project_id}")
 # The regex here is to ensure that the path parameter starts with "rec" and is followed by any number of alphanumeric characters
 def get_project(project_id: Annotated[str, Path(pattern=r"^rec\w*$")]):
-    project = db.projects.get(project_id)
-    if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
-    
-    okay_fields = ["name", "readme", "repo", "description", "event"]
-    return {field: project["fields"].get(field) for field in okay_fields}
+    try:
+        project = db.projects.get(project_id)
+    except HTTPError as e:
+        raise (
+            HTTPException(status_code=404, detail="Project not found")
+            if e.response.status_code == 404
+            else e
+        ) 
+    return Project.model_validate({id: project["id"], **project["fields"]})

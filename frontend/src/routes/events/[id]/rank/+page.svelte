@@ -4,6 +4,7 @@
     import { toast } from 'svelte-sonner';
     import { api } from '$lib/api/client.svelte';
     import ProjectCard from '$lib/components/ProjectCard.svelte';
+    import { onMount } from 'svelte';
     
     let { data } = $props();
     let { event, projects } = data;

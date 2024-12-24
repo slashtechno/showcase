@@ -24,12 +24,17 @@ export interface UserEvents {
     attending_events: Event[];
 }
 
-export interface Project {
+export interface ProjectCreationPayload {
     name: string;
     readme: string;
     repo: string;
+    image_url: string;
     description?: string;
-    event: string | string[];
+    event: string[];
+}
+
+export interface Project extends ProjectCreationPayload {
+    id: string;
 }
 
 export interface Vote {
