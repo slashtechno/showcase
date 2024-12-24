@@ -73,9 +73,9 @@
     {#if user.isAuthenticated}
         <div class="text-center">
             <h2 class="text-2xl font-bold mb-2">You are logged in as {user.email}</h2>
-            <!-- <button class="mt-4 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700" onclick={() => goto('/')}>
-                Go back to Home
-            </button> -->
+            <button class="mt-4 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700" onclick={() => history.back()}>
+                Go back to previous page
+            </button>
         </div>
     {:else}
         <div class="text-center">
@@ -118,8 +118,8 @@
                 </div>
             </div>
         </form>
-        {/if}
         <div class="text-center mt-4">
             <a href="/" class="text-sm text-blue-600 hover:text-blue-800">← Back to Home</a>
         </div>
+        {/if}
 </div>

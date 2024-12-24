@@ -47,7 +47,9 @@ settings.validators.register(
         ),
         Validator(
             "jwt_expire_minutes",
-            default=30,
+            # 2 days. People can always log in again
+    
+            default=2880,
         ),
     ],
 )

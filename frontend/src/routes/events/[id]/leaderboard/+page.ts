@@ -13,6 +13,7 @@ export const load: PageLoad = async ({ params }) => {
         }
         return { projects };
     } catch (err) {
+        console.error(err);
         throw error(500, 'Failed to load rankings');
     }
 }

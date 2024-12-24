@@ -10,8 +10,8 @@ export const load: PageLoad = async ({ params }) => {
     }
 
     if (!user.isAuthenticated) {
-        throw error(401, 'Unauthorized');
-        // return redirect(302, '/login');
+        // throw error(401, 'Unauthorized');
+        return redirect(302, '/login');
     }
 
     try {

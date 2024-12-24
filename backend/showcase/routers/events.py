@@ -18,11 +18,6 @@ from showcase.db import EventCreationPayload, ComplexEvent, UserEvents, Event
 router = APIRouter(prefix="/events", tags=["events"])
 
 
-# @router.get("/")
-# def get_events():
-#     """Get a list of all events"""
-#     return db.events.all()
-
 @router.get("/{event_id}")
 def get_event(
     event_id: Annotated[str, Path(title="Event ID")],

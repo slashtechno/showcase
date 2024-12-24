@@ -8,7 +8,7 @@
     let unsubscribe: Unsubscriber;
 
     onMount(() => {
-            console.log($state.snapshot(user));
+            // console.log($state.snapshot(user));
     });
 </script>
 

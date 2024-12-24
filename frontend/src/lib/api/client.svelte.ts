@@ -96,6 +96,12 @@ export class ApiClient {
         return response.json();
     }
 
+    // Get event projects
+    async getEventProjects(eventId: string): Promise<Project[]> {
+        const response = await this.fetch(`/events/${eventId}/projects`);
+        return response.json();
+    } 
+
     async createProject(project: Project) {
         const response = await this.fetch('/projects/', {
             method: 'POST',
