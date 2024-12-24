@@ -85,7 +85,7 @@ export class ApiClient {
         return response.json();
     }
 
-    async getLeaderboard(eventId: string) {
+    async getLeaderboard(eventId: string): Promise<[{id: string, name: string, points: number}]> {
         const response = await this.fetch(`/events/${eventId}/leaderboard`);
         return response.json();
     }

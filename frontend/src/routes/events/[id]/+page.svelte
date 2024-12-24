@@ -12,7 +12,10 @@
     <p class="text-gray-600">{data.description}</p>
     <!-- Link to /events/{data.id}/rank -->
 </div>
-<!-- Center the button -->
 <div class="flex justify-center">
     <a href={`/events/${data.id}/rank`} class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Rank Projects</a>
+</div>
+<!-- Leaderboard button -->
+<div class="flex justify-center">
+    <a href={`/events/${data.id}/leaderboard`} class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Leaderboard</a>
 </div>

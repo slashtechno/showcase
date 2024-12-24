@@ -3,6 +3,7 @@
 <script lang="ts">
     import { toast } from 'svelte-sonner';
     import { api } from '$lib/api/client.svelte';
+    import ProjectCard from '$lib/components/ProjectCard.svelte';
     
     let { data } = $props();
     let { event, projects } = data;
@@ -31,6 +32,7 @@
             await api.submitVote({ event_id: event.id, projects: selectedProjects });
             toast('Vote submitted successfully');
         } catch (err) {
+            console.error(err);
             toast(`Failed to submit vote: ${err}`);
         }
     }
@@ -46,17 +48,12 @@
     <p class="text-gray-600 mb-6">{event?.description}</p>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {#each projects as project}
-            <button
-                type="button"
-                class="project-card border p-4 rounded cursor-pointer {selectedProjects.includes(project.id) ? 'border-blue-500' : 'border-gray-300'}"
-                onclick={() => toggleProjectSelection(project.id)}
-                onkeydown={(e) => e.key === 'Enter' && toggleProjectSelection(project.id)}
-                aria-pressed={selectedProjects.includes(project.id)}
-            >
-                <img src="https://lorempic.com/640/480" alt="Project" class="w-full h-32 object-cover mb-4" />
-                <h2 class="text-lg font-semibold">{project.name}</h2>
-                <p class="text-gray-600">{project.description}</p>
-            </button>
+            <ProjectCard
+                project={project}
+                isSelected={selectedProjects.includes(project.id)}
+                toggle={() => toggleProjectSelection(project.id)}
+                selectable={true}
+            />
         {/each}
     </div>
     <button class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onclick={submitVote}>Submit Vote</button>

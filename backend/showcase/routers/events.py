@@ -277,3 +277,12 @@ def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]):
         }
         for project in projects
     ]
+
+@router.get("/{event_id}/projects")
+def get_event_projects(event_id: Annotated[str, Path(title="Event ID")]):
+    """
+    Get the projects for a specific event.
+    """
+    event = db.events.get(event_id)
+    projects = [db.projects.get(project_id) for project_id in event["fields"].get("projects", [])]
+    return projects
