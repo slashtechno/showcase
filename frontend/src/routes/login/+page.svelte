@@ -9,15 +9,49 @@
     let { ...rest } = $props();
 
     let isLoading = $state(false);
+    let showSignupFields = $state(false);
+    // TODO: consolidate these into a single object
     let email = $state('');
+    let first_name = $state('');
+    let last_name = $state('');
+    let mailing_address = $state('');
 
     // Function to handle login
     async function login() {
         isLoading = true;
         try {
-            // Request magic link for the provided email
+            const userExistsResponse = await api.userExists(email);
+            if (userExistsResponse.exists) {
+                // Request magic link for the provided email
+                const response = await api.requestLogin(email);
+                toast(`Magic link sent to ${email}`);
+                // Clear field
+                email = '';
+            } else {
+                toast("You don't exist (yet)! Let's change that.");
+                showSignupFields = true;
+            }
+        } catch (err) {
+            console.error(err);
+            toast(JSON.stringify(err));
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    // Function to handle signup and login
+    async function signupAndLogin() {
+        isLoading = true;
+        try {
+            const userPayload = { email, first_name, last_name, mailing_address };
+            await api.signupUser(userPayload);
             const response = await api.requestLogin(email);
             toast(`Magic link sent to ${email}`);
+            // Clear values
+            email = '';
+            first_name = '';
+            last_name = '';
+            mailing_address = '';
         } catch (err) {
             console.error(err);
             toast(JSON.stringify(err));
@@ -103,17 +137,65 @@
                         We'll send you a magic link to sign in
                     </p>
                 </div>
+                {#if showSignupFields}
+                    <div class="grid gap-1.5">
+                        <label class="text-sm font-medium" for="first_name">
+                            First Name
+                        </label>
+                        <input
+                            id="first_name"
+                            placeholder="First Name"
+                            type="text"
+                            autocomplete="off"
+                            disabled={isLoading}
+                            bind:value={first_name}
+                            class="w-full px-3 py-2 border rounded-md"
+                        />
+                    </div>
+                    <div class="grid gap-1.5">
+                        <label class="text-sm font-medium" for="last_name">
+                            Last Name
+                        </label>
+                        <input
+                            id="last_name"
+                            placeholder="Last Name"
+                            type="text"
+                            autocomplete="off"
+                            disabled={isLoading}
+                            bind:value={last_name}
+                            class="w-full px-3 py-2 border rounded-md"
+                        />
+                    </div>
+                    <div class="grid gap-1.5">
+                        <label class="text-sm font-medium" for="mailing_address">
+                            Mailing Address
+                        </label>
+                        <input
+                            id="mailing_address"
+                            placeholder="Mailing Address"
+                            type="text"
+                            autocomplete="off"
+                            disabled={isLoading}
+                            bind:value={mailing_address}
+                            class="w-full px-3 py-2 border rounded-md"
+                        />
+                    </div>
+                {/if}
                 <div class="flex justify-center mt-4">
                     <button
                         type="button"
-                        onclick={login}
+                        onclick={showSignupFields ? signupAndLogin : login}
                         disabled={isLoading}
                         class="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
                     >
                         {#if isLoading}
                             <span class="loader mr-2"></span>
                         {/if}
-                        Sign In with Email
+                        <!-- {#if showSignupFields} -->
+                            Sign in || Sign up
+                        <!-- {:else} -->
+                            <!-- Sign In with Email -->
+                        <!-- {/if} -->
                     </button>
                 </div>
             </div>
