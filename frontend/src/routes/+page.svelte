@@ -1,6 +1,7 @@
 <svelte:options runes />
 <script lang="ts">
     import CreateProject from '$lib/components/CreateProject.svelte';
+    import AttendEvent from '$lib/components/AttendEvent.svelte';
     import { user, signOut} from '$lib/user.svelte';
 
 </script>
@@ -34,6 +35,11 @@
         <section class="p-4 border rounded-lg shadow-sm">
             <h2 class="text-xl font-semibold mb-4">Create Project</h2>
             <CreateProject />
+        </section>
+
+        <section class="p-4 border rounded-lg shadow-sm">
+            <h2 class="text-xl font-semibold mb-4">Attend Event</h2>
+            <AttendEvent />
         </section>
     {/if}
 </div>

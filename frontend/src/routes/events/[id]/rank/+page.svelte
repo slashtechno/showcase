@@ -34,7 +34,7 @@
             toast('Vote submitted successfully');
         } catch (err) {
             console.error(err);
-            toast(`Failed to submit vote: ${err}`);
+            toast(JSON.stringify(err));
         }
     }
 </script>
