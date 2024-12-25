@@ -41,3 +41,10 @@ export interface Vote {
     event_id: string;
     projects: string[];
 }
+
+export interface UserSignupPayload {
+    first_name: string;
+    last_name: string;
+    email: string;
+    mailing_address: string;
+}

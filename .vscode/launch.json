@@ -3,7 +3,7 @@
     "configurations": [
         {
             "command": "npm run dev",
-            "name": "Run development server",
+            "name": "frontend",
             "request": "launch",
             "type": "node-terminal",
             "cwd": "${workspaceFolder}/frontend",
@@ -16,7 +16,7 @@
             "cwd": "${workspaceFolder}/frontend"
         },
         {
-            "name": "Python Debugger: FastAPI",
+            "name": "FastAPI",
             "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
@@ -32,8 +32,8 @@
         {
             "name": "dev",
             "configurations": [
-                "Run development server",
-                "Python Debugger: FastAPI"
+                "frontend",
+                "FastAPI"
             ]
         }
     ]

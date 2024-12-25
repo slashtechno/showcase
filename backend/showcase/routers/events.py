@@ -10,7 +10,6 @@ from pydantic.json_schema import SkipJsonSchema
 
 from requests import HTTPError
 
-# from showcase import db
 from showcase.routers.auth import get_current_user
 from showcase import db
 from showcase.db import EventCreationPayload, ComplexEvent, UserEvents, Event

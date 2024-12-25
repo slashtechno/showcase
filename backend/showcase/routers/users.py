@@ -1,5 +1,6 @@
-# from showcase import db
+from showcase import db
 from fastapi import APIRouter
+from showcase.db.user import UserSignupPayload
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -9,4 +10,8 @@ router = APIRouter(prefix="/users", tags=["users"])
 # def get_users():
 #     return db.users.all()
 
-# TODO: Add singup endpoint
+
+# Eventually, this should probably be rate-limited
+@router.post("/")
+def create_user(user: UserSignupPayload): 
+    db.users.create(user.model_dump())

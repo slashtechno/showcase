@@ -1,8 +1,7 @@
-import type { Project, Vote, EventCreationPayload, Event, UserEvents, OwnedEvent, ProjectCreationPayload } from "./types";
+import type { Project, Vote, EventCreationPayload, Event, UserEvents, OwnedEvent, ProjectCreationPayload, UserSignupPayload } from "./types";
 // @ts-ignore
 import { env } from '$env/dynamic/public';
 import { user } from '../user.svelte';
-import { derived } from "svelte/store";
 import { error } from '@sveltejs/kit';
 
 
@@ -33,7 +32,7 @@ export class ApiClient {
 
 
     // Auth endpoints
-    async requestLogin(email: string) {
+    async requestLogin(email: string): Promise<Object> {
         const response = await this.fetch('/request-login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -47,6 +46,14 @@ export class ApiClient {
         return response.json();
     }
 
+    async signupUser(user: UserSignupPayload): Promise<Object> {
+        const response = await this.fetch('/users/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+        });
+        return response.json();
+    }
 
     // At the moment this just returns whatever Airtable returns when it creates a new record
     async createEvent(event: EventCreationPayload): Promise<Object> {
@@ -69,14 +76,14 @@ export class ApiClient {
     }
 
 
-    async attendEvent(joinCode: string) {
+    async attendEvent(joinCode: string): Promise<Object> {
         const response = await this.fetch(`/events/attend?join_code=${joinCode}`, {
             method: 'POST'
         });
         return response.json();
     }
 
-    async submitVote(vote: Vote) {
+    async submitVote(vote: Vote): Promise<Object> {
         const response = await this.fetch('/events/vote', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -91,7 +98,7 @@ export class ApiClient {
     }
 
     // Projects endpoints
-    async getProjects() {
+    async getProjects(): Promise<Project[]> {
         const response = await this.fetch('/projects/');
         return response.json();
     }
@@ -102,7 +109,7 @@ export class ApiClient {
         return response.json();
     } 
 
-    async createProject(project: ProjectCreationPayload) {
+    async createProject(project: ProjectCreationPayload): Promise<Object> {
         const response = await this.fetch('/projects/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
