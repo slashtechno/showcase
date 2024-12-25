@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 # from email.mime.text import MIMEText
 from typing import Annotated
 
-from showcase import settings
+from showcase import db, settings
 
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -75,13 +75,17 @@ async def send_magic_link(email: str):
 
 @router.post("/request-login")
 async def request_login(user: User):
+    """Send a magic link to the user's email. If the user has not yet signed up, an error will be raised"""
+    # Check if the user exists
+    if db.user.get_user_record_id_by_email(user.email) is None:
+        raise HTTPException(status_code=404, detail="User not found")
+        return # not needed 
     await send_magic_link(user.email)
-    # The message is probably unnecessary since there will be a nice frontend for this eventually
-    return {"message": "Magic link sent to your email"}
 
 
 @router.get("/verify")
 async def verify_token(token: str):
+    """Verify a magic link and return an access token"""
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
@@ -98,6 +102,7 @@ async def verify_token(token: str):
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
         token_type="access",
     )
+    # TODO: Make a type for this
     return {"access_token": access_token, "token_type": "bearer", "email": email}
 
 

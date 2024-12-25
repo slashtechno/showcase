@@ -98,7 +98,7 @@ def create_event(
             event.join_code = join_code
             break
 
-    return db.events.create(event.model_dump())
+    db.events.create(event.model_dump())
 
 
     # The issue with the approach below was that ComplexEvent requires an ID, which isn't available until the event is created. It might be better to just do it and reoplace model_validate with model_construct to prevent validation errors
@@ -238,8 +238,6 @@ def vote(vote: Vote, current_user: Annotated[dict, Depends(get_current_user)]):
             "votes": user["fields"].get("votes", []) + [vote.event_id],
         },
     )
-
-    return {"message": "Vote successful"}
 
 
 @router.get("/{event_id}/leaderboard")
