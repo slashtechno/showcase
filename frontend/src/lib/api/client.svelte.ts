@@ -55,6 +55,11 @@ export class ApiClient {
         return response.json();
     }
 
+    async userExists(email: string): Promise<{ exists: boolean }> {
+        const response = await this.fetch(`/users/exists?email=${encodeURIComponent(email)}`);
+        return response.json();
+    }
+
     // At the moment this just returns whatever Airtable returns when it creates a new record
     async createEvent(event: EventCreationPayload): Promise<Object> {
         const response = await this.fetch('/events/', {

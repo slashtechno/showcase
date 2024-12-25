@@ -8,13 +8,13 @@
             "type": "node-terminal",
             "cwd": "${workspaceFolder}/frontend",
         }, 
-        {
-            "command": "npm run build",
-            "name": "Run build",
-            "request": "launch",
-            "type": "node-terminal",
-            "cwd": "${workspaceFolder}/frontend"
-        },
+        // {
+        //     "command": "npm run build",
+        //     "name": "Run build",
+        //     "request": "launch",
+        //     "type": "node-terminal",
+        //     "cwd": "${workspaceFolder}/frontend"
+        // },
         {
             "name": "FastAPI",
             "type": "debugpy",
