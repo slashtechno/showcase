@@ -20,7 +20,7 @@
     // https://svelte.dev/tutorial/svelte/inspecting-state
     // $inspect(project.event).with(console.debug);
     // $inspect(events);
-    $inspect(project)
+    // $inspect(project)
 
 
     async function fetchEvents() {
