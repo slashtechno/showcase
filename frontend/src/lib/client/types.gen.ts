@@ -183,7 +183,7 @@ export type GetLeaderboardEventsEventIdLeaderboardGetData = {
     };
 };
 
-export type GetLeaderboardEventsEventIdLeaderboardGetResponse = (unknown);
+export type GetLeaderboardEventsEventIdLeaderboardGetResponse = (Array<Project>);
 
 export type GetLeaderboardEventsEventIdLeaderboardGetError = (HTTPValidationError);
 

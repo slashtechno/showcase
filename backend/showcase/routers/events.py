@@ -246,7 +246,7 @@ def vote(vote: Vote, current_user: Annotated[dict, Depends(get_current_user)]):
 
 
 @router.get("/{event_id}/leaderboard")
-def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]):
+def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]) -> List[Project]:
     """
     Get the leaderboard for an event. The leaderboard is a list of projects in the event, sorted by the number of votes they have received.
     """
