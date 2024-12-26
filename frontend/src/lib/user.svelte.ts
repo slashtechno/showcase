@@ -1,5 +1,6 @@
-import { api } from "$lib/api/client.svelte";
-
+import { client } from "$lib/client/sdk.gen";
+import { AuthService } from "./client";
+import type {VerifyTokenVerifyGetData} from "$lib/client/types.gen";
 type User = {
     email: string;
     token: string;
@@ -17,18 +18,41 @@ export function signOut() {
     user.token = '';
     user.isAuthenticated = false;
     localStorage.removeItem('token');
+    client.setConfig({
+        headers: {
+            Authorization: ''
+        }
+    });
+    console.debug('User signed out, cleared user state, token in localStorage and headers');
 }
 
 export function validateToken(token: string): Promise<void> {
-    // console.debug("If you're seeing this on the server... that probably shouldn't happen. A wise message from user.svelte.ts");
-    return api.verifyAuth(token).then((response) => {
-        // Since it's $state we can do this. Assigning to user directly will not work as it's an import
-        user.email = response.email;
+
+    // return AuthService.verifyTokenVerifyGet({query: {token}} as VerifyTokenVerifyGetData).then((response) => {
+    return AuthService.protectedRouteProtectedRouteGet(
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    ).then((response) => {
+        if (!response.data) {
+            console.error('Invalid token', response);
+            throw new Error('Invalid token');
+        } 
+        const data = response.data;
+        user.email = data.email;
         user.token = token;
         user.isAuthenticated = true;
-        console.debug('Token verified, setting user in store', token);
+        client.setConfig({
+            headers: {
+                Authorization: `Bearer ${user.token}`
+            }
+        });
+        console.debug('Token verified, set user state and headers', user);
     }).catch((err) => {
         console.log('Token is invalid', err);
         signOut();
     });
+
 }

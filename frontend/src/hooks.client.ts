@@ -1,8 +1,17 @@
 import type { ServerInit } from '@sveltejs/kit';
-import { onMount } from "svelte";
-import { api } from "$lib/api/client.svelte";
+import { client } from '$lib/client/sdk.gen';
 import { user, signOut, validateToken } from "$lib/user.svelte";
+// @ts-ignore
+import { PUBLIC_API_URL } from '$env/static/public'
 
+client.setConfig(
+	{
+		baseUrl: PUBLIC_API_URL,
+		headers: {
+			'Authorization': `Bearer ${user.token}`
+		}
+	}
+);
 export const init: ServerInit = async () => {
 	if (user.isAuthenticated) {
 		console.debug('User is already authenticated, checking token');
@@ -19,4 +28,5 @@ export const init: ServerInit = async () => {
 	} else {
 		console.debug('No token found in localStorage');
 	}
+
 };

@@ -5,7 +5,7 @@ from typing import Annotated
 
 from showcase import db, settings
 
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, Query, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 import jwt
@@ -82,8 +82,12 @@ async def request_login(user: User):
     await send_magic_link(user.email)
 
 
+class MagicLinkVerificationResponse(BaseModel):
+    access_token: str
+    token_type: str
+    email: str
 @router.get("/verify")
-async def verify_token(token: str):
+async def verify_token(token: Annotated[str, Query()]) -> MagicLinkVerificationResponse:
     """Verify a magic link and return an access token"""
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -101,8 +105,7 @@ async def verify_token(token: str):
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
         token_type="access",
     )
-    # TODO: Make a type for this
-    return {"access_token": access_token, "token_type": "bearer", "email": email}
+    return MagicLinkVerificationResponse(access_token=access_token, token_type="access", email=email)
 
 
 security = HTTPBearer()
@@ -128,9 +131,12 @@ async def get_current_user(
     return {"email": email}
 
 
+
+class CheckAuthResponse(BaseModel):
+    email: str
 @router.get("/protected-route")
-async def protected_route(current_user: Annotated[dict, Depends(get_current_user)]):
-    return {"email": current_user["email"]}
+async def protected_route(current_user: Annotated[dict, Depends(get_current_user)]) -> CheckAuthResponse:
+    return CheckAuthResponse(email=current_user["email"])
 
 
 if __name__ == "__main__":
