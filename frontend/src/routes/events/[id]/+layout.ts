@@ -1,11 +1,17 @@
 // https://svelte.dev/docs/kit/load#Layout-data
 import { error, redirect} from '@sveltejs/kit';
-import type { PageLoad } from './$types';
+import type { LayoutLoad } from './$types';
 import { api } from '$lib/api/client.svelte';
 import type { Event, OwnedEvent } from '$lib/api/types';
 import { user } from '$lib/user.svelte';
+import type Layout from '../../+layout.svelte';
+import {client} from '$lib/client/sdk.gen';
+import { EventsService } from '$lib/client/sdk.gen';
+import type { GetEventEventsEventIdGetData } from '$lib/client';
 
-export const load: PageLoad = async ({ params }) => {
+
+export const load: LayoutLoad = async ({ params, fetch }) => {
+    client.setConfig({ fetch });
     if (!params.id) {
         throw error(400, 'no id provided');
     }
@@ -16,22 +22,27 @@ export const load: PageLoad = async ({ params }) => {
     }
 
     try {
-        const event = await api.getEvent(params.id);
-        if (!event) {
+        const event = await EventsService.getEventEventsEventIdGet({
+            path: {
+                event_id: params.id
+            }
+        });
+
+        if (!event.data) {
             throw error(404, 'Event not found');
         }
         const meta = [
             {
                 name: 'description',
-                content: event.description
+                content: event.data.description || 'No description provided'
             }
         ]
         return {
             event: {
-            ...event,
+            ...event.data,
             owned: 'attendees' in event
         },
-        title: event.name,
+        title: event.data.name,
         meta
         };
     } catch (err) {
