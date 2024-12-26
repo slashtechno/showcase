@@ -1,11 +1,12 @@
 import type { Project, Vote, EventCreationPayload, Event, UserEvents, OwnedEvent, ProjectCreationPayload, UserSignupPayload } from "./types";
+// https://svelte.dev/tutorial/kit/env-static-private
 // @ts-ignore
-import { env } from '$env/dynamic/public';
+import { PUBLIC_API_URL } from '$env/static/public'
 import { user } from '../user.svelte';
 import { error } from '@sveltejs/kit';
 
 
-const API_BASE: string = env.PUBLIC_API_URL 
+const API_BASE: string = PUBLIC_API_URL 
 
 export class ApiClient {
 
