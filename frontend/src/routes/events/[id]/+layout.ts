@@ -4,10 +4,8 @@ import type { LayoutLoad } from './$types';
 import { api } from '$lib/api/client.svelte';
 import type { Event, OwnedEvent } from '$lib/api/types';
 import { user } from '$lib/user.svelte';
-import type Layout from '../../+layout.svelte';
 import {client} from '$lib/client/sdk.gen';
 import { EventsService } from '$lib/client/sdk.gen';
-import type { GetEventEventsEventIdGetData } from '$lib/client';
 
 
 export const load: LayoutLoad = async ({ params, fetch }) => {

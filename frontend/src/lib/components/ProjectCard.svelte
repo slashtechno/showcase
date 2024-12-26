@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Project } from '$lib/api/types';
+    import type { Project } from "$lib/client/types.gen";
     interface Props {
         project: Project;
         isSelected: boolean;
