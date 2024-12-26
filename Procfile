@@ -1,1 +1,1 @@
-web:  poetry run uvicorn showcase.main:app --reload --host 0.0.0.0 --port 8000
+web: python -m uvicorn showcase.main:app --host 0.0.0.0 --port $PORT
