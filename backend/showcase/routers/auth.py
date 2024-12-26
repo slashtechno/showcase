@@ -54,8 +54,7 @@ async def send_magic_link(email: str):
         data=token_data, expires_delta=timedelta(minutes=15), token_type="magic_link"
     )
 
-    # TODO: Add a setting for the frontend URL
-    magic_link = f"http://localhost:5173/login?token={token}"
+    magic_link = f"{settings.production_url}/login?token={token}"
 
     message = Mail(
         from_email=settings.sendgrid_from_email,
@@ -70,7 +69,7 @@ async def send_magic_link(email: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to send auth email")      
 
-    print(f"Token for {email}: {token} | magic_link: http://localhost:5173/login?token={token}")
+    print(f"Token for {email}: {token} | magic_link: {settings.production_url}/login?token={token}")
 
 
 @router.post("/request-login")
