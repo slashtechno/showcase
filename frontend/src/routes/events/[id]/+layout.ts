@@ -1,3 +1,4 @@
+// https://svelte.dev/docs/kit/load#Layout-data
 import { error, redirect} from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import { api } from '$lib/api/client.svelte';
@@ -10,7 +11,7 @@ export const load: PageLoad = async ({ params }) => {
     }
 
     if (!user.isAuthenticated) {
-        throw error(401, 'Unauthorized');
+        throw error(401, 'Unauthorized, try logging in first');
         // return redirect(302, '/login');
     }
 
@@ -19,10 +20,19 @@ export const load: PageLoad = async ({ params }) => {
         if (!event) {
             throw error(404, 'Event not found');
         }
-
+        const meta = [
+            {
+                name: 'description',
+                content: event.description
+            }
+        ]
         return {
+            event: {
             ...event,
             owned: 'attendees' in event
+        },
+        title: event.name,
+        meta
         };
     } catch (err) {
         console.error(err);

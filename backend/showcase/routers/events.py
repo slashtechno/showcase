@@ -178,12 +178,17 @@ class Vote(BaseModel):
             raise HTTPException(
                 status_code=400, detail="At least 2 projects are required"
             )
-        elif len(self.projects) < 3 and len(self.event["fields"]["projects"]) >= 20:
+        if len(self.projects) < 3 and len(self.event["fields"]["projects"]) >= 20:
             raise HTTPException(
                 status_code=400,
                 detail="3 projects are required for events with 20 or more projects",
             )
-        elif len(self.projects) > 3:
+        elif len(self.projects) > 2 and len(self.event["fields"]["projects"]) < 20:
+            raise HTTPException(
+                status_code=400,
+                detail="Only 2 projects are allowed for events with less than 20 projects",
+            )
+        if len(self.projects) > 3:
             raise HTTPException(
                 status_code=400, detail="At most 3 projects are allowed"
             )

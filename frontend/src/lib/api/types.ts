@@ -35,6 +35,7 @@ export interface ProjectCreationPayload {
 
 export interface Project extends ProjectCreationPayload {
     id: string;
+    points: number;
 }
 
 export interface Vote {

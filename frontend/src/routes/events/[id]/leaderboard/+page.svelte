@@ -8,9 +8,6 @@
     let {data}: {data: PageData} = $props();
     let {projects} = data;
 
-    onMount(() => {
-        console.log(data);
-    });
 </script>
 
 <div class="container mx-auto p-6">
@@ -20,7 +17,7 @@
         {#each projects as project}
             <li class="mb-4">
                 <ProjectCard project={project} isSelected={false} toggle={() => {}} selectable={false} />
-                <!-- <p class="text-gray-600">Points: {project.points}</p> -->
+                <p class="text-gray-600">Points: {project.points}</p>
             </li>
         {/each}
     </ol>

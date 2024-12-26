@@ -26,3 +26,4 @@ class ProjectCreationPayload(BaseModel):
     
 class Project(ProjectCreationPayload):
     id: str
+    points: int
