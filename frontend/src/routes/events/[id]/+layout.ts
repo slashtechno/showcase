@@ -1,8 +1,6 @@
 // https://svelte.dev/docs/kit/load#Layout-data
 import { error, redirect} from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
-import { api } from '$lib/api/client.svelte';
-import type { Event, OwnedEvent } from '$lib/api/types';
 import { user } from '$lib/user.svelte';
 import {client} from '$lib/client/sdk.gen';
 import { EventsService } from '$lib/client/sdk.gen';
@@ -45,6 +43,7 @@ export const load: LayoutLoad = async ({ params, fetch }) => {
         };
     } catch (err) {
         console.error(err);
+        console.debug("Client used to fetch event", client);
         throw error(500, 'Failed to load event');
     }
 }

@@ -1,8 +1,9 @@
+<!-- TODO: Migrate to new API -->
 <script lang="ts">
     import { api } from "$lib/api/client.svelte";
     import { toast, Toaster } from "svelte-sonner";
     import { onMount } from "svelte";
-    import { user } from "$lib/user.svelte";
+    import { user, validateToken} from "$lib/user.svelte";
     import {goto} from '$app/navigation';
 
     // rest is the extra props passed to the component
@@ -45,7 +46,7 @@
         try {
             const userPayload = { email, first_name, last_name, mailing_address };
             await api.signupUser(userPayload);
-            const response = await api.requestLogin(email);
+            const _ = await api.requestLogin(email);
             toast(`Magic link sent to ${email}`);
             // Clear values
             email = '';
@@ -61,16 +62,22 @@
     }
 
     // Function to handle verification link
-    async function verifyToken(token: string) {
+    async function verifyMagicLink(token: string) {
         isLoading = true;
         try {
             const response = await api.verifyToken(token);
-            user.email = response.email;
-            user.token = response.access_token;
-            user.isAuthenticated = true;
+
+            // Set user object
+            // user.email = response.email;
+            // user.token = response.access_token;
+            // user.isAuthenticated = true;
             // Store the token in localStorage
             localStorage.setItem('token', response.access_token);
-            console.log('Token passed, set, and verified successfully', response);
+            // console.log('Token passed, set, and verified successfully', response);
+
+            // Just verify the new token since that will store it too. If this isn't valid, there's an issue since that means the server is returning a bad token.
+            await validateToken(response.access_token);
+
             toast('Login successful');
         } catch (err) {
             console.error(err);
@@ -87,7 +94,7 @@
         const token = urlParams.get('token');
         if (token) {
             console.log('Token found in URL:', token);
-            verifyToken(token);
+            verifyMagicLink(token);
         }
     });
 

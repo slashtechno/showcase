@@ -1,5 +1,6 @@
 <script lang="ts">
     import { api } from "$lib/api/client.svelte";
+    import {client} from "$lib/client/sdk.gen";
     import { toast } from 'svelte-sonner';
     let joinCode = $state('');
 

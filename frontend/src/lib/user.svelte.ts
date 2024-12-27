@@ -49,7 +49,7 @@ export function validateToken(token: string): Promise<void> {
                 Authorization: `Bearer ${user.token}`
             }
         });
-        console.debug('Token verified, set user state and headers', user);
+        console.debug('Token verified, set user state and headers');
     }).catch((err) => {
         console.log('Token is invalid', err);
         signOut();

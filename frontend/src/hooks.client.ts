@@ -15,11 +15,9 @@ client.setConfig(
 export const init: ServerInit = async () => {
 	if (user.isAuthenticated) {
 		console.debug('User is already authenticated, checking token');
-		validateToken(user.token);
+		await validateToken(user.token);
 		console.log('Finished auth');
-		return;
-	}
-
+	} else {
 	const token = localStorage.getItem('token');
 	if (token) {
 		console.debug('Token found in localStorage', token);
@@ -28,5 +26,8 @@ export const init: ServerInit = async () => {
 	} else {
 		console.debug('No token found in localStorage');
 	}
+	// console.debug('User token: ', user.token);
+	// console.debug('Client config: ', client.getConfig());
+}
 
 };

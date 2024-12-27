@@ -8,7 +8,6 @@
 
     onMount(() => {
         console.debug("Page data:", page.data);
-        console.log("Meta:", page.data.meta);
     });
 </script>
 
