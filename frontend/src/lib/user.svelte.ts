@@ -26,12 +26,12 @@ export function signOut() {
 }
 
 export function validateToken(token: string): Promise<void> {
-
     return AuthService.protectedRouteProtectedRouteGet(
         {
             headers: {
                 Authorization: `Bearer ${token}`
-            }
+            },
+            throwOnError: true
         }
     ).then((response) => {
         if (!response.data) {

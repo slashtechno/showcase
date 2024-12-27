@@ -12,7 +12,8 @@ export const load: PageLoad = async ({ params, fetch }) => {
         const projects = await EventsService.getEventProjectsEventsEventIdProjectsGet({
             path: {
                 event_id: id
-            }
+            },
+            throwOnError: true
         });
         if (!projects.data) {
             throw error(404, 'No projects found');

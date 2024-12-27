@@ -9,7 +9,10 @@ client.setConfig(
 		baseUrl: PUBLIC_API_URL,
 		headers: {
 			'Authorization': `Bearer ${user.token}`
-		}
+		},
+		// Instead of returning an error, throw an exception that can be caught with try/catch
+		// This can be overridden by passing throwOnError.
+		throwOnError: true
 	}
 );
 export const init: ServerInit = async () => {

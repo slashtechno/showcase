@@ -1,6 +1,5 @@
 <script lang="ts">
     import ProjectCard from '$lib/components/ProjectCard.svelte';
-    import { onMount } from 'svelte';
     import type { PageData } from './$types';
 
     let eventId: string;

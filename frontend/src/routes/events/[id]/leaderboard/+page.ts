@@ -1,4 +1,3 @@
-import { api } from '$lib/api/client.svelte';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import {client, EventsService} from '$lib/client/sdk.gen';
@@ -12,7 +11,8 @@ export const load: PageLoad = async ({ params, fetch }) => {
         const projectsResp = await EventsService.getLeaderboardEventsEventIdLeaderboardGet({
             path: {
                 event_id: id
-            }
+            },
+            throwOnError: true
         });
         return {
             // If this isn't a list of projects, return an empty list

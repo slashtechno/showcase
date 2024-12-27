@@ -21,7 +21,8 @@ export const load: LayoutLoad = async ({ params, fetch }) => {
         const event = await EventsService.getEventEventsEventIdGet({
             path: {
                 event_id: params.id
-            }
+            },
+            throwOnError: true
         });
 
         if (!event.data) {
@@ -43,7 +44,6 @@ export const load: LayoutLoad = async ({ params, fetch }) => {
         };
     } catch (err) {
         console.error(err);
-        console.debug("Client used to fetch event", client);
         throw error(500, 'Failed to load event');
     }
 }

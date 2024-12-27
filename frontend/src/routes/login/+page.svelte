@@ -24,7 +24,7 @@
         // Even though error handling is done in the API, the try-finally block is used to ensure the loading state is reset
         try {
             const { data, error } = await UsersService.userExistsUsersExistsGet(
-                { query: { email } },
+                { query: { email }, throwOnError: false },
             );
             if (data?.exists) {
                 // Request magic link for the provided email if the user exists
