@@ -1,6 +1,6 @@
 import type { ServerInit } from '@sveltejs/kit';
 import { client } from '$lib/client/sdk.gen';
-import { user, signOut, validateToken } from "$lib/user.svelte";
+import { user, validateToken } from "$lib/user.svelte";
 // @ts-ignore
 import { PUBLIC_API_URL } from '$env/static/public'
 

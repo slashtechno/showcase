@@ -1,10 +1,11 @@
 <!-- TODO: Migrate to new API -->
 <script lang="ts">
-    import { api } from "$lib/api/client.svelte";
     import { toast, Toaster } from "svelte-sonner";
     import { onMount } from "svelte";
-    import { user, validateToken} from "$lib/user.svelte";
-    import {goto} from '$app/navigation';
+    import { user, validateToken } from "$lib/user.svelte";
+    import { AuthService, UsersService } from "$lib/client/sdk.gen";
+    import type { HTTPValidationError } from "$lib/client/types.gen";
+    import { handleError } from "$lib/apiErrorCheck";
 
     // rest is the extra props passed to the component
     let { ...rest } = $props();
@@ -12,29 +13,40 @@
     let isLoading = $state(false);
     let showSignupFields = $state(false);
     // TODO: consolidate these into a single object
-    let email = $state('');
-    let first_name = $state('');
-    let last_name = $state('');
-    let mailing_address = $state('');
+    let email = $state("");
+    let first_name = $state("");
+    let last_name = $state("");
+    let mailing_address = $state("");
 
     // Function to handle login
     async function login() {
         isLoading = true;
+        // Even though error handling is done in the API, the try-finally block is used to ensure the loading state is reset
         try {
-            const userExistsResponse = await api.userExists(email);
-            if (userExistsResponse.exists) {
-                // Request magic link for the provided email
-                const response = await api.requestLogin(email);
+            const { data, error } = await UsersService.userExistsUsersExistsGet(
+                { query: { email } },
+            );
+            if (data?.exists) {
+                // Request magic link for the provided email if the user exists
+                await AuthService.requestLoginRequestLoginPost({
+                    body: { email },
+                });
                 toast(`Magic link sent to ${email}`);
                 // Clear field
-                email = '';
+                email = "";
+            } else if (error) {
+                // If it's a string, show the string. Otherwise, show a generic error message.
+                // toast(
+                //     typeof error.detail === "string"
+                //         ? error.detail
+                //         : "An error occurred, check the console for more details",
+                // );
+                // --- The following handles individual validation messages ---
+                handleError(error);
             } else {
                 toast("You don't exist (yet)! Let's change that.");
                 showSignupFields = true;
             }
-        } catch (err) {
-            console.error(err);
-            toast(JSON.stringify(err));
         } finally {
             isLoading = false;
         }
@@ -44,18 +56,22 @@
     async function signupAndLogin() {
         isLoading = true;
         try {
-            const userPayload = { email, first_name, last_name, mailing_address };
-            await api.signupUser(userPayload);
-            const _ = await api.requestLogin(email);
+            const userPayload = {
+                email,
+                first_name,
+                last_name,
+                mailing_address,
+            };
+            const {error} = await UsersService.createUserUsersPost({ body: userPayload });
+            if (error) {
+                handleError(error);
+            }  
             toast(`Magic link sent to ${email}`);
             // Clear values
-            email = '';
-            first_name = '';
-            last_name = '';
-            mailing_address = '';
-        } catch (err) {
-            console.error(err);
-            toast(JSON.stringify(err));
+            email = "";
+            first_name = "";
+            last_name = "";
+            mailing_address = "";
         } finally {
             isLoading = false;
         }
@@ -65,23 +81,18 @@
     async function verifyMagicLink(token: string) {
         isLoading = true;
         try {
-            const response = await api.verifyToken(token);
-
-            // Set user object
-            // user.email = response.email;
-            // user.token = response.access_token;
-            // user.isAuthenticated = true;
+            // AuthService.verifyTokenVerifyGet({query: {token}} as VerifyTokenVerifyGetData).then((response) => {
+            const {data, error} = await AuthService.verifyTokenVerifyGet({query: {token}});
+            if (error){
+                handleError(error);
+            } else {
             // Store the token in localStorage
-            localStorage.setItem('token', response.access_token);
+            localStorage.setItem("token", data.access_token);
             // console.log('Token passed, set, and verified successfully', response);
-
             // Just verify the new token since that will store it too. If this isn't valid, there's an issue since that means the server is returning a bad token.
-            await validateToken(response.access_token);
-
-            toast('Login successful');
-        } catch (err) {
-            console.error(err);
-            toast(JSON.stringify(err));
+            await validateToken(data.access_token);
+            toast("Login successful");
+            }
         } finally {
             isLoading = false;
         }
@@ -91,9 +102,9 @@
     // For example: /login?token=abc123
     onMount(() => {
         const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
+        const token = urlParams.get("token");
         if (token) {
-            console.log('Token found in URL:', token);
+            console.log("Token found in URL:", token);
             verifyMagicLink(token);
         }
     });
@@ -109,23 +120,29 @@
     // }
 </script>
 
-
 <div class="grid gap-6 max-w-sm mx-auto p-6" {...rest}>
     {#if user.isAuthenticated}
         <div class="text-center">
-            <h2 class="text-2xl font-bold mb-2">You are logged in as {user.email}</h2>
-            <button class="mt-4 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700" onclick={() => history.back()}>
+            <h2 class="text-2xl font-bold mb-2">
+                You are logged in as {user.email}
+            </h2>
+            <button
+                class="mt-4 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                onclick={() => history.back()}
+            >
                 Go back to previous page
             </button>
         </div>
     {:else}
         <div class="text-center">
             <h2 class="text-2xl font-bold mb-2">Welcome</h2>
-            <p class="text-gray-600 mb-4">Sign in with your email to continue</p>
+            <p class="text-gray-600 mb-4">
+                Sign in with your email to continue
+            </p>
         </div>
 
         <form onsubmit={login} class="space-y-4">
-        <!-- <form onsubmit={preventDefault(login)} class="space-y-4"> -->
+            <!-- <form onsubmit={preventDefault(login)} class="space-y-4"> -->
             <div class="grid gap-2">
                 <div class="grid gap-1.5">
                     <label class="text-sm font-medium" for="email">
@@ -174,7 +191,10 @@
                         />
                     </div>
                     <div class="grid gap-1.5">
-                        <label class="text-sm font-medium" for="mailing_address">
+                        <label
+                            class="text-sm font-medium"
+                            for="mailing_address"
+                        >
                             Mailing Address
                         </label>
                         <input
@@ -199,16 +219,18 @@
                             <span class="loader mr-2"></span>
                         {/if}
                         <!-- {#if showSignupFields} -->
-                            Sign in || Sign up
+                        Sign in || Sign up
                         <!-- {:else} -->
-                            <!-- Sign In with Email -->
+                        <!-- Sign In with Email -->
                         <!-- {/if} -->
                     </button>
                 </div>
             </div>
         </form>
         <div class="text-center mt-4">
-            <a href="/" class="text-sm text-blue-600 hover:text-blue-800">← Back to Home</a>
+            <a href="/" class="text-sm text-blue-600 hover:text-blue-800"
+                >← Back to Home</a
+            >
         </div>
-        {/if}
+    {/if}
 </div>

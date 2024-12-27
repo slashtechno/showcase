@@ -1,6 +1,5 @@
 import { client } from "$lib/client/sdk.gen";
-import { AuthService } from "./client";
-import type {VerifyTokenVerifyGetData} from "$lib/client/types.gen";
+import { AuthService } from "$lib/client/sdk.gen";
 type User = {
     email: string;
     token: string;
@@ -28,7 +27,6 @@ export function signOut() {
 
 export function validateToken(token: string): Promise<void> {
 
-    // return AuthService.verifyTokenVerifyGet({query: {token}} as VerifyTokenVerifyGetData).then((response) => {
     return AuthService.protectedRouteProtectedRouteGet(
         {
             headers: {
