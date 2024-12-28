@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { api } from "$lib/api/client.svelte";
+    import {EventsService, ProjectsService} from "$lib/client/sdk.gen";
+    import type { ProjectCreationPayload, Event} from "$lib/client";
     import { toast } from 'svelte-sonner';
-    import type {  Event, ProjectCreationPayload } from "$lib/api/types";
-    import { user } from "$lib/user.svelte";
-    import { get } from 'svelte/store';
+    import { handleError } from "$lib/apiErrorCheck";
+    
 
     let project: ProjectCreationPayload = $state({
         name: "",
@@ -11,7 +11,6 @@
         repo: "",
         image_url: "",
         description: "",
-        // TODO: Allow these fields to be changed
         event: [""],
     })
     let events: Event[] = $state([]);
@@ -26,22 +25,32 @@
     async function fetchEvents() {
         try {
             toast('Fetching events; please wait');
-            const userEvents = await api.getAttendingEvents();
+            const {data: userEvents} = await EventsService.getAttendingEventsEventsGet({throwOnError: true});
             events = userEvents.attending_events;
             fetchedEvents = true;
         } catch (err) {
-            console.error(err);
-            toast(JSON.stringify(err));
+            handleError(err);
         }
     }
 
     async function createProject() {
         try {
-            await api.createProject(project);
+            await ProjectsService.createProjectProjectsPost({
+                body: project,
+                throwOnError: true,
+            });
             toast('Project created successfully');
+            // Reset the fields
+            project = {
+                name: "",
+                readme: "https://example.com",
+                repo: "",
+                image_url: "",
+                description: "",
+                event: [""],
+            };
         } catch (err) {
-            console.error(err);
-            toast(JSON.stringify(err));
+            handleError(err);
         }
     }
 </script>

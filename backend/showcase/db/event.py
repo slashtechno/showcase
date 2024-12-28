@@ -1,12 +1,14 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StringConstraints
 from typing import Annotated, List, Optional
 from pydantic.json_schema import SkipJsonSchema
 
 
 # https://docs.pydantic.dev/1.10/usage/schema/#field-customization
 class EventCreationPayload(BaseModel):
-    name: str
-    description: Optional[str] = None
+    name: Annotated[str, StringConstraints(
+        min_length=1
+        )]
+    description: Optional[Annotated[str, StringConstraints(max_length=500)]] 
 
     # Owner is inferred from the current user (token)
     # https://github.com/fastapi/fastapi/discussions/7585#discussioncomment-7573510

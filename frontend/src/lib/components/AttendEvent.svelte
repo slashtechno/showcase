@@ -1,13 +1,15 @@
 <script lang="ts">
-    import { api } from "$lib/api/client.svelte";
-    import {client} from "$lib/client/sdk.gen";
+    import {EventsService} from "$lib/client/sdk.gen";
     import { toast } from 'svelte-sonner';
     let joinCode = $state('');
 
     // Function to create a new event
     async function attendEvent() {
         try {
-            await api.attendEvent(joinCode);
+            await EventsService.attendEventEventsAttendPost({
+                query: { join_code: joinCode },
+                throwOnError: true,
+            });
             toast('Joined event successfully');
             // Reset join code to empty string
             joinCode = '';

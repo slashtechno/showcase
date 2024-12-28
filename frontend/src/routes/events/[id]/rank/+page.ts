@@ -1,4 +1,3 @@
-import { api } from "$lib/api/client.svelte";
 import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 import { client, EventsService } from "$lib/client/sdk.gen";

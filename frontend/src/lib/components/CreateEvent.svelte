@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { api } from "$lib/api/client.svelte";
+    import { handleError } from "$lib/apiErrorCheck";
+    import { EventsService } from "$lib/client";
     import { toast } from 'svelte-sonner';
     // TODO: Use the object instead of individual variables
     let eventName = $state('');
@@ -8,13 +9,11 @@
     // Function to create a new event
     async function createEvent() {
         try {
-            // TODO: Add description and other fields
             const event = { name: eventName, description: eventDescription };
-            await api.createEvent(event);
+            await EventsService.createEventEventsPost({ body: event, throwOnError: true });
             toast('Event created successfully');
         } catch (err) {
-            console.error(err);
-            toast(JSON.stringify(err));
+            handleError(err);
         }
     }
 </script>
