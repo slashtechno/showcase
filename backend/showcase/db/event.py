@@ -23,6 +23,7 @@ class ComplexEvent(Event):
     # https://stackoverflow.com/questions/63793662/how-to-give-a-pydantic-list-field-a-default-value/63808835#63808835
     # List of record IDs, since that's what Airtable uses
     attendees: Annotated[List[str], Field(default_factory=list)]
+    join_code: str
 
 class UserEvents(BaseModel):
     """Return information regarding what the events the user owns and what events they are attending. If they are only attending an event, don't return sensitive information like participants."""

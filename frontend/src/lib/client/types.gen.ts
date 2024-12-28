@@ -7,6 +7,7 @@ export type CheckAuthResponse = {
 export type ComplexEvent = {
   name: string;
   description?: string | null;
+  join_code: string;
   id: string;
   attendees?: Array<string>;
 };
