@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta, timezone
+
 # import smtplib
 # from email.mime.text import MIMEText
 from typing import Annotated
 
 from showcase import db, settings
 
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, Query, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 import jwt
@@ -42,7 +43,9 @@ def create_access_token(
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=MAGIC_LINK_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=MAGIC_LINK_EXPIRE_MINUTES
+        )
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -64,12 +67,14 @@ async def send_magic_link(email: str):
     )
 
     try:
-        sg = SendGridAPIClient(settings.sendgrid_api_key)  
+        sg = SendGridAPIClient(settings.sendgrid_api_key)
         _ = sg.send(message)
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Failed to send auth email")      
+        raise HTTPException(status_code=500, detail="Failed to send auth email")
 
-    print(f"Token for {email}: {token} | magic_link: {settings.production_url}/login?token={token}")
+    print(
+        f"Token for {email}: {token} | magic_link: {settings.production_url}/login?token={token}"
+    )
 
 
 @router.post("/request-login")
@@ -78,12 +83,18 @@ async def request_login(user: User):
     # Check if the user exists
     if db.user.get_user_record_id_by_email(user.email) is None:
         raise HTTPException(status_code=404, detail="User not found")
-        return # not needed 
+        return  # not needed
     await send_magic_link(user.email)
 
 
+class MagicLinkVerificationResponse(BaseModel):
+    access_token: str
+    token_type: str
+    email: str
+
+
 @router.get("/verify")
-async def verify_token(token: str):
+async def verify_token(token: Annotated[str, Query()]) -> MagicLinkVerificationResponse:
     """Verify a magic link and return an access token"""
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -101,8 +112,9 @@ async def verify_token(token: str):
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
         token_type="access",
     )
-    # TODO: Make a type for this
-    return {"access_token": access_token, "token_type": "bearer", "email": email}
+    return MagicLinkVerificationResponse(
+        access_token=access_token, token_type="access", email=email
+    )
 
 
 security = HTTPBearer()
@@ -128,9 +140,15 @@ async def get_current_user(
     return {"email": email}
 
 
+class CheckAuthResponse(BaseModel):
+    email: str
+
+
 @router.get("/protected-route")
-async def protected_route(current_user: Annotated[dict, Depends(get_current_user)]):
-    return {"email": current_user["email"]}
+async def protected_route(
+    current_user: Annotated[dict, Depends(get_current_user)],
+) -> CheckAuthResponse:
+    return CheckAuthResponse(email=current_user["email"])
 
 
 if __name__ == "__main__":
@@ -146,4 +164,6 @@ if __name__ == "__main__":
         token_type="magic_link",
     )
     # print the access token on one line and on the next line the magic link
-    print(f"Access token for {DEBUG_EMAIL}: {debug_access}\nMagic link: http://localhost:5173/login?token={debug_verify}")
+    print(
+        f"Access token for {DEBUG_EMAIL}: {debug_access}\nMagic link: http://localhost:5173/login?token={debug_verify}"
+    )

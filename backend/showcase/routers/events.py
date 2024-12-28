@@ -30,7 +30,7 @@ def get_event(
     user_id = db.user.get_user_record_id_by_email(current_user["email"])
     if user_id is None:
         raise HTTPException(status_code=500, detail="User not found")
-    
+
     user = db.users.get(user_id)
     event = db.events.get(event_id)
 
@@ -42,7 +42,10 @@ def get_event(
     elif user["id"] in event["fields"].get("attendees", []):
         return Event.model_validate({"id": event["id"], **event["fields"]})
     else:
-        raise HTTPException(status_code=403, detail="User does not have access to event")
+        raise HTTPException(
+            status_code=403, detail="User does not have access to event"
+        )
+
 
 # Used to be /attending
 @router.get("/")
@@ -56,7 +59,6 @@ def get_attending_events(
     if user_id is None:
         raise HTTPException(status_code=500, detail="User not found")
     user = db.users.get(user_id)
-
 
     # Eventually it might be better to return a user object. Otherwise, the client that the event owner is using would need to fetch the user. Since user emails probably shouldn't be public with just a record ID as a parameter, we would need to check if the person calling GET /users?user=ID has an event wherein that user ID is present. To avoid all this, the user object could be returned.
     owned_events = [
@@ -74,13 +76,13 @@ def get_attending_events(
         ]
     ]
 
-
     return UserEvents(owned_events=owned_events, attending_events=attending_events)
 
 
 @router.post("/")
 def create_event(
-    event: EventCreationPayload, current_user: Annotated[dict, Depends(get_current_user)]
+    event: EventCreationPayload,
+    current_user: Annotated[dict, Depends(get_current_user)],
 ):
     """
     Create a new event. The current user is automatically added as an owner of the event.
@@ -100,7 +102,6 @@ def create_event(
 
     db.events.create(event.model_dump())
 
-
     # The issue with the approach below was that ComplexEvent requires an ID, which isn't available until the event is created. It might be better to just do it and reoplace model_validate with model_construct to prevent validation errors
     # return db.events.create(
     #     ComplexEvent.model_validate(
@@ -113,13 +114,13 @@ def create_event(
     #         }
     #     ).model_dump(
     #         exclude_unset=True
-    #     )  
+    #     )
     # )
 
 
 @router.post("/attend")
 def attend_event(
-        join_code: Annotated[str, Query(description="A unique code used to join an event")],
+    join_code: Annotated[str, Query(description="A unique code used to join an event")],
     current_user: Annotated[dict, Depends(get_current_user)],
 ):
     """
@@ -246,7 +247,7 @@ def vote(vote: Vote, current_user: Annotated[dict, Depends(get_current_user)]):
 
 
 @router.get("/{event_id}/leaderboard")
-def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]):
+def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]) -> List[Project]:
     """
     Get the leaderboard for an event. The leaderboard is a list of projects in the event, sorted by the number of votes they have received.
     """
@@ -267,16 +268,22 @@ def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]):
 
     # Sort the projects by the number of votes they have received
     projects.sort(key=lambda project: project["fields"].get("points", 0), reverse=True)
-    
-    projects = [Project.model_validate({"id": project["id"], **project["fields"]}) for project in projects]
+
+    projects = [
+        Project.model_validate({"id": project["id"], **project["fields"]})
+        for project in projects
+    ]
     return projects
 
+
 @router.get("/{event_id}/projects")
-def get_event_projects(event_id: Annotated[str, Path(title="Event ID")]) -> List[Project]:
+def get_event_projects(
+    event_id: Annotated[str, Path(title="Event ID")],
+) -> List[Project]:
     """
     Get the projects for a specific event.
     """
-    try: 
+    try:
         event = db.events.get(event_id)
     except HTTPError as e:
         raise (
@@ -285,5 +292,11 @@ def get_event_projects(event_id: Annotated[str, Path(title="Event ID")]) -> List
             else e
         )
 
-    projects = [Project.model_validate({"id": project["id"], **project["fields"]}) for project in [db.projects.get(project_id) for project_id in event["fields"].get("projects", [])]]
+    projects = [
+        Project.model_validate({"id": project["id"], **project["fields"]})
+        for project in [
+            db.projects.get(project_id)
+            for project_id in event["fields"].get("projects", [])
+        ]
+    ]
     return projects

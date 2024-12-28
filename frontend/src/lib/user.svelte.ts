@@ -1,34 +1,57 @@
-import { api } from "$lib/api/client.svelte";
-
+import { client } from "$lib/client/sdk.gen";
+import { AuthService } from "$lib/client/sdk.gen";
 type User = {
-    email: string;
-    token: string;
-    isAuthenticated: boolean;
+  email: string;
+  token: string;
+  isAuthenticated: boolean;
 };
 
 export const user: User = $state({
-    email: "",
-    token: "",
-    isAuthenticated: false,
+  email: "",
+  token: "",
+  isAuthenticated: false,
 });
 
 export function signOut() {
-    user.email = '';
-    user.token = '';
-    user.isAuthenticated = false;
-    localStorage.removeItem('token');
+  user.email = "";
+  user.token = "";
+  user.isAuthenticated = false;
+  localStorage.removeItem("token");
+  client.setConfig({
+    headers: {
+      Authorization: "",
+    },
+  });
+  console.debug(
+    "User signed out, cleared user state, token in localStorage and headers",
+  );
 }
 
 export function validateToken(token: string): Promise<void> {
-    // console.debug("If you're seeing this on the server... that probably shouldn't happen. A wise message from user.svelte.ts");
-    return api.verifyAuth(token).then((response) => {
-        // Since it's $state we can do this. Assigning to user directly will not work as it's an import
-        user.email = response.email;
-        user.token = token;
-        user.isAuthenticated = true;
-        console.debug('Token verified, setting user in store', token);
-    }).catch((err) => {
-        console.log('Token is invalid', err);
-        signOut();
+  return AuthService.protectedRouteProtectedRouteGet({
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    throwOnError: true,
+  })
+    .then((response) => {
+      if (!response.data) {
+        console.error("Invalid token", response);
+        throw new Error("Invalid token");
+      }
+      const data = response.data;
+      user.email = data.email;
+      user.token = token;
+      user.isAuthenticated = true;
+      client.setConfig({
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      console.debug("Token verified, set user state and headers");
+    })
+    .catch((err) => {
+      console.log("Token is invalid", err);
+      signOut();
     });
 }

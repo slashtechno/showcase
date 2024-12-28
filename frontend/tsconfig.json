@@ -1,24 +1,24 @@
 {
-    "extends": "./.svelte-kit/tsconfig.json",
-    "compilerOptions": {
-      "lib": ["DOM", "ES2017"],
-      "module": "ESNext",
-      "target": "ES2017",
-      "moduleResolution": "Node",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-      "noEmit": true
-    },
-    "include": ["src/**/*", "src/**/*.svelte"],
-    "exclude": ["node_modules", "public"],
+  "extends": "./.svelte-kit/tsconfig.json",
+  "compilerOptions": {
+    "lib": ["DOM", "ES2017"],
+    "module": "ESNext",
+    "target": "ES2017",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*", "src/**/*.svelte"],
+  "exclude": ["node_modules", "public"]
   //   "plugins": [{
   //     "name": "typescript-svelte-plugin",
   //     // the following options can be set additionally; they are optional; their default values are listed here
   //     "enabled": true, // enables this plugin
   //     "assumeIsSvelteProject": false // if true, skip detection and always assume it's a Svelte project
   // }]
-  }
+}

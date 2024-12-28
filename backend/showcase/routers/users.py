@@ -15,11 +15,13 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 # Eventually, this should probably be rate-limited
 @router.post("/")
-def create_user(user: UserSignupPayload): 
+def create_user(user: UserSignupPayload):
     db.users.create(user.model_dump())
+
 
 class UserExistsResponse(BaseModel):
     exists: bool
+
 
 @router.get("/exists")
 def user_exists(email: Annotated[EmailStr, Query(...)]) -> UserExistsResponse:
