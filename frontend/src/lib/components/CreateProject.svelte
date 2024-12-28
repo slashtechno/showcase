@@ -95,7 +95,7 @@
   </select>
   <button
     onclick={createProject}
-    class="p-2 bg-blue-500 text-white rounded w-full"
+    class="btn btn-block"
   >
     Create Project
   </button>

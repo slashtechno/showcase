@@ -15,7 +15,9 @@
     "@sveltejs/adapter-vercel": "^5.5.2",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
+    "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.20",
+    "daisyui": "^4.12.23",
     "prettier": "3.4.2",
     "prettier-plugin-svelte": "^3.3.2",
     "svelte": "^5.0.0",
@@ -25,6 +27,7 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "^0.5.7",
-    "svelte-sonner": "^0.3.28"
+    "svelte-sonner": "^0.3.28",
+    "theme-change": "^2.5.0"
   }
 }

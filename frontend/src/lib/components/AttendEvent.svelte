@@ -36,7 +36,7 @@
 
   <button
     onclick={attendEvent}
-    class="p-2 bg-blue-500 text-white rounded w-full"
+    class="btn-block btn"
   >
     Join the adventure!
   </button>
