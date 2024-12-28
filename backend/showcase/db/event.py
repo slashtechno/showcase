@@ -6,7 +6,7 @@ from pydantic.json_schema import SkipJsonSchema
 # https://docs.pydantic.dev/1.10/usage/schema/#field-customization
 class EventCreationPayload(BaseModel):
     name: Annotated[str, StringConstraints(min_length=1)]
-    description: Optional[Annotated[str, StringConstraints(max_length=500)]]
+    description: Optional[Annotated[str, StringConstraints(max_length=500)]] = ""
 
     # Owner is inferred from the current user (token)
     # https://github.com/fastapi/fastapi/discussions/7585#discussioncomment-7573510
@@ -24,6 +24,7 @@ class Event(EventCreationPayload):
 class ComplexEvent(Event):
     # https://stackoverflow.com/questions/63793662/how-to-give-a-pydantic-list-field-a-default-value/63808835#63808835
     # List of record IDs, since that's what Airtable uses
+    # attendees: Annotated[List[str], Field(default_factory=list)] = []
     attendees: Annotated[List[str], Field(default_factory=list)]
     join_code: str
 

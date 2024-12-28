@@ -36,13 +36,6 @@
         // Clear field
         email = "";
       } else if (error) {
-        // If it's a string, show the string. Otherwise, show a generic error message.
-        // toast(
-        //     typeof error.detail === "string"
-        //         ? error.detail
-        //         : "An error occurred, check the console for more details",
-        // );
-        // --- The following handles individual validation messages ---
         handleError(error);
       } else {
         toast("You don't exist (yet)! Let's change that.");
@@ -65,6 +58,7 @@
       };
       const { error } = await UsersService.createUserUsersPost({
         body: userPayload,
+        throwOnError: false,
       });
       if (error) {
         handleError(error);
@@ -86,7 +80,7 @@
     try {
       // AuthService.verifyTokenVerifyGet({query: {token}} as VerifyTokenVerifyGetData).then((response) => {
       const { data, error } = await AuthService.verifyTokenVerifyGet({
-        query: { token },
+        query: { token }, throwOnError: false,
       });
       if (error) {
         handleError(error);
