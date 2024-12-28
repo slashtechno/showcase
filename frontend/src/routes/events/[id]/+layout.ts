@@ -13,7 +13,6 @@ export const load: LayoutLoad = async ({ params, fetch }) => {
 
   if (!user.isAuthenticated) {
     throw error(401, "Unauthorized, try logging in first");
-    // return redirect(302, '/login');
   }
 
   try {

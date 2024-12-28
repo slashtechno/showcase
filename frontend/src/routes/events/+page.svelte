@@ -2,25 +2,11 @@
 
 <script lang="ts">
   import CreateEvent from "$lib/components/CreateEvent.svelte";
-  import { onMount } from "svelte";
-  import type { UserEvents } from "$lib/client/types.gen";
-  import { EventsService } from "$lib/client/sdk.gen";
-  import { handleError } from "$lib/apiErrorCheck";
+  import type { PageData } from "./$types";
 
-  let events: UserEvents = $state({ owned_events: [], attending_events: [] });
+  let { data }: { data: PageData } = $props();
+  const {events} = data;
 
-  // TODO: migrate this to a load function
-  onMount(async () => {
-    try {
-      // events = await api.getAttendingEvents();
-      const { data } = await EventsService.getAttendingEventsEventsGet({
-        throwOnError: true,
-      });
-      events = data;
-    } catch (error) {
-      handleError(error);
-    }
-  });
 </script>
 
 <div class="space-y-8 p-4">
