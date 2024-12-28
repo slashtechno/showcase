@@ -33,9 +33,9 @@ settings.validators.register(
             messages={"condition": "Must start with 'SG.'"},
         ),
         # Validator(
-            # "sendgrid_from_email",
-            # must_exist=False,
-            # default="",
+        # "sendgrid_from_email",
+        # must_exist=False,
+        # default="",
         # ),
         Validator(
             "jwt_secret",
@@ -48,7 +48,6 @@ settings.validators.register(
         Validator(
             "jwt_expire_minutes",
             # 2 days. People can always log in again
-    
             default=2880,
         ),
     ],

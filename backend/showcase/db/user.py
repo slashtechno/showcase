@@ -4,12 +4,13 @@ from pydantic import BaseModel, EmailStr
 from showcase.db import tables
 from pyairtable.formulas import match
 
+
 class UserSignupPayload(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
     # Might eventually add validation for mailing address, although it's not necessary for the MVP
-    mailing_address: str 
+    mailing_address: str
 
 
 # It may help to create a lookup field later, although this works fine for now
