@@ -1,6 +1,7 @@
 <script lang="ts">
   import { EventsService } from "$lib/client/sdk.gen";
   import { toast } from "svelte-sonner";
+  import { handleError } from "$lib/apiErrorCheck";
   let joinCode = $state("");
 
   // Function to create a new event
@@ -14,8 +15,7 @@
       // Reset join code to empty string
       joinCode = "";
     } catch (err) {
-      console.error(err);
-      toast(JSON.stringify(err));
+      handleError(err);
     }
   }
 </script>

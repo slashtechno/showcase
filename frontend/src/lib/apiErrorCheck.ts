@@ -21,7 +21,6 @@ export function handleError(
       toast(error.detail);
     }
   } else {
-    // console.error("Unknown error", error);
     if (error instanceof Error) {
       toast(error.message);
     } else {

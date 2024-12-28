@@ -2,9 +2,9 @@
 
 <script lang="ts">
   import { toast } from "svelte-sonner";
-  import { api } from "$lib/api/client.svelte";
+  import { EventsService } from "$lib/client/sdk.gen";
   import ProjectCard from "$lib/components/ProjectCard.svelte";
-  import { onMount } from "svelte";
+  import { handleError } from "$lib/apiErrorCheck.js";
 
   let { data } = $props();
   let { event, projects } = data;
@@ -33,11 +33,13 @@
       return;
     }
     try {
-      await api.submitVote({ event_id: event.id, projects: selectedProjects });
+      await EventsService.voteEventsVotePost({
+        body: { event_id: event.id, projects: selectedProjects },
+        throwOnError: true,
+      });
       toast("Vote submitted successfully");
     } catch (err) {
-      console.error(err);
-      toast(JSON.stringify(err));
+      handleError(err);
     }
   }
 </script>
