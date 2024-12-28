@@ -39,7 +39,7 @@ export type Project = {
     repo: string;
     image_url: string;
     description?: (string | null);
-    event?: [
+    event: [
         string
     ];
     id: string;
@@ -52,7 +52,7 @@ export type ProjectCreationPayload = {
     repo: string;
     image_url: string;
     description?: (string | null);
-    event?: [
+    event: [
         string
     ];
 };

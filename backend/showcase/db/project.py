@@ -17,7 +17,7 @@ class ProjectCreationPayload(BaseModel):
     event: Annotated[
         List[Annotated[str, StringConstraints(pattern=r"^rec\w*$")]],
         Len(min_length=1, max_length=1),
-    ] = None
+    ]
 
     def model_dump(self, *args, **kwargs):
         data = super().model_dump(*args, **kwargs)
