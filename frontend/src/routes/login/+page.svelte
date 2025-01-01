@@ -11,8 +11,8 @@
   let { ...rest } = $props();
 
   let isLoading = $state(false);
-  let showSignupFields = $state(false);
-  // let showSignupFields = $state(true); // ONLY FOR DEBUGGING
+  // let showSignupFields = $state(false);
+  let showSignupFields = $state(true); // ONLY FOR DEBUGGING
   // TODO: consolidate these into a single object
   let email = $state("");
   let first_name = $state("");
@@ -118,7 +118,7 @@
   // }
 </script>
 
-<div class="grid gap-6 max-w-sm mx-auto p-6" {...rest}>
+<div class="p-4 max-w-md mx-auto" {...rest}>
   {#if user.isAuthenticated}
     <div class="text-center">
       <h2 class="text-2xl font-bold mb-2">
@@ -132,72 +132,71 @@
       </button>
     </div>
   {:else}
-  <form onsubmit={login} class="space-y-4">
-    <div class="form-control">
-      <label for="email" class="label">
-        <span class="label-text">Email</span>
+  <!-- space-y-n adds space (margin) between the children -->
+    <form onsubmit={login} class="space-y-2">
+      <label class="form-control">
+        <div class="label">
+          <span class="label-text">Email</span>
+        </div>
+        <input
+          id="email"
+          type="email"
+          class="input input-bordered grow"
+          bind:value={email}
+          placeholder="example@example.com"
+        />
+        <div class="label">
+          <span class="label-text-alt"> We'll send you a magic link </span>
+        </div>
       </label>
-      <input
-        id="email"
-        type="email"
-        class="input input-bordered grow"
-        bind:value={email}
-        placeholder="example@example.com"
-      />
-      <label class="label" for="email">
-        <span class="label-text-alt">We'll send you a magic link</span>
-      </label>
-    </div>
-  
-    {#if showSignupFields}
-      <div class="form-control">
-        <label for="first_name" class="label">
-          <span class="label-text">First Name</span>
+
+      {#if showSignupFields}
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">First Name</span>
+          </div>
+          <input
+            id="first_name"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="Abc"
+            bind:value={first_name}
+          />
         </label>
-        <input
-          id="first_name"
-          type="text"
-          class="input input-bordered grow"
-          placeholder="Abc"
-          bind:value={first_name}
-        />
-      </div>
-  
-      <div class="form-control">
-        <label for="last_name" class="label">
-          <span class="label-text">Last Name</span>
+
+ 
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Last Name</span>
+          </div>
+          <input
+            id="last_name"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="Xyz"
+            bind:value={last_name}
+          />
         </label>
-        <input
-          id="last_name"
-          type="text"
-          class="input input-bordered grow"
-          placeholder="Xyz"
-          bind:value={last_name}
-        />
-      </div>
-  
-      <div class="form-control">
-        <label for="mailing_address" class="label">
-          <span class="label-text">Mailing Address</span>
+
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Mailing Address</span>
+          </div>
+          <input
+            id="mailing_address"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="1234 Elm St, Springfield, IL 62701"
+            bind:value={mailing_address}
+          />
         </label>
-        <input
-          id="mailing_address"
-          type="text"
-          class="input input-bordered grow"
-          placeholder="1234 Elm St, Springfield, IL 62701"
-          bind:value={mailing_address}
-        />
+      {/if}
+      <div class="flex justify-center">
+        <button type="submit" class="btn btn-primary mt-4" disabled={isLoading}>
+          Sign in || Sign up
+        </button>
       </div>
-    {/if}
-    <div class="flex justify-center">
-      <button
-        type="submit"
-        class="btn btn-primary"
-        disabled={isLoading}
-      > Sign in || Sign up </button>
-    </div>
-  </form>
-  
+    </form>
   {/if}
   <div class="text-center mt-4">
     <a href="/" class="text-sm text-blue-600 hover:text-blue-800"
