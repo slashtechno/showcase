@@ -4,14 +4,17 @@
   import { page } from "$app/state";
   let { children } = $props();
   import { onMount } from "svelte";
-  // import { themeChange } from "theme-change";
+  import { themeChange } from "theme-change";
   import ThemeSwitcher from "$lib/components/ThemeSwitcher.svelte";
+  import { setSystemTheme } from "$lib/misc";
   // import CheckAuth from '$lib/components/CheckAuth.svelte';
-  
 
   onMount(() => {
     console.debug("Page data:", page.data);
-    // themeChange();
+    themeChange(false);
+
+    setSystemTheme();
+
   });
 </script>
 

@@ -2,8 +2,7 @@
 import {themes} from './src/lib/themes';
 export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
-  darkMode: ["class"],
-
+  darkMode: ['selector', '[data-theme="dark"]'],
   theme: {
     extend: {
       },

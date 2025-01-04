@@ -1,5 +1,18 @@
 <script lang="ts">
   import { themes } from "$lib/themes";
+  import { setSystemTheme } from "$lib/misc";
+
+  // function setSystemTheme() {
+  //   if (
+  //     localStorage.theme === "dark" ||
+  //     (!("theme" in localStorage) &&
+  //       window.matchMedia("(prefers-color-scheme: dark)").matches)
+  //   ) {
+  //     document.documentElement.setAttribute("data-theme", "night");
+  //   } else {
+  //     document.documentElement.removeAttribute("data-theme");
+  //   }
+  // }
 </script>
 
 <div class="dropdown dropdown-top">
@@ -22,14 +35,28 @@
   >
     {#each themes as theme}
       <li>
+        <!-- value={theme} -->
         <input
           type="radio"
           name="theme-dropdown"
           class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
           aria-label={theme}
-          value={theme}
+          data-set-theme={theme}
+          data-act-class="ACTIVECLASS"
         />
       </li>
     {/each}
+     <!-- Option to respect system theme by removing the theme from localStorage -->
+    <li>
+      <input
+        type="radio"
+        name="theme-dropdown"
+        class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+        aria-label="system"
+        onchange={() => {
+          localStorage.removeItem("theme");
+          setSystemTheme();
+        }}
+      />
   </ul>
 </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { EventsService } from "$lib/client/sdk.gen";
   import { toast } from "svelte-sonner";
-  import { handleError } from "$lib/apiErrorCheck";
+  import { handleError } from "$lib/misc";
   let joinCode = $state("");
 
   // Function to create a new event

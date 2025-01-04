@@ -4,7 +4,7 @@
   import { toast } from "svelte-sonner";
   import { EventsService } from "$lib/client/sdk.gen";
   import ProjectCard from "$lib/components/ProjectCard.svelte";
-  import { handleError } from "$lib/apiErrorCheck.js";
+  import { handleError } from "$lib/misc.js";
 
   let { data } = $props();
   let { event, projects } = data;

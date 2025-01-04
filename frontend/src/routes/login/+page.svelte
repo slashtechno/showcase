@@ -5,14 +5,13 @@
   import { user, validateToken } from "$lib/user.svelte";
   import { AuthService, UsersService } from "$lib/client/sdk.gen";
   import type { HTTPValidationError } from "$lib/client/types.gen";
-  import { handleError } from "$lib/apiErrorCheck";
+  import { handleError } from "$lib/misc";
 
   // rest is the extra props passed to the component
   let { ...rest } = $props();
 
   let isLoading = $state(false);
-  // let showSignupFields = $state(false);
-  let showSignupFields = $state(true); // ONLY FOR DEBUGGING
+  let showSignupFields = $state(false);
   // TODO: consolidate these into a single object
   let email = $state("");
   let first_name = $state("");

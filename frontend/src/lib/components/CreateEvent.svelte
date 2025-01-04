@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { handleError } from "$lib/apiErrorCheck";
+  import { handleError } from "$lib/misc";
   import { EventsService } from "$lib/client";
   import { toast } from "svelte-sonner";
   // TODO: Use the object instead of individual variables

@@ -2,7 +2,7 @@
   import { EventsService, ProjectsService } from "$lib/client/sdk.gen";
   import type { ProjectCreationPayload, Event } from "$lib/client";
   import { toast } from "svelte-sonner";
-  import { handleError } from "$lib/apiErrorCheck";
+  import { handleError } from "$lib/misc";
 
   let project: ProjectCreationPayload = $state({
     name: "",
