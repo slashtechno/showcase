@@ -192,7 +192,7 @@
       {/if}
       <div class="flex justify-center">
         <button type="submit" class="btn btn-primary mt-4" disabled={isLoading}>
-          Sign in || Sign up
+          Login / Sign Up
         </button>
       </div>
     </form>
