@@ -14,24 +14,31 @@
 
 <button
   type="button"
-  class="project-card border p-4 rounded-lg shadow-md cursor-pointer transform transition-transform duration-200 hover:scale-105 {isSelected
-    ? 'border-blue-500'
-    : 'border-gray-300'}"
-  onclick={selectable ? toggle : null}
-  onkeydown={selectable ? (e) => e.key === "Enter" && toggle() : null}
+  onclick={() => {
+    if (selectable) {
+      console.debug('card clicked');
+      toggle();
+    }
+  }}  onkeydown={selectable ? (e) => e.key === "Enter" && toggle() : null}
   aria-pressed={isSelected}
   disabled={!selectable}
 >
-  <!-- <img src="https://lorempic.com/640/480" alt="Project" class="w-full h-32 object-cover mb-4" /> -->
-  <img
-    src={project.image_url}
-    alt="Project"
-    class="w-full h-32 object-contain mb-4"
-  />
-  <h2 class="text-lg font-semibold">
-    <a href={project.repo} target="_blank" class="text-blue-500 hover:underline"
-      >{project.name}</a
-    >
-  </h2>
-  <p class="text-gray-600">{project.description}</p>
+<div class="card bg-base-100 card-compact rounded transition-transform duration-200 border-solid border-base {isSelected ? 'border-info scale-110 border-2' : ''}">
+  <figure>
+    <img
+      src={project.image_url}
+      alt="Project">
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">
+      {project.name}
+    </h2>
+    <p>{project.description}</p>
+    <div class="card-actions justify-end">
+      <a href={project.repo} target="_blank">
+      <div class="badge badge-primary badge-lg underline">Repo</div>
+    </a>
+    </div>
+  </div>
+</div>
 </button>
