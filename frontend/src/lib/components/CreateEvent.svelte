@@ -22,24 +22,35 @@
 </script>
 
 <div class="p-4 max-w-md mx-auto">
-  <!-- Event name input field -->
+  <form onsubmit={createEvent} class="space-y-2">
+  <label class="form-control">
+    <div class="label">
+      <span class="label-text">
+        Event name
+      </span>
+    </div>
   <input
     type="text"
     bind:value={eventName}
-    placeholder="Enter event name"
-    class="mb-2 p-2 border rounded w-full"
+    placeholder="A really cool event"
+    class="input input-bordered grow"
   />
-  <!-- Event description field -->
-  <textarea
-    bind:value={eventDescription}
-    placeholder="Enter event description"
-    class="mb-2 p-2 border rounded w-full"
-  ></textarea>
+</label>
+  <label class="form-control">
+    <div class="label">
+      <span class="label-text">Event Description</span>
+    </div>
+    <textarea
+      bind:value={eventDescription}
+      placeholder="Some cool description"
+      class="textarea textarea-bordered grow"
+    ></textarea>
+  </label>
   <!-- Create Event button -->
   <button
-    onclick={createEvent}
-    class="p-2 bg-blue-500 text-white rounded w-full"
+    class="btn btn-block mt-4" type="submit"
   >
     Create Event
   </button>
+</form>
 </div>
