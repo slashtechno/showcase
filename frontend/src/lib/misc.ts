@@ -28,3 +28,16 @@ export function handleError(
     }
   }
 }
+
+export function setSystemTheme() {
+
+  // If the user has set a theme preference, don't override it
+  if (localStorage.theme) {
+    return;
+  }
+  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    document.documentElement.setAttribute("data-theme", "dark");
+  } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+}

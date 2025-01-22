@@ -5,7 +5,7 @@
   import { user, validateToken } from "$lib/user.svelte";
   import { AuthService, UsersService } from "$lib/client/sdk.gen";
   import type { HTTPValidationError } from "$lib/client/types.gen";
-  import { handleError } from "$lib/apiErrorCheck";
+  import { handleError } from "$lib/misc";
 
   // rest is the extra props passed to the component
   let { ...rest } = $props();
@@ -56,13 +56,10 @@
         last_name,
         mailing_address,
       };
-      const { error } = await UsersService.createUserUsersPost({
+      await UsersService.createUserUsersPost({
         body: userPayload,
-        throwOnError: false,
+        throwOnError: true,
       });
-      if (error) {
-        handleError(error);
-      }
       toast(`Magic link sent to ${email}`);
       // Clear values
       email = "";
@@ -80,7 +77,8 @@
     try {
       // AuthService.verifyTokenVerifyGet({query: {token}} as VerifyTokenVerifyGetData).then((response) => {
       const { data, error } = await AuthService.verifyTokenVerifyGet({
-        query: { token }, throwOnError: false,
+        query: { token },
+        throwOnError: false,
       });
       if (error) {
         handleError(error);
@@ -119,7 +117,7 @@
   // }
 </script>
 
-<div class="grid gap-6 max-w-sm mx-auto p-6" {...rest}>
+<div class="p-4 max-w-md mx-auto" {...rest}>
   {#if user.isAuthenticated}
     <div class="text-center">
       <h2 class="text-2xl font-bold mb-2">
@@ -133,96 +131,75 @@
       </button>
     </div>
   {:else}
-    <div class="text-center">
-      <h2 class="text-2xl font-bold mb-2">Welcome</h2>
-      <p class="text-gray-600 mb-4">Sign in with your email to continue</p>
-    </div>
+  <!-- space-y-n adds space (margin) between the children -->
+    <form onsubmit={login} class="space-y-2">
+      <label class="form-control">
+        <div class="label">
+          <span class="label-text">Email</span>
+        </div>
+        <input
+          id="email"
+          type="email"
+          class="input input-bordered grow"
+          bind:value={email}
+          placeholder="example@example.com"
+        />
+        <div class="label">
+          <span class="label-text-alt"> We'll send you a magic link </span>
+        </div>
+      </label>
 
-    <form onsubmit={login} class="space-y-4">
-      <!-- <form onsubmit={preventDefault(login)} class="space-y-4"> -->
-      <div class="grid gap-2">
-        <div class="grid gap-1.5">
-          <label class="text-sm font-medium" for="email"> Email address </label>
+      {#if showSignupFields}
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">First Name</span>
+          </div>
           <input
-            id="email"
-            placeholder="name@example.com"
-            type="email"
-            autocomplete="off"
-            disabled={isLoading}
-            bind:value={email}
-            class="w-full px-3 py-2 border rounded-md"
+            id="first_name"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="Abc"
+            bind:value={first_name}
           />
-          <p class="text-sm text-gray-500">
-            We'll send you a magic link to sign in
-          </p>
-        </div>
-        {#if showSignupFields}
-          <div class="grid gap-1.5">
-            <label class="text-sm font-medium" for="first_name">
-              First Name
-            </label>
-            <input
-              id="first_name"
-              placeholder="First Name"
-              type="text"
-              autocomplete="off"
-              disabled={isLoading}
-              bind:value={first_name}
-              class="w-full px-3 py-2 border rounded-md"
-            />
+        </label>
+
+ 
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Last Name</span>
           </div>
-          <div class="grid gap-1.5">
-            <label class="text-sm font-medium" for="last_name">
-              Last Name
-            </label>
-            <input
-              id="last_name"
-              placeholder="Last Name"
-              type="text"
-              autocomplete="off"
-              disabled={isLoading}
-              bind:value={last_name}
-              class="w-full px-3 py-2 border rounded-md"
-            />
+          <input
+            id="last_name"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="Xyz"
+            bind:value={last_name}
+          />
+        </label>
+
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Mailing Address</span>
           </div>
-          <div class="grid gap-1.5">
-            <label class="text-sm font-medium" for="mailing_address">
-              Mailing Address
-            </label>
-            <input
-              id="mailing_address"
-              placeholder="Mailing Address"
-              type="text"
-              autocomplete="off"
-              disabled={isLoading}
-              bind:value={mailing_address}
-              class="w-full px-3 py-2 border rounded-md"
-            />
-          </div>
-        {/if}
-        <div class="flex justify-center mt-4">
-          <button
-            type="button"
-            onclick={showSignupFields ? signupAndLogin : login}
-            disabled={isLoading}
-            class="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-          >
-            {#if isLoading}
-              <span class="loader mr-2"></span>
-            {/if}
-            <!-- {#if showSignupFields} -->
-            Sign in || Sign up
-            <!-- {:else} -->
-            <!-- Sign In with Email -->
-            <!-- {/if} -->
-          </button>
-        </div>
+          <input
+            id="mailing_address"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="1234 Elm St, Springfield, IL 62701"
+            bind:value={mailing_address}
+          />
+        </label>
+      {/if}
+      <div class="flex justify-center">
+        <button type="submit" class="btn btn-primary mt-4" disabled={isLoading}>
+          Login / Sign Up
+        </button>
       </div>
     </form>
-    <div class="text-center mt-4">
-      <a href="/" class="text-sm text-blue-600 hover:text-blue-800"
-        >← Back to Home</a
-      >
-    </div>
   {/if}
+  <div class="text-center mt-4">
+    <a href="/" class="text-sm text-blue-600 hover:text-blue-800"
+      >← Back to Home</a
+    >
+  </div>
 </div>

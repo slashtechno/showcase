@@ -4,7 +4,7 @@ import type { PageLoad } from "./$types";
 import { user } from "$lib/user.svelte";
 import { client } from "$lib/client/sdk.gen";
 import { EventsService } from "$lib/client/sdk.gen";
-import { handleError } from "$lib/apiErrorCheck";
+import { handleError } from "$lib/misc";
 
 export const load: PageLoad = async ({ params, fetch }) => {
   client.setConfig({ fetch });

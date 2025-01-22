@@ -2,7 +2,7 @@
   import { EventsService, ProjectsService } from "$lib/client/sdk.gen";
   import type { ProjectCreationPayload, Event } from "$lib/client";
   import { toast } from "svelte-sonner";
-  import { handleError } from "$lib/apiErrorCheck";
+  import { handleError } from "$lib/misc";
 
   let project: ProjectCreationPayload = $state({
     name: "",
@@ -55,48 +55,74 @@
 </script>
 
 <div class="p-4 max-w-md mx-auto">
-  <!-- Project name input field -->
-  <input
-    type="text"
-    bind:value={project.name}
-    placeholder="A really cool project!"
-    class="mb-2 p-2 border rounded w-full"
-  />
-  <!-- Project description field -->
-  <textarea
-    bind:value={project.description}
-    placeholder="Some cool description"
-    class="mb-2 p-2 border rounded w-full"
-  ></textarea>
-  <input
-    type="text"
-    bind:value={project.image_url}
-    placeholder="Image URL (such as a raw GitHub link or a #cdn link)"
-    class="mb-2 p-2 border rounded w-full"
-  />
-  <input
-    type="text"
-    bind:value={project.repo}
-    placeholder="Repository URL (such as a GitHub link)"
-    class="mb-2 p-2 border rounded w-full"
-  />
-  <!-- Dropdown to select event -->
-  <select
-    bind:value={project.event[0]}
-    class="mb-2 p-2 border rounded w-full"
-    onfocus={() => {
-      if (!fetchedEvents) fetchEvents();
-    }}
-  >
-    <option value="" disabled selected>Select an event</option>
-    {#each events as event}
-      <option value={event.id}>{event.name}</option>
-    {/each}
-  </select>
-  <button
-    onclick={createProject}
-    class="p-2 bg-blue-500 text-white rounded w-full"
-  >
-    Create Project
-  </button>
+  <form onsubmit={createProject} class="space-y-4">
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Project Name</span>
+      </div>
+      <input
+        type="text"
+        bind:value={project.name}
+        placeholder="A really cool project!"
+        class="input input-bordered grow"
+      />
+    </label>
+    <!-- Project description field -->
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Project Description</span>
+      </div>
+      <textarea
+        bind:value={project.description}
+        placeholder="Some cool description"
+        class="textarea textarea-bordered grow"
+      ></textarea>
+    </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Image URL</span>
+        <span class="label-text-alt">
+          (such as a raw GitHub link or a #cdn link)</span
+        >
+      </div>
+      <input
+        type="text"
+        bind:value={project.image_url}
+        placeholder="Image URL (such as a raw GitHub link or a #cdn link)"
+        class="input input-bordered grow"
+      />
+    </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Repository URL</span>
+        <span class="label-text-alt"> (such as a GitHub link)</span>
+      </div>
+      <input
+        type="text"
+        bind:value={project.repo}
+        placeholder="Repository URL (such as a GitHub link)"
+        class="input input-bordered grow"
+      />
+    </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Event</span>
+      </div>
+      <select
+        bind:value={project.event[0]}
+        class="select select-bordered"
+        onfocus={() => {
+          if (!fetchedEvents) fetchEvents();
+        }}
+      >
+        <option value="" disabled selected>Select an event</option>
+        {#each events as event}
+          <option value={event.id}>{event.name}</option>
+        {/each}
+      </select>
+      <button type="submit" class="btn btn-block mt-4">
+        Create Project
+      </button>
+    </label>
+  </form>
 </div>

@@ -10,18 +10,17 @@
 
 <div class="container mx-auto p-6">
   <h1 class="text-2xl font-semibold mb-4 text-center">Leaderboard</h1>
-  <ol class="list-decimal list-inside mx-auto max-w-2xl">
-    <!-- {#each projects as { project, points }} -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto max-w-4xl">
     {#each projects as project}
-      <li class="mb-4 p-4 flex flex-col items-center">
-        <ProjectCard
-          {project}
-          isSelected={false}
-          toggle={() => {}}
-          selectable={false}
-        />
-        <p class="text-gray-600 mt-2">Points: {project.points}</p>
-      </li>
+    <div class="flex flex-col items-center">
+      <ProjectCard
+        {project}
+        isSelected={false}
+        toggle={() => {}}
+        selectable={false}
+      />
+      <p class="text-gray-600 mt-2">Points: {project.points}</p>
+      </div>
     {/each}
-  </ol>
+  </div>
 </div>

@@ -4,7 +4,7 @@
   import { toast } from "svelte-sonner";
   import { EventsService } from "$lib/client/sdk.gen";
   import ProjectCard from "$lib/components/ProjectCard.svelte";
-  import { handleError } from "$lib/apiErrorCheck.js";
+  import { handleError } from "$lib/misc.js";
 
   let { data } = $props();
   let { event, projects } = data;
@@ -45,8 +45,8 @@
 </script>
 
 <!-- Basic information about voting -->
-<div class="bg-gray-100 p-4 text-center">
-  <p class="text-gray-600">
+<div class="p-4 bg-info text-center"> 
+  <p class="text-info-content">
     Select your top {toSelect} projects in no particular order
   </p>
 </div>
@@ -67,7 +67,7 @@
     {/each}
   </div>
   <button
-    class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    class="btn-block btn btn-warning mt-4"
     onclick={submitVote}>Submit Vote</button
   >
 </div>

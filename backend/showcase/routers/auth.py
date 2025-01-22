@@ -69,7 +69,7 @@ async def send_magic_link(email: str):
     try:
         sg = SendGridAPIClient(settings.sendgrid_api_key)
         _ = sg.send(message)
-    except Exception as e:
+    except Exception: 
         raise HTTPException(status_code=500, detail="Failed to send auth email")
 
     print(

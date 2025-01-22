@@ -217,16 +217,25 @@ def vote(vote: Vote, current_user: Annotated[dict, Depends(get_current_user)]):
     """
     Vote for the top 3 projects in an event. The client must provide the event ID and a list of the top 3 projects. If there are less than 20 projects in the event, only the top 2 projects are required.
     """
-
-    user = db.users.get(db.user.get_user_record_id_by_email(current_user["email"]))
+    
+    user_id = db.user.get_user_record_id_by_email(current_user["email"])
+    user = db.users.get(user_id)
 
     if vote.event_id in user["fields"].get("votes", []):
         raise HTTPException(status_code=400, detail="User has already voted in event")
 
     # Update the votes (increment the `points` field of the nominated projects by 1)
     for project_id in vote.projects:
+        # If the validation didn't properly check if the project exists, just use a try-except block
         try:
+            # Get the project record
             project = db.projects.get(project_id)
+            # Check if the user is the owner and raise an error if they are
+            if user_id in project["fields"].get("owner", []):
+                raise HTTPException(
+                    status_code=400, detail="User cannot vote for their own project"
+                )
+            # Increment the points field by 1
             db.projects.update(
                 project_id, {"points": project["fields"].get("points", 0) + 1}
             )
