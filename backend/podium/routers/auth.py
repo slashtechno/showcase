@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 # from email.mime.text import MIMEText
 from typing import Annotated
 
-from showcase import db, settings
+from podium import db, settings
 
 from fastapi import APIRouter, HTTPException, Query, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -62,8 +62,8 @@ async def send_magic_link(email: str):
     message = Mail(
         from_email=settings.sendgrid_from_email,
         to_emails=email,
-        subject="Magic link for Showcase",
-        html_content=f"Click <a href='{magic_link}'>here</a> to log in to Showcase",
+        subject="Magic link for Podium",
+        html_content=f"Click <a href='{magic_link}'>here</a> to log in to Podium",
     )
 
     try:

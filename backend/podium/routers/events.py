@@ -10,10 +10,10 @@ from pydantic.json_schema import SkipJsonSchema
 
 from requests import HTTPError
 
-from showcase.routers.auth import get_current_user
-from showcase import db
-from showcase.db import EventCreationPayload, ComplexEvent, UserEvents, Event
-from showcase.db.project import Project
+from podium.routers.auth import get_current_user
+from podium import db
+from podium.db import EventCreationPayload, ComplexEvent, UserEvents, Event
+from podium.db.project import Project
 
 router = APIRouter(prefix="/events", tags=["events"])
 

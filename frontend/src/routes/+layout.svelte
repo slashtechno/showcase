@@ -20,21 +20,21 @@
 
 <svelte:head>
   {#if page.data.title}
-    <title>{page.data.title} | Showcase</title>
+    <title>{page.data.title} | Podium</title>
   {:else}
-    <title>Showcase</title>
+    <title>Podium</title>
   {/if}
   {#if page.data.meta}
     {#each page.data.meta as { name, content }}
       <meta {name} {content} />
     {/each}
   {:else}
-    <meta name="description" content="Showcase" />
+    <meta name="description" content="Podium" />
   {/if}
 </svelte:head>
 
 <nav class="p-4 text-center bg-neutral">
-  <a href="/" class="text-2xl font-bold text-neutral-content">Showcase</a>
+  <a href="/" class="text-2xl font-bold text-neutral-content">Podium</a>
 </nav>
 <!--  Check for auth on all pages -->
 <!-- <CheckAuth /> -->

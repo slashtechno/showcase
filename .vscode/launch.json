@@ -21,7 +21,7 @@
             "request": "launch",
             "module": "uvicorn",
             "args": [
-                "showcase.main:app",
+                "podium.main:app",
                 "--reload"
             ],
             "cwd": "${workspaceFolder}/backend",

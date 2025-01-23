@@ -1,7 +1,7 @@
 from dynaconf import Dynaconf, Validator
 
 settings = Dynaconf(
-    envvar_prefix="SHOWCASE",
+    envvar_prefix="PODIUM",
     load_dotenv=True,
     settings_files=["settings.toml", ".secrets.toml"],
     merge_enabled=True,

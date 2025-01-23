@@ -1,10 +1,10 @@
 from typing import Annotated
 from requests import HTTPError
-from showcase import db
+from podium import db
 from fastapi import APIRouter, Depends, HTTPException, Path
 from pyairtable.formulas import EQ, RECORD_ID
-from showcase.routers.auth import get_current_user
-from showcase.db.project import Project
+from podium.routers.auth import get_current_user
+from podium.db.project import Project
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 

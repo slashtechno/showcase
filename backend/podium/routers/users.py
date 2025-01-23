@@ -1,8 +1,8 @@
 from typing import Annotated
 from pydantic import BaseModel, EmailStr
-from showcase import db
+from podium import db
 from fastapi import APIRouter, Query
-from showcase.db.user import UserSignupPayload
+from podium.db.user import UserSignupPayload
 
 router = APIRouter(prefix="/users", tags=["users"])
 

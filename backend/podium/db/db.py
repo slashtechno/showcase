@@ -1,7 +1,7 @@
 from pyairtable import Api, Table
 
 # from pyairtable.formulas import match
-from showcase import settings
+from podium import settings
 
 
 tables: dict[str, Table] = {}

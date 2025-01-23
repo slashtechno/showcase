@@ -25,7 +25,7 @@ app.add_middleware(
 routers_dir = Path(__file__).parent / "routers"
 for path in routers_dir.glob("*.py"):
     if path.name != "__init__.py":
-        module_name = f"showcase.routers.{path.stem}"
+        module_name = f"podium.routers.{path.stem}"
         module = importlib.import_module(module_name)
         # If the module has a router attribute, include it in the app
         if hasattr(module, "router"):

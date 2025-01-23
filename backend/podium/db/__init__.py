@@ -1,0 +1,11 @@
+from podium.db.db import tables
+from podium.db.event import ComplexEvent as ComplexEvent
+from podium.db.event import EventCreationPayload as EventCreationPayload
+from podium.db.event import UserEvents as UserEvents
+from podium.db.event import Event as Event
+from podium.db import user as user
+from podium.db.project import ProjectCreationPayload as ProjectCreationPayload
+
+events = tables["events"]
+users = tables["users"]
+projects = tables["projects"]
