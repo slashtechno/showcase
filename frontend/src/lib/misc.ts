@@ -30,7 +30,6 @@ export function handleError(
 }
 
 export function setSystemTheme() {
-
   // If the user has set a theme preference, don't override it
   if (localStorage.theme) {
     return;

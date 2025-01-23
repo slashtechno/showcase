@@ -12,7 +12,7 @@
   let { ...rest } = $props();
 
   let isLoading = $state(false);
-  let showSignupFields = $state(true);
+  let showSignupFields = $state(false);
   // Consolidate user-related variables into a single object
   let userInfo: UserSignupPayload = $state({
     email: "",
@@ -26,14 +26,14 @@
     country: "",
   });
 
-async function eitherLoginOrSignUp () {
-// If showSignupFields is true, the user is signing up and signupAndLogin should be called. Otherwise, the user is logging in and login should be called.
-  if (showSignupFields) {
-    signupAndLogin();
-  } else {
-    login();
+  async function eitherLoginOrSignUp() {
+    // If showSignupFields is true, the user is signing up and signupAndLogin should be called. Otherwise, the user is logging in and login should be called.
+    if (showSignupFields) {
+      signupAndLogin();
+    } else {
+      login();
+    }
   }
-}
 
   // Function to handle login
   async function login() {
@@ -86,9 +86,8 @@ async function eitherLoginOrSignUp () {
         country: "",
       };
     } catch (error) {
-  handleError(error)
-    }
-    finally {
+      handleError(error);
+    } finally {
       isLoading = false;
     }
   }
@@ -153,7 +152,7 @@ async function eitherLoginOrSignUp () {
       </button>
     </div>
   {:else}
-  <!-- space-y-n adds space (margin) between the children -->
+    <!-- space-y-n adds space (margin) between the children -->
     <form onsubmit={eitherLoginOrSignUp} class="space-y-2">
       <label class="form-control">
         <div class="label">
@@ -185,7 +184,6 @@ async function eitherLoginOrSignUp () {
           />
         </label>
 
- 
         <label class="form-control">
           <div class="label">
             <span class="label-text">Last Name</span>
@@ -228,8 +226,10 @@ async function eitherLoginOrSignUp () {
         </label>
         <label class="form-control">
           <div class="label">
-            <span class="label-text
-">City</span>
+            <span
+              class="label-text
+">City</span
+            >
           </div>
           <input
             id="city"
@@ -266,7 +266,12 @@ async function eitherLoginOrSignUp () {
         <label class="form-control">
           <div class="label">
             <span class="label-text">Country</span>
-            <span class="label-text-alt"> <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" class="underline">ISO 3166-1 alpha-2</a> </span>
+            <span class="label-text-alt">
+              <a
+                href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
+                class="underline">ISO 3166-1 alpha-2</a
+              >
+            </span>
           </div>
           <input
             id="country"

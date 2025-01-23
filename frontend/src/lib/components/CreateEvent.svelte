@@ -23,34 +23,28 @@
 
 <div class="p-4 max-w-md mx-auto">
   <form onsubmit={createEvent} class="space-y-2">
-  <label class="form-control">
-    <div class="label">
-      <span class="label-text">
-        Event name
-      </span>
-    </div>
-  <input
-    type="text"
-    bind:value={eventName}
-    placeholder="A really cool event"
-    class="input input-bordered grow"
-  />
-</label>
-  <label class="form-control">
-    <div class="label">
-      <span class="label-text">Event Description</span>
-    </div>
-    <textarea
-      bind:value={eventDescription}
-      placeholder="Some cool description"
-      class="textarea textarea-bordered grow"
-    ></textarea>
-  </label>
-  <!-- Create Event button -->
-  <button
-    class="btn btn-block mt-4" type="submit"
-  >
-    Create Event
-  </button>
-</form>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text"> Event name </span>
+      </div>
+      <input
+        type="text"
+        bind:value={eventName}
+        placeholder="A really cool event"
+        class="input input-bordered grow"
+      />
+    </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Event Description</span>
+      </div>
+      <textarea
+        bind:value={eventDescription}
+        placeholder="Some cool description"
+        class="textarea textarea-bordered grow"
+      ></textarea>
+    </label>
+    <!-- Create Event button -->
+    <button class="btn btn-block mt-4" type="submit"> Create Event </button>
+  </form>
 </div>

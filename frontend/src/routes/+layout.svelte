@@ -14,7 +14,6 @@
     themeChange(false);
 
     setSystemTheme();
-
   });
 </script>
 

@@ -9,14 +9,10 @@
   <!-- Link to /events/{data.id}/rank -->
 </div>
 <div class="flex justify-center flex-col mx-auto max-w-md space-y-4 mt-4">
-  <a
-    href={`/events/${data.event.id}/rank`}
-    class="btn-primary btn"
+  <a href={`/events/${data.event.id}/rank`} class="btn-primary btn"
     >Rank Projects</a
   >
-  <a
-    href={`/events/${data.event.id}/leaderboard`}
-    class="btn-primary btn"
+  <a href={`/events/${data.event.id}/leaderboard`} class="btn-primary btn"
     >Leaderboard</a
   >
 </div>

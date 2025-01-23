@@ -46,7 +46,7 @@
         />
       </li>
     {/each}
-     <!-- Option to respect system theme by removing the theme from localStorage -->
+    <!-- Option to respect system theme by removing the theme from localStorage -->
     <li>
       <input
         type="radio"
@@ -58,5 +58,6 @@
           setSystemTheme();
         }}
       />
+    </li>
   </ul>
 </div>

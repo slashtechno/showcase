@@ -23,9 +23,7 @@
 <div class="p-4 max-w-md mx-auto">
   <form onsubmit={attendEvent} class="space-y-4">
     <label class="form-control">
-      <div class="label">
-        Join Code
-      </div>
+      <div class="label">Join Code</div>
       <input
         type="text"
         bind:value={joinCode}
@@ -33,7 +31,6 @@
         class="w-full input input-bordered"
       />
     </label>
-    <button type="submit" class="btn-block btn">
-      Join the adventure!
-    </button>
+    <button type="submit" class="btn-block btn"> Join the adventure! </button>
+  </form>
 </div>

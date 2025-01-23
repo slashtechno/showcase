@@ -120,9 +120,7 @@
           <option value={event.id}>{event.name}</option>
         {/each}
       </select>
-      <button type="submit" class="btn btn-block mt-4">
-        Create Project
-      </button>
+      <button type="submit" class="btn btn-block mt-4"> Create Project </button>
     </label>
   </form>
 </div>

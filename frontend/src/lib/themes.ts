@@ -1,6 +1,1 @@
-export const themes = [
-    'light',
-    'dark',
-    'retro',
-    'dracula'
-  ];
+export const themes = ["light", "dark", "retro", "dracula"];

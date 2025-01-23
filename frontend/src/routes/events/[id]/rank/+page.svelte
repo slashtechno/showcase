@@ -45,7 +45,7 @@
 </script>
 
 <!-- Basic information about voting -->
-<div class="p-4 bg-info text-center"> 
+<div class="p-4 bg-info text-center">
   <p class="text-info-content">
     Select your top {toSelect} projects in no particular order
   </p>
@@ -66,8 +66,7 @@
       />
     {/each}
   </div>
-  <button
-    class="btn-block btn btn-warning mt-4"
-    onclick={submitVote}>Submit Vote</button
+  <button class="btn-block btn btn-warning mt-4" onclick={submitVote}
+    >Submit Vote</button
   >
 </div>

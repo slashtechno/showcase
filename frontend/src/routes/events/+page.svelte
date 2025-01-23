@@ -5,8 +5,7 @@
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
-  const {events} = data;
-
+  const { events } = data;
 </script>
 
 <div class="space-y-8 p-4">
@@ -21,9 +20,12 @@
         <li class="py-2">
           <a
             href={`/events/${event.id}`}
-            class="font-medium underline hover rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1">{event.name}</a
+            class="font-medium underline hover rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1"
+            >{event.name}</a
           >
-          <span class="ml-4 bg-base-300 p-1 rounded">Join Code: {event.join_code}</span>
+          <span class="ml-4 bg-base-300 p-1 rounded"
+            >Join Code: {event.join_code}</span
+          >
         </li>
       {/each}
     </ul>
@@ -35,7 +37,8 @@
         <li class="py-2">
           <a
             href={`/events/${event.id}`}
-            class="font-medium underline hover rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1">{event.name}</a
+            class="font-medium underline hover rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1"
+            >{event.name}</a
           >
         </li>
       {/each}

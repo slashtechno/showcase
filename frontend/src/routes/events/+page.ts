@@ -14,10 +14,10 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
   try {
     const { data } = await EventsService.getAttendingEventsEventsGet({
-        throwOnError: true,
-      });
+      throwOnError: true,
+    });
     return {
-        events: data,
+      events: data,
     };
   } catch (err) {
     console.error(err);

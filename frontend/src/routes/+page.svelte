@@ -15,10 +15,7 @@
         <p>
           You're signed in as <strong>{user.email}</strong>.
         </p>
-        <button
-          class="btn mt-2"
-          onclick={signOut}>Sign out</button
-        >
+        <button class="btn mt-2" onclick={signOut}>Sign out</button>
       </div>
     {:else}
       <div class="flex justify-center my-4">
@@ -30,12 +27,7 @@
   {#if user.isAuthenticated}
     <section class="p-4 border rounded-lg shadow-sm">
       <h2 class="text-xl font-semibold mb-4">Events</h2>
-      <a
-        href="/events"
-        class="btn"
-      >
-        Events Dashboard
-      </a>
+      <a href="/events" class="btn"> Events Dashboard </a>
     </section>
 
     <section class="p-4 border rounded-lg shadow-sm">

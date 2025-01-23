@@ -217,7 +217,7 @@ def vote(vote: Vote, current_user: Annotated[dict, Depends(get_current_user)]):
     """
     Vote for the top 3 projects in an event. The client must provide the event ID and a list of the top 3 projects. If there are less than 20 projects in the event, only the top 2 projects are required.
     """
-    
+
     user_id = db.user.get_user_record_id_by_email(current_user["email"])
     user = db.users.get(user_id)
 
