@@ -18,6 +18,15 @@
   let last_name = $state("");
   let mailing_address = $state("");
 
+async function eitherLoginOrSignUp () {
+// If showSignupFields is true, the user is signing up and signupAndLogin should be called. Otherwise, the user is logging in and login should be called.
+  if (showSignupFields) {
+    signupAndLogin();
+  } else {
+    login();
+  }
+}
+
   // Function to handle login
   async function login() {
     isLoading = true;
@@ -60,7 +69,8 @@
         body: userPayload,
         throwOnError: true,
       });
-      toast(`Magic link sent to ${email}`);
+      await login();
+      // toast(`Signed up! Check your email for a magic link!`);
       // Clear values
       email = "";
       first_name = "";
@@ -132,7 +142,7 @@
     </div>
   {:else}
   <!-- space-y-n adds space (margin) between the children -->
-    <form onsubmit={login} class="space-y-2">
+    <form onsubmit={eitherLoginOrSignUp} class="space-y-2">
       <label class="form-control">
         <div class="label">
           <span class="label-text">Email</span>
