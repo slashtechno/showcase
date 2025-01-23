@@ -6,7 +6,7 @@ export type CheckAuthResponse = {
 
 export type ComplexEvent = {
     name: string;
-    description: (string | null);
+    description?: (string | null);
     join_code: string;
     id: string;
     attendees?: Array<(string)>;
@@ -14,13 +14,13 @@ export type ComplexEvent = {
 
 export type Event = {
     name: string;
-    description: (string | null);
+    description?: (string | null);
     id: string;
 };
 
 export type EventCreationPayload = {
     name: string;
-    description: (string | null);
+    description?: (string | null);
 };
 
 export type HTTPValidationError = {
@@ -43,7 +43,7 @@ export type Project = {
         string
     ];
     id: string;
-    points: number;
+    points?: number;
 };
 
 export type ProjectCreationPayload = {
@@ -97,7 +97,12 @@ export type UserSignupPayload = {
     first_name: string;
     last_name: string;
     email: string;
-    mailing_address: string;
+    street_1: string;
+    street_2?: (string | null);
+    city: string;
+    state: string;
+    zip_code: string;
+    country: string;
 };
 
 export type ValidationError = {

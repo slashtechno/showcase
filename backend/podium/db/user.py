@@ -1,5 +1,5 @@
-from typing import Optional
-from pydantic import BaseModel, EmailStr
+from typing import Annotated, Optional
+from pydantic import BaseModel, EmailStr, StringConstraints
 
 from podium.db import tables
 from pyairtable.formulas import match
@@ -9,8 +9,14 @@ class UserSignupPayload(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
-    # Might eventually add validation for mailing address, although it's not necessary for the MVP
-    mailing_address: str
+    street_1: str
+    street_2: Optional[str] = None
+    city: str
+    state: str
+    # str but only allow digits
+    zip_code: Annotated[str, StringConstraints(pattern=r"^\d*$")]
+    # https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+    country: Annotated[str, StringConstraints(pattern=r"^[A-Z]{2}$")]
 
 
 # It may help to create a lookup field later, although this works fine for now

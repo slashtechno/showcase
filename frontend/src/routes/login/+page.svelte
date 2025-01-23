@@ -6,17 +6,25 @@
   import { AuthService, UsersService } from "$lib/client/sdk.gen";
   import type { HTTPValidationError } from "$lib/client/types.gen";
   import { handleError } from "$lib/misc";
+  import type { UserSignupPayload } from "$lib/client/types.gen";
 
   // rest is the extra props passed to the component
   let { ...rest } = $props();
 
   let isLoading = $state(false);
-  let showSignupFields = $state(false);
-  // TODO: consolidate these into a single object
-  let email = $state("");
-  let first_name = $state("");
-  let last_name = $state("");
-  let mailing_address = $state("");
+  let showSignupFields = $state(true);
+  // Consolidate user-related variables into a single object
+  let userInfo: UserSignupPayload = $state({
+    email: "",
+    first_name: "",
+    last_name: "",
+    street_1: "",
+    street_2: "",
+    city: "",
+    state: "",
+    zip_code: "",
+    country: "",
+  });
 
 async function eitherLoginOrSignUp () {
 // If showSignupFields is true, the user is signing up and signupAndLogin should be called. Otherwise, the user is logging in and login should be called.
@@ -33,17 +41,17 @@ async function eitherLoginOrSignUp () {
     // Even though error handling is done in the API, the try-finally block is used to ensure the loading state is reset
     try {
       const { data, error } = await UsersService.userExistsUsersExistsGet({
-        query: { email },
+        query: { email: userInfo.email },
         throwOnError: false,
       });
       if (data?.exists) {
         // Request magic link for the provided email if the user exists
         await AuthService.requestLoginRequestLoginPost({
-          body: { email },
+          body: { email: userInfo.email },
         });
-        toast(`Magic link sent to ${email}`);
+        toast(`Magic link sent to ${userInfo.email}`);
         // Clear field
-        email = "";
+        userInfo.email = "";
       } else if (error) {
         handleError(error);
       } else {
@@ -59,24 +67,28 @@ async function eitherLoginOrSignUp () {
   async function signupAndLogin() {
     isLoading = true;
     try {
-      const userPayload = {
-        email,
-        first_name,
-        last_name,
-        mailing_address,
-      };
       await UsersService.createUserUsersPost({
-        body: userPayload,
+        body: userInfo,
         throwOnError: true,
       });
       await login();
       // toast(`Signed up! Check your email for a magic link!`);
       // Clear values
-      email = "";
-      first_name = "";
-      last_name = "";
-      mailing_address = "";
-    } finally {
+      userInfo = {
+        email: "",
+        first_name: "",
+        last_name: "",
+        street_1: "",
+        street_2: "",
+        city: "",
+        state: "",
+        zip_code: "",
+        country: "",
+      };
+    } catch (error) {
+  handleError(error)
+    }
+    finally {
       isLoading = false;
     }
   }
@@ -151,7 +163,7 @@ async function eitherLoginOrSignUp () {
           id="email"
           type="email"
           class="input input-bordered grow"
-          bind:value={email}
+          bind:value={userInfo.email}
           placeholder="example@example.com"
         />
         <div class="label">
@@ -169,7 +181,7 @@ async function eitherLoginOrSignUp () {
             type="text"
             class="input input-bordered grow"
             placeholder="Abc"
-            bind:value={first_name}
+            bind:value={userInfo.first_name}
           />
         </label>
 
@@ -183,20 +195,85 @@ async function eitherLoginOrSignUp () {
             type="text"
             class="input input-bordered grow"
             placeholder="Xyz"
-            bind:value={last_name}
+            bind:value={userInfo.last_name}
           />
         </label>
 
         <label class="form-control">
           <div class="label">
-            <span class="label-text">Mailing Address</span>
+            <span class="label-text">Address line 1</span>
           </div>
           <input
-            id="mailing_address"
+            id="street_1"
             type="text"
             class="input input-bordered grow"
-            placeholder="1234 Elm St, Springfield, IL 62701"
-            bind:value={mailing_address}
+            placeholder="123 Main St"
+            bind:value={userInfo.street_1}
+          />
+        </label>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Address line 2</span>
+          </div>
+          <input
+            id="street_2"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="Apt 4B"
+            bind:value={userInfo.street_2}
+          />
+          <div class="label">
+            <span class="label-text-alt">Optional</span>
+          </div>
+        </label>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text
+">City</span>
+          </div>
+          <input
+            id="city"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="New York"
+            bind:value={userInfo.city}
+          />
+        </label>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">State/Province</span>
+          </div>
+          <input
+            id="state"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="NY"
+            bind:value={userInfo.state}
+          />
+        </label>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Zip/Postal Code</span>
+          </div>
+          <input
+            id="zip_code"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="10001"
+            bind:value={userInfo.zip_code}
+          />
+        </label>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Country</span>
+            <span class="label-text-alt"> <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" class="underline">ISO 3166-1 alpha-2</a> </span>
+          </div>
+          <input
+            id="country"
+            type="text"
+            class="input input-bordered grow"
+            placeholder="US"
+            bind:value={userInfo.country}
           />
         </label>
       {/if}
