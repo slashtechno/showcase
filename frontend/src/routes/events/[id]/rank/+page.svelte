@@ -9,7 +9,7 @@
   let { data } = $props();
   let { event, projects } = data;
   let selectedProjects: string[] = $state([]);
-
+  // let toSelect = $state(projects.length >= 20 ? 3 : 2);
   let toSelect = projects.length >= 20 ? 3 : 2;
 
   function toggleProjectSelection(projectId: string) {
@@ -17,7 +17,7 @@
       // If the project is already selected, remove it from the list
       selectedProjects = selectedProjects.filter((id) => id !== projectId);
     } else {
-      if (selectedProjects.length < 3) {
+      if (selectedProjects.length < toSelect) {
         // If the project is not selected and the limit is not reached, add it to the list
         selectedProjects = [...selectedProjects, projectId];
       }
