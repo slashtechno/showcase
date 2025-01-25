@@ -238,6 +238,16 @@ export type UpdateProjectProjectsProjectIdPutResponse = (unknown);
 
 export type UpdateProjectProjectsProjectIdPutError = (HTTPValidationError);
 
+export type DeleteProjectProjectsProjectIdDeleteData = {
+    path: {
+        project_id: string;
+    };
+};
+
+export type DeleteProjectProjectsProjectIdDeleteResponse = (unknown);
+
+export type DeleteProjectProjectsProjectIdDeleteError = (HTTPValidationError);
+
 export type GetProjectProjectsProjectIdGetData = {
     path: {
         project_id: string;

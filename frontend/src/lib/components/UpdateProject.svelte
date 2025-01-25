@@ -34,7 +34,21 @@ $inspect(chosenProject)
   }
 
   async function deleteProject() {
-// TODO: not implemented yet
+    showDeleteAlert = false;
+    try {
+      await ProjectsService.deleteProjectProjectsProjectIdDelete({
+      path: { project_id: chosenProject.id },
+        throwOnError: true,
+      });
+      toast("Project deleted successfully");
+      // Reset the fields
+      project = {} as ProjectUpdate;
+      chosenProject = {} as Project;
+      // Fetch the projects again if the user wants to perform another update to reflect the deletion
+      fetchedProjects = false;
+    } catch (err) {
+      handleError(err);
+    }
   }
 
   async function confirmDeleteProject() {
@@ -53,13 +67,10 @@ $inspect(chosenProject)
       });
       toast("Project updated successfully");
       // Reset the fields
-      project = {
-        name: "",
-        readme: "https://example.com",
-        repo: "",
-        image_url: "",
-        description: "",
-      };
+      project = {} as ProjectUpdate;
+      chosenProject = {} as Project;
+      // fetch the projects again if the user wants to perform another update
+      fetchedProjects = false;
     } catch (err) {
       handleError(err);
     }

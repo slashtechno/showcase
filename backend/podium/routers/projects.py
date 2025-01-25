@@ -73,13 +73,28 @@ def update_project(
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ):
     """
-    Update an existing project. The current user is automatically added as an owner of the project.
+    Update a project by replacing it
     """
-
-    # No matter what email the user provides, the owner is always the current user
-    project.owner = [db.user.get_user_record_id_by_email(current_user.email)]
+    # Check if the user is an owner of the project
+    user_id = db.user.get_user_record_id_by_email(current_user.email)
+    if user_id not in db.projects.get(project_id)["fields"].get("owner", []):
+        raise HTTPException(status_code=403, detail="User not an owner of the project")
 
     return db.projects.update(project_id, project.model_dump())["fields"]
+
+# Delete project
+@router.delete("/{project_id}")
+def delete_project(
+    project_id: Annotated[str, Path(pattern=r"^rec\w*$")],
+    current_user: Annotated[CurrentUser, Depends(get_current_user)],
+):
+
+    # Check if the user is an owner of the project
+    user_id = db.user.get_user_record_id_by_email(current_user.email)
+    if user_id not in db.projects.get(project_id)["fields"].get("owner", []):
+        raise HTTPException(status_code=403, detail="User not an owner of the project")
+
+    return db.projects.delete(project_id)
 
 
 @router.get("/{project_id}")
