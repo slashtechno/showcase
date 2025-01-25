@@ -46,12 +46,15 @@ export type Project = {
     points?: number;
 };
 
-export type ProjectBase = {
+export type ProjectCreationPayload = {
     name: string;
     readme: string;
     repo: string;
     image_url: string;
     description?: (string | null);
+    event: [
+        string
+    ];
 };
 
 export type ProjectUpdate = {
@@ -212,12 +215,12 @@ export type GetEventProjectsEventsEventIdProjectsGetResponse = (Array<Project>);
 
 export type GetEventProjectsEventsEventIdProjectsGetError = (HTTPValidationError);
 
-export type GetProjectsProjectsMineGetResponse = (unknown);
+export type GetProjectsProjectsMineGetResponse = (Array<Project>);
 
 export type GetProjectsProjectsMineGetError = unknown;
 
 export type CreateProjectProjectsPostData = {
-    body: ProjectUpdate;
+    body: ProjectCreationPayload;
 };
 
 export type CreateProjectProjectsPostResponse = (unknown);
@@ -225,7 +228,7 @@ export type CreateProjectProjectsPostResponse = (unknown);
 export type CreateProjectProjectsPostError = (HTTPValidationError);
 
 export type UpdateProjectProjectsProjectIdPutData = {
-    body: ProjectBase;
+    body: ProjectUpdate;
     path: {
         project_id: string;
     };

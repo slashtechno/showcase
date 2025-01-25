@@ -14,7 +14,7 @@ router = APIRouter(prefix="/projects", tags=["projects"])
 @router.get("/mine")
 def get_projects(
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
-):
+) -> list[Project]:
     """
     Get the current user's projects.
     """
@@ -36,7 +36,7 @@ def get_projects(
 # It's up to the client to provide the event record ID
 @router.post("/")
 def create_project(
-    project: db.ProjectUpdate,
+    project: db.ProjectCreationPayload,
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ):
     """
@@ -69,7 +69,7 @@ def create_project(
 @router.put("/{project_id}")
 def update_project(
     project_id: Annotated[str, Path(pattern=r"^rec\w*$")],
-    project: db.ProjectBase,
+    project: db.ProjectUpdate,
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ):
     """
