@@ -8,6 +8,7 @@ from podium import db, settings
 
 from fastapi import APIRouter, HTTPException, Query, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from podium.db.user import CurrentUser
 from pydantic import BaseModel
 import jwt
 from jwt.exceptions import PyJWTError
@@ -117,13 +118,11 @@ async def verify_token(token: Annotated[str, Query()]) -> MagicLinkVerificationR
     )
 
 
-security = HTTPBearer()
-
-
 # This serves two purposes: it checks if the token is valid and returns the user's email
+security = HTTPBearer()
 async def get_current_user(
     credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],
-):
+) -> CurrentUser: 
     token = credentials.credentials
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -137,18 +136,17 @@ async def get_current_user(
             raise credentials_exception
     except PyJWTError:
         raise credentials_exception
-    return {"email": email}
+    return CurrentUser(email=email)
 
 
 class CheckAuthResponse(BaseModel):
     email: str
 
-
 @router.get("/protected-route")
 async def protected_route(
-    current_user: Annotated[dict, Depends(get_current_user)],
+    current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ) -> CheckAuthResponse:
-    return CheckAuthResponse(email=current_user["email"])
+    return CheckAuthResponse(email=current_user.email)
 
 
 if __name__ == "__main__":

@@ -46,15 +46,20 @@ export type Project = {
     points?: number;
 };
 
-export type ProjectCreationPayload = {
+export type ProjectBase = {
     name: string;
     readme: string;
     repo: string;
     image_url: string;
     description?: (string | null);
-    event: [
-        string
-    ];
+};
+
+export type ProjectUpdate = {
+    name: string;
+    readme: string;
+    repo: string;
+    image_url: string;
+    description?: (string | null);
 };
 
 /**
@@ -207,13 +212,28 @@ export type GetEventProjectsEventsEventIdProjectsGetResponse = (Array<Project>);
 
 export type GetEventProjectsEventsEventIdProjectsGetError = (HTTPValidationError);
 
+export type GetProjectsProjectsMineGetResponse = (unknown);
+
+export type GetProjectsProjectsMineGetError = unknown;
+
 export type CreateProjectProjectsPostData = {
-    body: ProjectCreationPayload;
+    body: ProjectUpdate;
 };
 
 export type CreateProjectProjectsPostResponse = (unknown);
 
 export type CreateProjectProjectsPostError = (HTTPValidationError);
+
+export type UpdateProjectProjectsProjectIdPutData = {
+    body: ProjectBase;
+    path: {
+        project_id: string;
+    };
+};
+
+export type UpdateProjectProjectsProjectIdPutResponse = (unknown);
+
+export type UpdateProjectProjectsProjectIdPutError = (HTTPValidationError);
 
 export type GetProjectProjectsProjectIdGetData = {
     path: {
