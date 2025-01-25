@@ -38,6 +38,7 @@ export type Project = {
     readme: string;
     repo: string;
     image_url: string;
+    demo: string;
     description?: (string | null);
     event: [
         string
@@ -51,6 +52,7 @@ export type ProjectCreationPayload = {
     readme: string;
     repo: string;
     image_url: string;
+    demo: string;
     description?: (string | null);
     event: [
         string
@@ -62,6 +64,7 @@ export type ProjectUpdate = {
     readme: string;
     repo: string;
     image_url: string;
+    demo: string;
     description?: (string | null);
 };
 

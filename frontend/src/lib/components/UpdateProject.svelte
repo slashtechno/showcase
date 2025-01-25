@@ -11,6 +11,7 @@
     readme: "https://example.com",
     repo: "",
     image_url: "",
+    demo: "",
     description: "",
   });
   let chosenProject: Project = $state({} as Project);
@@ -146,7 +147,19 @@ $inspect(chosenProject)
       <input
         type="text"
         bind:value={project.image_url}
-        placeholder="Image URL (such as a raw GitHub link or a #cdn link)"
+        placeholder="Image URL"
+        class="input input-bordered grow"
+      />
+    </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Demo URL</span>
+        <span class="label-text-alt"> (a link to an interactive demo)</span>
+      </div>
+      <input
+        type="text"
+        bind:value={project.demo}
+        placeholder="Demo URL"
         class="input input-bordered grow"
       />
     </label>
@@ -158,7 +171,7 @@ $inspect(chosenProject)
       <input
         type="text"
         bind:value={project.repo}
-        placeholder="Repository URL (such as a GitHub link)"
+        placeholder="Repository URL"
         class="input input-bordered grow"
       />
     </label>

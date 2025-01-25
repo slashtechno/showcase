@@ -9,6 +9,7 @@ class ProjectBase(BaseModel):
     readme: HttpUrl
     repo: HttpUrl
     image_url: HttpUrl
+    demo: HttpUrl
     description: Optional[str] = None
     owner: Annotated[SkipJsonSchema[List[str]], Field()] = None
 
@@ -17,6 +18,7 @@ class ProjectBase(BaseModel):
         data["readme"] = str(self.readme)
         data["repo"] = str(self.repo)
         data["image_url"] = str(self.image_url)
+        data["demo"] = str(self.demo)
         return data
     
 class ProjectUpdate(ProjectBase):

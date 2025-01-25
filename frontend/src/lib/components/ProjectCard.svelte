@@ -39,7 +39,10 @@
       <p>{project.description}</p>
       <div class="card-actions justify-end">
         <a href={project.repo} target="_blank">
-          <div class="badge badge-primary badge-lg underline">Repo</div>
+          <div class="badge badge-secondary badge-lg underline">Repo</div>
+        </a>
+        <a href={project.demo} target="_blank">
+          <div class="badge badge-primary badge-lg underline">Demo</div>
         </a>
       </div>
     </div>
