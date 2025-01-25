@@ -23,6 +23,7 @@
   onkeydown={selectable ? (e) => e.key === "Enter" && toggle() : null}
   aria-pressed={isSelected}
   disabled={!selectable}
+  class="m-4"
 >
   <div
     class="card bg-base-100 card-compact rounded transition-transform duration-200 border-solid border-base {isSelected

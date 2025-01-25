@@ -34,7 +34,7 @@
   {/if}
 </svelte:head>
 
-<nav class="p-4 text-center bg-neutral">
+<nav class="p-4 text-center rounded-b-full w-1/2 mx-auto bg-neutral">
   <a href="/" class="text-2xl font-bold text-neutral-content">Podium</a>
 </nav>
 <!--  Check for auth on all pages -->
@@ -93,5 +93,6 @@
 <style>
   .modal-box a {
     @apply underline rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-0.5 underline-offset-2 decoration-accent;
+    /* @apply underline rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-0.5; */
   }
 </style>

@@ -8,7 +8,7 @@
 </script>
 
 <div class="space-y-8 p-4">
-  <section class="p-4 border rounded-lg shadow-sm">
+  <section>
     <h2 class="text-xl font-semibold mb-4">Login</h2>
     {#if user.isAuthenticated}
       <div class="my-4 text-center">
@@ -27,25 +27,32 @@
 
   {#if user.isAuthenticated}
     <!-- Style and center -->
-    <section class="p-4 border rounded-lg shadow-sm">
+    <section>
       <h2 class="text-xl font-semibold mb-4">Events</h2>
       <div class="flex justify-center">
       <a href="/events" class="btn btn-wide btn-primary"> Events Dashboard </a>
     </div>
     </section>
 
-    <section class="p-4 border rounded-lg shadow-sm">
+    <section>
       <h2 class="text-xl font-semibold mb-4">Create Project</h2>
       <CreateProject />
     </section>
 
-    <section class="p-4 border rounded-lg shadow-sm">
+    <section>
       <h2 class="text-xl font-semibold mb-4">Attend Event</h2>
       <AttendEvent />
     </section>
     <div class="flex justify-center">
-    <a class="btn btn-wide btn-primary" href="/projects">Update my projects</a>
+    <a class="btn btn-wide btn-primary" href="/projects">Update projects</a>
     <!-- <a class="btn btn-block btn-primary" href="/projects">Update my projects</a> -->
   </div>
   {/if}
 </div>
+
+
+<style>
+  section {
+    @apply p-6 rounded-lg shadow-sm border-accent border-2 border-dotted border-opacity-50;
+  }
+</style>
