@@ -40,8 +40,15 @@
         throwOnError: true,
       });
       toast("Project created successfully");
-      // Reset the fields
-      project = {} as ProjectCreationPayload;
+      project = {
+        name: "",
+        readme: "https://example.com",
+        repo: "",
+        demo: "",
+        image_url: "",
+        description: "",
+        event: [""],
+      };
     } catch (err) {
       handleError(err);
     }

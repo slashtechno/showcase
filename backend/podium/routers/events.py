@@ -96,7 +96,7 @@ def create_event(
 
     # Generate a unique join code by continuously generating a new one until it doesn't match any existing join codes
     while True:
-        join_code = token_urlsafe(8)
+        join_code = token_urlsafe(4).upper()
         if not db.events.first(formula=match({"join_code": join_code})):
             event.join_code = join_code
             break
@@ -128,7 +128,7 @@ def attend_event(
     Attend an event. The client must supply a join code that matches the event's join code.
     """
     # Accomplish this by trying to match the join code against the table and if nothing matches, return a 404
-    event = db.events.first(formula=match({"join_code": join_code}))
+    event = db.events.first(formula=match({"join_code": join_code.upper()}))
     if event is None:
         raise HTTPException(status_code=404, detail="Event not found")
     # If the event is found, add the current user to the attendees list
@@ -262,7 +262,6 @@ def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]) -> List[Pr
     Get the leaderboard for an event. The leaderboard is a list of projects in the event, sorted by the number of votes they have received.
     """
     event = db.events.get(event_id)
-    # projects = [project for project in event["fields"].get("projects", [])]
     projects = []
     for project_id in event["fields"].get("projects", []):
         try:

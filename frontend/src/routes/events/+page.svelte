@@ -5,7 +5,6 @@
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
-  const { events } = data;
 </script>
 
 <div class="space-y-8 p-4">
@@ -16,7 +15,7 @@
   <section class="p-4 border rounded-lg shadow-sm">
     <h2>Events you own</h2>
     <ul>
-      {#each events.owned_events as event}
+      {#each data.events.owned_events as event}
         <li class="py-2">
           <a
             href={`/events/${event.id}`}
@@ -33,7 +32,7 @@
   <section class="p-4 border rounded-lg shadow-sm">
     <h2>Events you are attending</h2>
     <ul>
-      {#each events.attending_events as event}
+      {#each data.events.attending_events as event}
         <li class="py-2">
           <a
             href={`/events/${event.id}`}
