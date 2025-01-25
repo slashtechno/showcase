@@ -8,6 +8,7 @@ from podium import db, settings
 
 from fastapi import APIRouter, HTTPException, Query, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from podium.db.user import CurrentUser
 from pydantic import BaseModel
 import jwt
 from jwt.exceptions import PyJWTError
@@ -63,7 +64,9 @@ async def send_magic_link(email: str):
         from_email=settings.sendgrid_from_email,
         to_emails=email,
         subject="Magic link for Podium",
-        html_content=f"Click <a href='{magic_link}'>here</a> to log in to Podium",
+        # html_content=f"Click <a href='{magic_link}'>here</a> to log in to Podium",
+        html_content=magic_link_email_content(magic_link=magic_link)["html"],
+        plain_text_content=magic_link_email_content(magic_link=magic_link)["text"],
     )
 
     try:
@@ -117,13 +120,13 @@ async def verify_token(token: Annotated[str, Query()]) -> MagicLinkVerificationR
     )
 
 
+# This serves two purposes: it checks if the token is valid and returns the user's email
 security = HTTPBearer()
 
 
-# This serves two purposes: it checks if the token is valid and returns the user's email
 async def get_current_user(
     credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],
-):
+) -> CurrentUser:
     token = credentials.credentials
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -137,7 +140,7 @@ async def get_current_user(
             raise credentials_exception
     except PyJWTError:
         raise credentials_exception
-    return {"email": email}
+    return CurrentUser(email=email)
 
 
 class CheckAuthResponse(BaseModel):
@@ -146,9 +149,9 @@ class CheckAuthResponse(BaseModel):
 
 @router.get("/protected-route")
 async def protected_route(
-    current_user: Annotated[dict, Depends(get_current_user)],
+    current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ) -> CheckAuthResponse:
-    return CheckAuthResponse(email=current_user["email"])
+    return CheckAuthResponse(email=current_user.email)
 
 
 if __name__ == "__main__":
@@ -167,3 +170,129 @@ if __name__ == "__main__":
     print(
         f"Access token for {DEBUG_EMAIL}: {debug_access}\nMagic link: http://localhost:5173/login?token={debug_verify}"
     )
+
+
+def magic_link_email_content(magic_link: str) -> dict:
+    html = f"""
+ <html>
+      <head>
+      <style>
+        .wrapper {{
+          padding: 1rem;
+          margin: 0 auto;
+          max-width: 600px;
+          font-family: 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Fira Sans', 'Oxygen', 'Ubuntu', 'Helvetica Neue', sans-serif;
+        }}
+    
+        .container {{
+          padding: 0;
+          margin: 0;
+          width: 100%;
+          max-width: 100%;
+        }}
+    
+        a {{
+          color: #8492a6;
+        }}
+    
+        .section {{
+          padding: 0.5rem 1rem;
+        }}
+    
+        .footer {{
+          font-size: 0.8rem;
+          line-height: 1.2rem;
+          color: #606a79;
+    
+          background-position: center;
+          background-size: cover;
+          background-repeat: repeat-x;
+        }}
+    
+        .footer p {{
+          margin-block-start: 0.5rem;
+          margin-block-end: 0.5rem;
+        }}
+    
+        .footer a {{
+          color: #646464;
+        }}
+      </style>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      </head>
+      <body>
+      <div class="wrapper">
+        <div class="container">
+          <table>
+            <thead>
+            <tr>
+              <th>
+                <div class="section" style="text-align: left;">
+                  <a
+                    href="https://hackclub.com"
+                    target="_blank"
+                  >
+                    <img
+                      src="https://assets.hackclub.com/icon-rounded.png"
+                      alt="Hack Club Logo"
+                      style="width: 2.5rem"
+                    />
+                  </a>
+                </div>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <div
+                  class="section"
+                >
+                <p>👋 Hey! </p>
+                <p>You requested a magic link for Podium. It's here:</p>
+                <p><a href="{magic_link}">{magic_link}</a></p>
+                <p>- Hack Club</p>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div
+                  class="footer section"
+                  style="background-image: url('https://hackclub.com/pattern.svg');"
+                >
+                  <p>
+                    Hack Club |
+                    <a href="mailto:team@hackclub.com">team@hackclub.com</a>
+                    |
+                    <a href="tel:+1855625HACK">1-855-625-HACK</a>
+                  </p>
+                  <p>
+                    Hack Club is an
+                    <a href="https://hackclub.com/opensource" target="_blank">open source</a>
+                    and
+                    <a href="https://hcb.hackclub.com/hq" target="_blank"
+                      >financially transparent</a
+                    >
+                    501(c)(3) nonprofit. Our EIN is 81-2908499. By the students, for the
+                    students.
+                  </p>
+                </div>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      </body>
+</html>
+"""
+    text = """
+👋 Hey ${name}, \n\n
+      
+You requested a login code for The Summit. Here it is: ${loginCode}. \n\n
+      
+- Hack Club`
+"""
+
+    return {"html": html, "text": text}

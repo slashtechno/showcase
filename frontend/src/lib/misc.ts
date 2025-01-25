@@ -1,5 +1,6 @@
 import type { HTTPValidationError } from "$lib/client/types.gen";
 import { toast } from "svelte-sonner";
+import { lightTheme, darkTheme } from "$lib/themes";
 
 type ErrorWithDetail = {
   detail: string;
@@ -35,8 +36,8 @@ export function setSystemTheme() {
     return;
   }
   if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    document.documentElement.setAttribute("data-theme", "dark");
+    document.documentElement.setAttribute("data-theme", darkTheme);
   } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme", lightTheme);
   }
 }

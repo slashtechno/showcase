@@ -3,4 +3,6 @@
     "[svelte]": {
       "editor.defaultFormatter": "svelte.svelte-vscode"
     },
+    // "css.lint.unknownAtRules": "ignore",
+    // "css.customData": [".vscode/tailwind.json"]
   }

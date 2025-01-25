@@ -38,6 +38,7 @@ export type Project = {
     readme: string;
     repo: string;
     image_url: string;
+    demo: string;
     description?: (string | null);
     event: [
         string
@@ -51,10 +52,20 @@ export type ProjectCreationPayload = {
     readme: string;
     repo: string;
     image_url: string;
+    demo: string;
     description?: (string | null);
     event: [
         string
     ];
+};
+
+export type ProjectUpdate = {
+    name: string;
+    readme: string;
+    repo: string;
+    image_url: string;
+    demo: string;
+    description?: (string | null);
 };
 
 /**
@@ -207,6 +218,10 @@ export type GetEventProjectsEventsEventIdProjectsGetResponse = (Array<Project>);
 
 export type GetEventProjectsEventsEventIdProjectsGetError = (HTTPValidationError);
 
+export type GetProjectsProjectsMineGetResponse = (Array<Project>);
+
+export type GetProjectsProjectsMineGetError = unknown;
+
 export type CreateProjectProjectsPostData = {
     body: ProjectCreationPayload;
 };
@@ -214,6 +229,27 @@ export type CreateProjectProjectsPostData = {
 export type CreateProjectProjectsPostResponse = (unknown);
 
 export type CreateProjectProjectsPostError = (HTTPValidationError);
+
+export type UpdateProjectProjectsProjectIdPutData = {
+    body: ProjectUpdate;
+    path: {
+        project_id: string;
+    };
+};
+
+export type UpdateProjectProjectsProjectIdPutResponse = (unknown);
+
+export type UpdateProjectProjectsProjectIdPutError = (HTTPValidationError);
+
+export type DeleteProjectProjectsProjectIdDeleteData = {
+    path: {
+        project_id: string;
+    };
+};
+
+export type DeleteProjectProjectsProjectIdDeleteResponse = (unknown);
+
+export type DeleteProjectProjectsProjectIdDeleteError = (HTTPValidationError);
 
 export type GetProjectProjectsProjectIdGetData = {
     path: {

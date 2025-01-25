@@ -31,7 +31,7 @@
     >
   </div>
   <ul
-    class="dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-2xl"
+    class="dropdown-content bg-base-300 rounded-box z-[1] w-52 p-1 shadow-2xl overflow-auto max-h-52 mr-0"  
   >
     {#each themes as theme}
       <li>

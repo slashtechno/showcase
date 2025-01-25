@@ -145,7 +145,7 @@
         You are logged in as {user.email}
       </h2>
       <button
-        class="mt-4 px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+        class="mt-4 px-4 py-2 btn btn-primary"
         onclick={() => history.back()}
       >
         Go back to previous page
@@ -289,8 +289,9 @@
       </div>
     </form>
   {/if}
+  <!-- TODO: Make this use a var -->
   <div class="text-center mt-4">
-    <a href="/" class="text-sm text-blue-600 hover:text-blue-800"
+    <a href="/" class="btn-sm btn-secondary btn"
       >← Back to Home</a
     >
   </div>

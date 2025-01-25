@@ -8,6 +8,7 @@
     name: "",
     readme: "https://example.com",
     repo: "",
+    demo: "",
     image_url: "",
     description: "",
     event: [""],
@@ -39,11 +40,11 @@
         throwOnError: true,
       });
       toast("Project created successfully");
-      // Reset the fields
       project = {
         name: "",
         readme: "https://example.com",
         repo: "",
+        demo: "",
         image_url: "",
         description: "",
         event: [""],
@@ -88,7 +89,19 @@
       <input
         type="text"
         bind:value={project.image_url}
-        placeholder="Image URL (such as a raw GitHub link or a #cdn link)"
+        placeholder="Image URL"
+        class="input input-bordered grow"
+      />
+    </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Demo URL</span>
+        <span class="label-text-alt"> (a link to an interactive demo)</span>
+      </div>
+      <input
+        type="text"
+        bind:value={project.demo}
+        placeholder="Demo URL"
         class="input input-bordered grow"
       />
     </label>
@@ -100,7 +113,7 @@
       <input
         type="text"
         bind:value={project.repo}
-        placeholder="Repository URL (such as a GitHub link)"
+        placeholder="Repository URL"
         class="input input-bordered grow"
       />
     </label>
@@ -120,7 +133,7 @@
           <option value={event.id}>{event.name}</option>
         {/each}
       </select>
-      <button type="submit" class="btn btn-block mt-4"> Create Project </button>
     </label>
+    <button type="submit" class="btn btn-block btn-primary mt-4"> Create Project </button>
   </form>
 </div>

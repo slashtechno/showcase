@@ -11,6 +11,7 @@ from pydantic.json_schema import SkipJsonSchema
 from requests import HTTPError
 
 from podium.routers.auth import get_current_user
+from podium.db.user import CurrentUser
 from podium import db
 from podium.db import EventCreationPayload, ComplexEvent, UserEvents, Event
 from podium.db.project import Project
@@ -21,13 +22,13 @@ router = APIRouter(prefix="/events", tags=["events"])
 @router.get("/{event_id}")
 def get_event(
     event_id: Annotated[str, Path(title="Event ID")],
-    current_user: Annotated[dict, Depends(get_current_user)],
+    current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ) -> Union[ComplexEvent, Event]:
     """
     Get an event by its ID. If the user owns it, return a complex event. Otherwise, return a regular event.
     """
 
-    user_id = db.user.get_user_record_id_by_email(current_user["email"])
+    user_id = db.user.get_user_record_id_by_email(current_user.email)
     if user_id is None:
         raise HTTPException(status_code=500, detail="User not found")
 
@@ -50,12 +51,12 @@ def get_event(
 # Used to be /attending
 @router.get("/")
 def get_attending_events(
-    current_user: Annotated[dict, Depends(get_current_user)],
+    current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ) -> UserEvents:
     """
     Get a list of all events that the current user is attending.
     """
-    user_id = db.user.get_user_record_id_by_email(current_user["email"])
+    user_id = db.user.get_user_record_id_by_email(current_user.email)
     if user_id is None:
         raise HTTPException(status_code=500, detail="User not found")
     user = db.users.get(user_id)
@@ -82,20 +83,20 @@ def get_attending_events(
 @router.post("/")
 def create_event(
     event: EventCreationPayload,
-    current_user: Annotated[dict, Depends(get_current_user)],
+    current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ):
     """
     Create a new event. The current user is automatically added as an owner of the event.
     """
     # No matter what email the user provides, the owner is always the current user
-    event.owner = [db.user.get_user_record_id_by_email(current_user["email"])]
+    event.owner = [db.user.get_user_record_id_by_email(current_user.email)]
     # If the owner is not found, return a 404. Since there might eventually be multiple owners, just check if any of them are None
     if None in event.owner:
         raise HTTPException(status_code=404, detail="User not found")
 
     # Generate a unique join code by continuously generating a new one until it doesn't match any existing join codes
     while True:
-        join_code = token_urlsafe(8)
+        join_code = token_urlsafe(4).upper()
         if not db.events.first(formula=match({"join_code": join_code})):
             event.join_code = join_code
             break
@@ -121,18 +122,18 @@ def create_event(
 @router.post("/attend")
 def attend_event(
     join_code: Annotated[str, Query(description="A unique code used to join an event")],
-    current_user: Annotated[dict, Depends(get_current_user)],
+    current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ):
     """
     Attend an event. The client must supply a join code that matches the event's join code.
     """
     # Accomplish this by trying to match the join code against the table and if nothing matches, return a 404
-    event = db.events.first(formula=match({"join_code": join_code}))
+    event = db.events.first(formula=match({"join_code": join_code.upper()}))
     if event is None:
         raise HTTPException(status_code=404, detail="Event not found")
     # If the event is found, add the current user to the attendees list
     # But first, ensure that the user is not already in the list
-    if db.user.get_user_record_id_by_email(current_user["email"]) in event[
+    if db.user.get_user_record_id_by_email(current_user.email) in event[
         "fields"
     ].get("attendees", []):
         raise HTTPException(status_code=400, detail="User already attending event")
@@ -140,7 +141,7 @@ def attend_event(
         event["id"],
         {
             "attendees": event["fields"].get("attendees", [])
-            + [db.user.get_user_record_id_by_email(current_user["email"])]
+            + [db.user.get_user_record_id_by_email(current_user.email)]
         },
     )
 
@@ -213,12 +214,12 @@ class Vote(BaseModel):
 
 # @router.post("/{event_id}/vote")
 @router.post("/vote")
-def vote(vote: Vote, current_user: Annotated[dict, Depends(get_current_user)]):
+def vote(vote: Vote, current_user: Annotated[CurrentUser, Depends(get_current_user)]):
     """
     Vote for the top 3 projects in an event. The client must provide the event ID and a list of the top 3 projects. If there are less than 20 projects in the event, only the top 2 projects are required.
     """
 
-    user_id = db.user.get_user_record_id_by_email(current_user["email"])
+    user_id = db.user.get_user_record_id_by_email(current_user.email)
     user = db.users.get(user_id)
 
     if vote.event_id in user["fields"].get("votes", []):
@@ -261,7 +262,6 @@ def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]) -> List[Pr
     Get the leaderboard for an event. The leaderboard is a list of projects in the event, sorted by the number of votes they have received.
     """
     event = db.events.get(event_id)
-    # projects = [project for project in event["fields"].get("projects", [])]
     projects = []
     for project_id in event["fields"].get("projects", []):
         try:
