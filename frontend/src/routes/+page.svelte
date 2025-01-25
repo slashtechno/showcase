@@ -11,7 +11,7 @@
   <section class="p-4 border rounded-lg shadow-sm">
     <h2 class="text-xl font-semibold mb-4">Login</h2>
     {#if user.isAuthenticated}
-      <div class="my-4">
+      <div class="my-4 text-center">
         <h2>Hey!</h2>
         <p>
           You're signed in as <strong>{user.email}</strong>.
@@ -26,9 +26,12 @@
   </section>
 
   {#if user.isAuthenticated}
+    <!-- Style and center -->
     <section class="p-4 border rounded-lg shadow-sm">
       <h2 class="text-xl font-semibold mb-4">Events</h2>
-      <a href="/events" class="btn"> Events Dashboard </a>
+      <div class="flex justify-center">
+      <a href="/events" class="btn btn-wide btn-primary"> Events Dashboard </a>
+    </div>
     </section>
 
     <section class="p-4 border rounded-lg shadow-sm">
@@ -41,8 +44,8 @@
       <AttendEvent />
     </section>
     <div class="flex justify-center">
-    <!-- <a class="btn btn-wide btn-primary" href="/projects">My projects</a> -->
-    <a class="btn btn-block btn-primary" href="/projects">Update my projects</a>
+    <a class="btn btn-wide btn-primary" href="/projects">Update my projects</a>
+    <!-- <a class="btn btn-block btn-primary" href="/projects">Update my projects</a> -->
   </div>
   {/if}
 </div>

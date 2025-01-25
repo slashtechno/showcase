@@ -31,6 +31,6 @@
         class="w-full input input-bordered"
       />
     </label>
-    <button type="submit" class="btn-block btn"> Join the adventure! </button>
+    <button type="submit" class="btn-block btn btn-primary"> Join the adventure! </button>
   </form>
 </div>

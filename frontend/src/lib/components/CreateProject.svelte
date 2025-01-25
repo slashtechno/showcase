@@ -134,6 +134,6 @@
         {/each}
       </select>
     </label>
-    <button type="submit" class="btn btn-block mt-4"> Create Project </button>
+    <button type="submit" class="btn btn-block btn-primary mt-4"> Create Project </button>
   </form>
 </div>

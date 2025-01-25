@@ -51,6 +51,6 @@
       ></textarea>
     </label>
     <!-- Create Event button -->
-    <button class="btn btn-block mt-4" type="submit"> Create Event </button>
+    <button class="btn btn-block btn-primary mt-4" type="submit"> Create Event </button>
   </form>
 </div>

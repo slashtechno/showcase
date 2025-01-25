@@ -19,7 +19,6 @@
         <li class="py-2">
           <a
             href={`/events/${event.id}`}
-            class="font-medium underline hover rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1"
             >{event.name}</a
           >
           <span class="ml-4 bg-base-300 p-1 rounded"
@@ -36,7 +35,6 @@
         <li class="py-2">
           <a
             href={`/events/${event.id}`}
-            class="font-medium underline hover rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1"
             >{event.name}</a
           >
         </li>
@@ -44,3 +42,9 @@
     </ul>
   </section>
 </div>
+
+<style>
+  a {
+    @apply underline rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1 underline-offset-2 decoration-accent;
+  }
+</style>
