@@ -4,6 +4,7 @@
   import { toast } from "svelte-sonner";
   import { handleError } from "$lib/misc";
   import type { ProjectUpdate } from "$lib/client/types.gen";
+  import { fade } from "svelte/transition";
 
   let project: ProjectUpdate = $state({
     name: "",
@@ -13,17 +14,18 @@
     description: "",
   });
   let chosenProject: Project = $state({} as Project);
-
+$inspect(chosenProject)
   let projects: Project[] = $state([]);
   let fetchedProjects = false;
+
+  let showDeleteAlert = $state(false);
 
   async function fetchProjects() {
     try {
       toast("Fetching projects...");
-      const { data } =
-        await ProjectsService.getProjectsProjectsMineGet({
-          throwOnError: true,
-        });
+      const { data } = await ProjectsService.getProjectsProjectsMineGet({
+        throwOnError: true,
+      });
       projects = data;
       fetchedProjects = true;
     } catch (err) {
@@ -32,6 +34,14 @@
   }
 
   async function deleteProject() {
+// TODO: not implemented yet
+  }
+
+  async function confirmDeleteProject() {
+    showDeleteAlert = true;
+    setTimeout(() => {
+      showDeleteAlert = false;
+    }, 5000);
   }
 
   async function updateProject() {
@@ -57,6 +67,20 @@
 </script>
 
 <div class="p-4 max-w-md mx-auto">
+  {#if showDeleteAlert}
+    <div role="alert" class="alert" in:fade out:fade>
+      <span>Are you <strong>sure</strong> you want to delete this project?</span
+      >
+      <div>
+        <button class="btn" onclick={() => (showDeleteAlert = false)}
+          >Cancel</button
+        >
+        <button class="btn btn-error" onclick={() => deleteProject()}
+          >Delete</button
+        >
+      </div>
+    </div>
+  {/if}
   <form onsubmit={updateProject} class="space-y-4">
     <label class="form-control">
       <div class="label">
@@ -69,7 +93,8 @@
           if (!fetchedProjects) fetchProjects();
         }}
         onchange={() => {
-          project = { ...chosenProject}
+          project = { ...chosenProject };
+          showDeleteAlert = false;
         }}
       >
         <option value="" disabled selected>Select a project to update</option>
@@ -126,7 +151,17 @@
         class="input input-bordered grow"
       />
     </label>
-    <button type="submit" class="btn btn-block mt-4 btn-primary"> Update Project </button>
-  </form>
-  <!-- <button class="btn btn-block mt-4 btn-warning" onclick={() => deleteProject()}> Delete Project </button> -->
+    {#if chosenProject.id}
+    <button type="submit" class="btn btn-block mt-4 btn-primary">
+      Update Project
+    </button>
+    <button
+    class="btn btn-block mt-4 btn-warning"
+    type="button"
+    onclick={() => confirmDeleteProject()}
+    >
+    Delete Project
+  </button>
+  {/if}
+</form>
 </div>
