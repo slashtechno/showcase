@@ -33,7 +33,7 @@ export type MagicLinkVerificationResponse = {
     email: string;
 };
 
-export type OwnerProject = {
+export type PrivateProject = {
     name: string;
     readme: string;
     repo: string;
@@ -41,6 +41,12 @@ export type OwnerProject = {
     demo: string;
     description?: (string | null);
     event: [
+        string
+    ];
+    id: string;
+    points?: number;
+    collaborators?: Array<(string)>;
+    owner: [
         string
     ];
     join_code: string;
@@ -56,11 +62,12 @@ export type Project = {
     event: [
         string
     ];
+    id: string;
+    points?: number;
+    collaborators?: Array<(string)>;
     owner: [
         string
     ];
-    id: string;
-    points?: number;
 };
 
 export type ProjectUpdate = {
@@ -261,7 +268,7 @@ export type GetEventProjectsEventsEventIdProjectsGetResponse = (Array<Project>);
 
 export type GetEventProjectsEventsEventIdProjectsGetError = (HTTPValidationError);
 
-export type GetProjectsProjectsMineGetResponse = (Array<OwnerProject>);
+export type GetProjectsProjectsMineGetResponse = (Array<PrivateProject>);
 
 export type GetProjectsProjectsMineGetError = unknown;
 
@@ -272,6 +279,19 @@ export type CreateProjectProjectsPostData = {
 export type CreateProjectProjectsPostResponse = (unknown);
 
 export type CreateProjectProjectsPostError = (HTTPValidationError);
+
+export type JoinProjectProjectsJoinPostData = {
+    query: {
+        /**
+         * A unique code used to join a project as a collaborator
+         */
+        join_code: string;
+    };
+};
+
+export type JoinProjectProjectsJoinPostResponse = (unknown);
+
+export type JoinProjectProjectsJoinPostError = (HTTPValidationError);
 
 export type UpdateProjectProjectsProjectIdPutData = {
     body: ProjectUpdate;

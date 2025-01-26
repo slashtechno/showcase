@@ -4,7 +4,7 @@
   import CreateProject from "$lib/components/CreateProject.svelte";
   import AttendEvent from "$lib/components/AttendEvent.svelte";
   import { user, signOut } from "$lib/user.svelte";
-    import Page from "./events/+page.svelte";
+  import Page from "./events/+page.svelte";
 </script>
 
 <div class="space-y-8 p-4">
@@ -30,10 +30,19 @@
     <section>
       <h2 class="text-xl font-semibold mb-4">Events</h2>
       <div class="flex justify-center">
-      <a href="/events" class="btn btn-wide btn-primary"> Events Dashboard </a>
-    </div>
+        <a href="/events" class="btn btn-wide btn-primary">
+          Events Dashboard
+        </a>
+      </div>
     </section>
-
+    <section>
+      <h2 class="text-xl font-semibold mb-4">Projects</h2>
+      <div class="flex justify-center">
+        <a href="/projects" class="btn btn-wide btn-primary">
+          Projects Dashboard
+        </a>
+      </div>
+    </section>
     <section>
       <h2 class="text-xl font-semibold mb-4">Create Project</h2>
       <CreateProject />
@@ -43,13 +52,8 @@
       <h2 class="text-xl font-semibold mb-4">Attend Event</h2>
       <AttendEvent />
     </section>
-    <div class="flex justify-center">
-    <a class="btn btn-wide btn-primary" href="/projects">Your projects</a>
-    <!-- <a class="btn btn-block btn-primary" href="/projects">Update my projects</a> -->
-  </div>
   {/if}
 </div>
-
 
 <style>
   section {

@@ -1,13 +1,14 @@
 <script lang="ts">
   import UpdateProject from "$lib/components/UpdateProject.svelte";
+  import JoinProject from "$lib/components/JoinProject.svelte";
   import type { PageData } from "./$types";
 
   let { data }: { data: PageData } = $props();
 </script>
 
-<div class="p-4 mx-auto">
+<div class="p-4 mx-auto space-y-4">
 <!-- <div > -->
-  <section class="space-y-8 p-4 mb-4">
+  <section class="space-y-8 p-4">
     <h2>Your projects</h2>
     <ul>
       {#each data.projects as project}
@@ -20,7 +21,10 @@
       {/each}
     </ul>
   </section>
-
+  <section>
+    <h2 class="text-xl font-semibold mb-4">Join project</h2>
+    <JoinProject />
+  </section>
   <section>
     <h2 class="text-xl font-semibold mb-4">Update Projects</h2>
     <UpdateProject projects={data.projects} events={data.events}/>

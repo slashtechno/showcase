@@ -3,7 +3,7 @@
   import type { Event, Project } from "$lib/client";
   import { toast } from "svelte-sonner";
   import { handleError } from "$lib/misc";
-  import type { OwnerProject, ProjectUpdate } from "$lib/client/types.gen";
+  import type { PrivateProject, ProjectUpdate } from "$lib/client/types.gen";
   import { fade } from "svelte/transition";
   import { onMount } from "svelte";
 
@@ -22,7 +22,7 @@
   //   }
   // }
 
-  let {projects, events}: {projects: Array<OwnerProject>, events:Array<Event>} = $props();
+  let {projects, events}: {projects: Array<PrivateProject>, events:Array<Event>} = $props();
 
   const emptyProjectUpdate: ProjectUpdate = {
     name: "",

@@ -1,4 +1,4 @@
-from podium.constants import SingleRecordField
+from podium.constants import SingleRecordField, MultiRecordField
 from pydantic import BaseModel, HttpUrl, StringConstraints
 from typing import Annotated, Optional
 
@@ -9,7 +9,7 @@ class ProjectBase(BaseModel):
     repo: HttpUrl
     image_url: HttpUrl
     demo: HttpUrl
-    description: Optional[str] = None
+    description: Optional[str] = ""
     # event: Annotated[
     #     List[Annotated[str, StringConstraints(pattern=RECORD_REGEX)]],
     #     Len(min_length=1, max_length=1),
@@ -31,14 +31,15 @@ class ProjectUpdate(ProjectBase):
     ...
 
 
-class PrivateProjectCreationPayload(ProjectBase):
-    owner: SingleRecordField
-    join_code: str
-    
 
 class Project(ProjectBase):
     id: str
     points: int = 0
+    collaborators: MultiRecordField = []
+    owner: SingleRecordField
 
-class OwnerProject(PrivateProjectCreationPayload, Project):
-    pass
+
+
+class PrivateProject(Project):
+    join_code: str
+

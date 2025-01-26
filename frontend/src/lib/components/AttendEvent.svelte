@@ -8,7 +8,6 @@
     query: { join_code: "", referral: "" },
   })
 
-  // Function to create a new event
   async function attendEvent() {
     try {
       await EventsService.attendEventEventsAttendPost({
@@ -32,7 +31,7 @@
       <input
         type="text"
         bind:value={toSend.query.join_code}
-        placeholder="8 character join code"
+        placeholder="~4 character case-insensitive join code"
         class="w-full input input-bordered"
       />
     </label>

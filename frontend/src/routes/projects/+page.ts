@@ -3,7 +3,7 @@ import { error, redirect } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 import { user } from "$lib/user.svelte";
 import { client, EventsService, ProjectsService } from "$lib/client/sdk.gen";
-import type { Event, OwnerProject, UserEvents } from "$lib/client/types.gen";
+import type { Event, PrivateProject, UserEvents } from "$lib/client/types.gen";
 
 export const load: PageLoad = async ({ params, fetch, depends }) => {
   // depends("events:events")
@@ -15,7 +15,7 @@ export const load: PageLoad = async ({ params, fetch, depends }) => {
   }
 
   let events: Array<Event> = [];
-  let projects: Array<OwnerProject> = [];
+  let projects: Array<PrivateProject> = [];
   
   try {
       const { data } = await EventsService.getAttendingEventsEventsGet({
