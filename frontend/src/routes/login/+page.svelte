@@ -25,6 +25,8 @@
     state: "",
     zip_code: "",
     country: "",
+    // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date
+    dob: "",
   });
 
   async function eitherLoginOrSignUp() {
@@ -103,6 +105,7 @@
         state: "",
         zip_code: "",
         country: "",
+        dob: "",
       };
     } catch (error) {
       handleError(error);
@@ -185,7 +188,11 @@
           placeholder="example@example.com"
           onblur={async () => {
             // If the signup field is expanded and the email currently entered into the field may be valid, check if the signup fields should be hidden since the user already exists
-            if (expandedDueTo != userInfo.email && userInfo.email && showSignupFields) {
+            if (
+              expandedDueTo != userInfo.email &&
+              userInfo.email &&
+              showSignupFields
+            ) {
               const userExists = await checkUserExists();
               if (userExists) {
                 showSignupFields = false;
@@ -242,6 +249,7 @@
         <label class="form-control">
           <div class="label">
             <span class="label-text">Address line 2</span>
+            <span class="label-text-alt">Optional</span>
           </div>
           <input
             id="street_2"
@@ -250,9 +258,6 @@
             placeholder="Apt 4B"
             bind:value={userInfo.street_2}
           />
-          <div class="label">
-            <span class="label-text-alt">Optional</span>
-          </div>
         </label>
         <label class="form-control">
           <div class="label">
@@ -309,6 +314,20 @@
             class="input input-bordered grow"
             placeholder="US"
             bind:value={userInfo.country}
+          />
+        </label>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Date of Birth</span>
+            <span class="label-text-alt"
+              >Hack Club is only for students {"<="}18</span
+            >
+          </div>
+          <input
+            id="dob"
+            type="date"
+            class="input input-bordered grow"
+            bind:value={userInfo.dob}
           />
         </label>
       {/if}

@@ -33,6 +33,29 @@ export type MagicLinkVerificationResponse = {
     email: string;
 };
 
+export type PrivateProject = {
+    name: string;
+    readme: string;
+    repo: string;
+    image_url: string;
+    demo: string;
+    description?: (string | null);
+    event: [
+        string
+    ];
+    /**
+     * A lower-bound estimate of the number of hours spent on the project. Only used for general statistics.
+     */
+    hours_spent?: number;
+    id: string;
+    points?: number;
+    collaborators?: Array<(string)>;
+    owner: [
+        string
+    ];
+    join_code: string;
+};
+
 export type Project = {
     name: string;
     readme: string;
@@ -43,18 +66,14 @@ export type Project = {
     event: [
         string
     ];
+    /**
+     * A lower-bound estimate of the number of hours spent on the project. Only used for general statistics.
+     */
+    hours_spent?: number;
     id: string;
     points?: number;
-};
-
-export type ProjectCreationPayload = {
-    name: string;
-    readme: string;
-    repo: string;
-    image_url: string;
-    demo: string;
-    description?: (string | null);
-    event: [
+    collaborators?: Array<(string)>;
+    owner: [
         string
     ];
 };
@@ -66,6 +85,29 @@ export type ProjectUpdate = {
     image_url: string;
     demo: string;
     description?: (string | null);
+    event: [
+        string
+    ];
+    /**
+     * A lower-bound estimate of the number of hours spent on the project. Only used for general statistics.
+     */
+    hours_spent?: number;
+};
+
+export type PublicProjectCreationPayload = {
+    name: string;
+    readme: string;
+    repo: string;
+    image_url: string;
+    demo: string;
+    description?: (string | null);
+    event: [
+        string
+    ];
+    /**
+     * A lower-bound estimate of the number of hours spent on the project. Only used for general statistics.
+     */
+    hours_spent?: number;
 };
 
 /**
@@ -88,8 +130,27 @@ export type RecordDict = {
     };
 };
 
-export type User = {
+export type User_Input = {
     email: string;
+};
+
+export type User_Output = {
+    first_name: string;
+    last_name: string;
+    email: string;
+    street_1: string;
+    street_2?: (string | null);
+    city: string;
+    state: string;
+    zip_code: string;
+    country: string;
+    dob: string;
+    id: string;
+    votes?: Array<(string)>;
+    projects?: Array<(string)>;
+    owned_events?: Array<(string)>;
+    attending_events?: Array<(string)>;
+    referral?: Array<(string)>;
 };
 
 /**
@@ -114,6 +175,7 @@ export type UserSignupPayload = {
     state: string;
     zip_code: string;
     country: string;
+    dob: string;
 };
 
 export type ValidationError = {
@@ -134,7 +196,7 @@ export type Vote = {
 };
 
 export type RequestLoginRequestLoginPostData = {
-    body: User;
+    body: User_Input;
 };
 
 export type RequestLoginRequestLoginPostResponse = (unknown);
@@ -183,6 +245,10 @@ export type AttendEventEventsAttendPostData = {
          * A unique code used to join an event
          */
         join_code: string;
+        /**
+         * How did you hear about this event?
+         */
+        referral: string;
     };
 };
 
@@ -218,17 +284,30 @@ export type GetEventProjectsEventsEventIdProjectsGetResponse = (Array<Project>);
 
 export type GetEventProjectsEventsEventIdProjectsGetError = (HTTPValidationError);
 
-export type GetProjectsProjectsMineGetResponse = (Array<Project>);
+export type GetProjectsProjectsMineGetResponse = (Array<PrivateProject>);
 
 export type GetProjectsProjectsMineGetError = unknown;
 
 export type CreateProjectProjectsPostData = {
-    body: ProjectCreationPayload;
+    body: PublicProjectCreationPayload;
 };
 
 export type CreateProjectProjectsPostResponse = (unknown);
 
 export type CreateProjectProjectsPostError = (HTTPValidationError);
+
+export type JoinProjectProjectsJoinPostData = {
+    query: {
+        /**
+         * A unique code used to join a project as a collaborator
+         */
+        join_code: string;
+    };
+};
+
+export type JoinProjectProjectsJoinPostResponse = (unknown);
+
+export type JoinProjectProjectsJoinPostError = (HTTPValidationError);
 
 export type UpdateProjectProjectsProjectIdPutData = {
     body: ProjectUpdate;
@@ -260,6 +339,10 @@ export type GetProjectProjectsProjectIdGetData = {
 export type GetProjectProjectsProjectIdGetResponse = (unknown);
 
 export type GetProjectProjectsProjectIdGetError = (HTTPValidationError);
+
+export type GetCurrentUserUsersCurrentGetResponse = (User_Output);
+
+export type GetCurrentUserUsersCurrentGetError = unknown;
 
 export type CreateUserUsersPostData = {
     body: UserSignupPayload;

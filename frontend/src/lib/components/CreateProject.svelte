@@ -1,10 +1,10 @@
 <script lang="ts">
   import { EventsService, ProjectsService } from "$lib/client/sdk.gen";
-  import type { ProjectCreationPayload, Event } from "$lib/client";
+  import type { PublicProjectCreationPayload, Event } from "$lib/client";
   import { toast } from "svelte-sonner";
   import { handleError } from "$lib/misc";
 
-  let project: ProjectCreationPayload = $state({
+  let project: PublicProjectCreationPayload = $state({
     name: "",
     readme: "https://example.com",
     repo: "",
@@ -12,14 +12,10 @@
     image_url: "",
     description: "",
     event: [""],
+    hours_spent: 0,
   });
   let events: Event[] = $state([]);
   let fetchedEvents = false;
-
-  // https://svelte.dev/tutorial/svelte/inspecting-state
-  // $inspect(project.event).with(console.debug);
-  // $inspect(events);
-  // $inspect(project)
 
   async function fetchEvents() {
     try {
@@ -48,6 +44,7 @@
         image_url: "",
         description: "",
         event: [""],
+        hours_spent: 0,
       };
     } catch (err) {
       handleError(err);
@@ -119,6 +116,25 @@
     </label>
     <label class="form-control">
       <div class="label">
+        <span class="label-text"
+          >Rough estimate of how many hours your team spent on this project</span
+        >
+      </div>
+      <input
+        type="number"
+        bind:value={project.hours_spent}
+        placeholder="Hours spent"
+        class="input input-bordered grow"
+        min="0"
+      />
+      <div class="label">
+        <span class="label-text-alt">
+          This is only used for statistics, so please be honest!</span
+        >
+      </div>
+    </label>
+    <label class="form-control">
+      <div class="label">
         <span class="label-text">Event</span>
       </div>
       <select
@@ -134,6 +150,8 @@
         {/each}
       </select>
     </label>
-    <button type="submit" class="btn btn-block btn-primary mt-4"> Create Project </button>
+    <button type="submit" class="btn btn-block btn-primary mt-4">
+      Create Project
+    </button>
   </form>
 </div>

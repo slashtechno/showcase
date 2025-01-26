@@ -3,48 +3,77 @@
   import type { Event, Project } from "$lib/client";
   import { toast } from "svelte-sonner";
   import { handleError } from "$lib/misc";
-  import type { ProjectUpdate } from "$lib/client/types.gen";
+  import type { PrivateProject, ProjectUpdate } from "$lib/client/types.gen";
   import { fade } from "svelte/transition";
+  import { onMount } from "svelte";
 
-  let project: ProjectUpdate = $state({
+  // let events: Event[] = $state([]);
+  // let fetchedEvents = false;
+
+  // async function fetchEvents() {
+  //   try {
+  //     toast("Fetching events; please wait");
+  //     const { data: userEvents } =
+  //       await EventsService.getAttendingEventsEventsGet({ throwOnError: true });
+  //     events = userEvents.attending_events;
+  //     fetchedEvents = true;
+  //   } catch (err) {
+  //     handleError(err);
+  //   }
+  // }
+
+  let {
+    projects,
+    events,
+  }: { projects: Array<PrivateProject>; events: Array<Event> } = $props();
+
+  const emptyProjectUpdate: ProjectUpdate = {
     name: "",
     readme: "https://example.com",
     repo: "",
     image_url: "",
     demo: "",
     description: "",
-  });
-  let chosenProject: Project = $state({} as Project);
-$inspect(chosenProject)
-  let projects: Project[] = $state([]);
+    event: [""],
+    hours_spent: 0,
+  };
+  const emptyProject: Project = {
+    ...emptyProjectUpdate,
+    owner: [""],
+    event: [""],
+    id: "",
+  };
+  let project: ProjectUpdate = $state(emptyProjectUpdate);
+  let chosenProject: Project = $state(emptyProject);
+  $inspect(project);
   let fetchedProjects = false;
 
   let showDeleteAlert = $state(false);
 
-  async function fetchProjects() {
-    try {
-      toast("Fetching projects...");
-      const { data } = await ProjectsService.getProjectsProjectsMineGet({
-        throwOnError: true,
-      });
-      projects = data;
-      fetchedProjects = true;
-    } catch (err) {
-      handleError(err);
-    }
-  }
+  // async function fetchProjects() {
+  //   try {
+  //     toast("Fetching projects...");
+  //     const { data } = await ProjectsService.getProjectsProjectsMineGet({
+  //       throwOnError: true,
+  //     });
+  //     projects = data;
+  //     fetchedProjects = true;
+  //   } catch (err) {
+  //     handleError(err);
+  //   }
+  // }
 
   async function deleteProject() {
     showDeleteAlert = false;
     try {
       await ProjectsService.deleteProjectProjectsProjectIdDelete({
-      path: { project_id: chosenProject.id },
+        path: { project_id: chosenProject.id },
         throwOnError: true,
       });
       toast("Project deleted successfully");
       // Reset the fields
-      project = {} as ProjectUpdate;
-      chosenProject = {} as Project;
+      project = emptyProjectUpdate;
+      chosenProject = emptyProject;
       // Fetch the projects again if the user wants to perform another update to reflect the deletion
       fetchedProjects = false;
     } catch (err) {
@@ -59,6 +88,10 @@ $inspect(chosenProject)
     }, 5000);
   }
 
+  // onMount(() => {
+  //   fetchEvents();
+  // });
+
   async function updateProject() {
     try {
       await ProjectsService.updateProjectProjectsProjectIdPut({
@@ -68,8 +101,8 @@ $inspect(chosenProject)
       });
       toast("Project updated successfully");
       // Reset the fields
-      project = {} as ProjectUpdate;
-      chosenProject = {} as Project;
+      project = emptyProjectUpdate;
+      chosenProject = emptyProject;
       // fetch the projects again if the user wants to perform another update
       fetchedProjects = false;
     } catch (err) {
@@ -101,9 +134,6 @@ $inspect(chosenProject)
       <select
         bind:value={chosenProject}
         class="select select-bordered"
-        onfocus={() => {
-          if (!fetchedProjects) fetchProjects();
-        }}
         onchange={() => {
           project = { ...chosenProject };
           showDeleteAlert = false;
@@ -175,17 +205,47 @@ $inspect(chosenProject)
         class="input input-bordered grow"
       />
     </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text"
+          >Rough estimate of how many hours your team spent on this project</span
+        >
+      </div>
+      <input
+        type="number"
+        bind:value={project.hours_spent}
+        placeholder="Hours spent"
+        class="input input-bordered grow"
+        min="0"
+      />
+      <div class="label">
+        <span class="label-text-alt">
+          This is only used for statistics, so please be honest!</span
+        >
+      </div>
+    </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Event</span>
+      </div>
+      <select bind:value={project.event[0]} class="select select-bordered">
+        <option value="" disabled selected>Select an event</option>
+        {#each events as event}
+          <option value={event.id}>{event.name}</option>
+        {/each}
+      </select>
+    </label>
     {#if chosenProject.id}
-    <button type="submit" class="btn btn-block mt-4 btn-primary">
-      Update Project
-    </button>
-    <button
-    class="btn btn-block mt-4 btn-warning"
-    type="button"
-    onclick={() => confirmDeleteProject()}
-    >
-    Delete Project
-  </button>
-  {/if}
-</form>
+      <button type="submit" class="btn btn-block mt-4 btn-primary">
+        Update Project
+      </button>
+      <button
+        class="btn btn-block mt-4 btn-warning"
+        type="button"
+        onclick={() => confirmDeleteProject()}
+      >
+        Delete Project
+      </button>
+    {/if}
+  </form>
 </div>

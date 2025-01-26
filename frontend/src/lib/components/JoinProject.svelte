@@ -1,23 +1,23 @@
 <script lang="ts">
-  import { EventsService } from "$lib/client/sdk.gen";
   import { toast } from "svelte-sonner";
   import { handleError } from "$lib/misc";
-  import type { AttendEventEventsAttendPostData } from "$lib/client";
 
-  let toSend: AttendEventEventsAttendPostData = $state({
-    query: { join_code: "", referral: "" },
+  import { ProjectsService } from "$lib/client";
+  import type { JoinProjectProjectsJoinPostData } from "$lib/client";
+
+  let toSend: JoinProjectProjectsJoinPostData = $state({
+    query: { join_code: "" },
   });
 
   async function attendEvent() {
     try {
-      await EventsService.attendEventEventsAttendPost({
+      await ProjectsService.joinProjectProjectsJoinPost({
         ...toSend,
         throwOnError: true,
       });
-      toast("Joined event successfully");
+      toast("Joined project successfully");
       // Reset
       toSend.query.join_code = "";
-      toSend.query.referral = "";
     } catch (err) {
       handleError(err);
     }
@@ -35,20 +35,8 @@
         class="w-full input input-bordered"
       />
     </label>
-    <label class="form-control">
-      <div class="label">
-        <span class="label-text">How did you hear about this event?</span>
-        <span class="label-text-alt">Optional</span>
-      </div>
-      <input
-        type="text"
-        class="input input-bordered grow"
-        placeholder="Friend, social media, etc."
-        bind:value={toSend.query.referral}
-      />
-    </label>
     <button type="submit" class="btn-block btn btn-primary">
-      Join the adventure!
+      Join the development of something great!
     </button>
   </form>
 </div>

@@ -1,7 +1,6 @@
-from pydantic import BaseModel, HttpUrl, Field, StringConstraints
-from pydantic.json_schema import SkipJsonSchema
-from typing import Annotated, List, Optional
-from annotated_types import Len
+from podium.constants import SingleRecordField, MultiRecordField
+from pydantic import BaseModel, Field, HttpUrl, StringConstraints
+from typing import Annotated, Optional
 
 
 class ProjectBase(BaseModel):
@@ -10,8 +9,19 @@ class ProjectBase(BaseModel):
     repo: HttpUrl
     image_url: HttpUrl
     demo: HttpUrl
-    description: Optional[str] = None
-    owner: Annotated[SkipJsonSchema[List[str]], Field()] = None
+    description: Optional[str] = ""
+    # event: Annotated[
+    #     List[Annotated[str, StringConstraints(pattern=RECORD_REGEX)]],
+    #     Len(min_length=1, max_length=1),
+    # ]
+    event: SingleRecordField
+    hours_spent: Annotated[
+        int,
+        Field(
+            description="A lower-bound estimate of the number of hours spent on the project. Only used for general statistics.",
+            ge=0,
+        ),
+    ] = 0
 
     def model_dump(self, *args, **kwargs):
         data = super().model_dump(*args, **kwargs)
@@ -20,20 +30,20 @@ class ProjectBase(BaseModel):
         data["image_url"] = str(self.image_url)
         data["demo"] = str(self.demo)
         return data
-    
-class ProjectUpdate(ProjectBase):
-    ...
 
 
-# https://docs.pydantic.dev/1.10/usage/schema/#field-customization
-class ProjectCreationPayload(ProjectBase):
-    # https://docs.pydantic.dev/latest/api/types/#pydantic.types.constr--__tabbed_1_2
-    event: Annotated[
-        List[Annotated[str, StringConstraints(pattern=r"^rec\w*$")]],
-        Len(min_length=1, max_length=1),
-    ]
+class PublicProjectCreationPayload(ProjectBase): ...
 
 
-class Project(ProjectCreationPayload):
+class ProjectUpdate(ProjectBase): ...
+
+
+class Project(ProjectBase):
     id: str
     points: int = 0
+    collaborators: MultiRecordField = []
+    owner: SingleRecordField
+
+
+class PrivateProject(Project):
+    join_code: str

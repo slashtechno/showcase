@@ -2,7 +2,7 @@
   import { handleError } from "$lib/misc";
   import { EventsService } from "$lib/client";
   import { toast } from "svelte-sonner";
-    import { invalidate } from "$app/navigation";
+  import { invalidate } from "$app/navigation";
   // TODO: Use the object instead of individual variables
   let eventName = $state("");
   let eventDescription = $state("");
@@ -16,7 +16,7 @@
         throwOnError: true,
       });
       toast("Event created successfully");
-      invalidate(url => url.pathname.startsWith("/events"));
+      invalidate((url) => url.pathname.startsWith("/events"));
       // invalidate("events:events")
       // Clear the form
       eventName = "";
@@ -51,6 +51,8 @@
       ></textarea>
     </label>
     <!-- Create Event button -->
-    <button class="btn btn-block btn-primary mt-4" type="submit"> Create Event </button>
+    <button class="btn btn-block btn-primary mt-4" type="submit">
+      Create Event
+    </button>
   </form>
 </div>
