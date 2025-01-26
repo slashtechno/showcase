@@ -46,7 +46,7 @@ export type PrivateProject = {
     /**
      * A lower-bound estimate of the number of hours spent on the project. Only used for general statistics.
      */
-    hours_spent: number;
+    hours_spent?: number;
     id: string;
     points?: number;
     collaborators?: Array<(string)>;
@@ -69,7 +69,7 @@ export type Project = {
     /**
      * A lower-bound estimate of the number of hours spent on the project. Only used for general statistics.
      */
-    hours_spent: number;
+    hours_spent?: number;
     id: string;
     points?: number;
     collaborators?: Array<(string)>;
@@ -91,7 +91,7 @@ export type ProjectUpdate = {
     /**
      * A lower-bound estimate of the number of hours spent on the project. Only used for general statistics.
      */
-    hours_spent: number;
+    hours_spent?: number;
 };
 
 export type PublicProjectCreationPayload = {
@@ -107,7 +107,7 @@ export type PublicProjectCreationPayload = {
     /**
      * A lower-bound estimate of the number of hours spent on the project. Only used for general statistics.
      */
-    hours_spent: number;
+    hours_spent?: number;
 };
 
 /**
