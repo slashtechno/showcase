@@ -96,7 +96,7 @@ def create_event(
 
     # Generate a unique join code by continuously generating a new one until it doesn't match any existing join codes
     while True:
-        join_code = token_urlsafe(4).upper()
+        join_code = token_urlsafe(3).upper()
         if not db.events.first(formula=match({"join_code": join_code})):
             event.join_code = join_code
             break
