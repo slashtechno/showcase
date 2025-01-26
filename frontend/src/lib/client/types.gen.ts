@@ -33,6 +33,19 @@ export type MagicLinkVerificationResponse = {
     email: string;
 };
 
+export type OwnerProject = {
+    name: string;
+    readme: string;
+    repo: string;
+    image_url: string;
+    demo: string;
+    description?: (string | null);
+    event: [
+        string
+    ];
+    join_code: string;
+};
+
 export type Project = {
     name: string;
     readme: string;
@@ -43,11 +56,14 @@ export type Project = {
     event: [
         string
     ];
+    owner: [
+        string
+    ];
     id: string;
     points?: number;
 };
 
-export type ProjectCreationPayload = {
+export type ProjectUpdate = {
     name: string;
     readme: string;
     repo: string;
@@ -59,13 +75,16 @@ export type ProjectCreationPayload = {
     ];
 };
 
-export type ProjectUpdate = {
+export type PublicProjectCreationPayload = {
     name: string;
     readme: string;
     repo: string;
     image_url: string;
     demo: string;
     description?: (string | null);
+    event: [
+        string
+    ];
 };
 
 /**
@@ -97,17 +116,18 @@ export type User_Output = {
     last_name: string;
     email: string;
     street_1: string;
-    street_2: (string | null);
+    street_2?: (string | null);
     city: string;
     state: string;
     zip_code: string;
     country: string;
     dob: string;
     id: string;
-    votes: Array<(string)>;
-    projects: Array<(string)>;
-    owned_events: Array<(string)>;
-    attending_events: Array<(string)>;
+    votes?: Array<(string)>;
+    projects?: Array<(string)>;
+    owned_events?: Array<(string)>;
+    attending_events?: Array<(string)>;
+    referral?: Array<(string)>;
 };
 
 /**
@@ -127,7 +147,7 @@ export type UserSignupPayload = {
     last_name: string;
     email: string;
     street_1: string;
-    street_2: (string | null);
+    street_2?: (string | null);
     city: string;
     state: string;
     zip_code: string;
@@ -241,12 +261,12 @@ export type GetEventProjectsEventsEventIdProjectsGetResponse = (Array<Project>);
 
 export type GetEventProjectsEventsEventIdProjectsGetError = (HTTPValidationError);
 
-export type GetProjectsProjectsMineGetResponse = (Array<Project>);
+export type GetProjectsProjectsMineGetResponse = (Array<OwnerProject>);
 
 export type GetProjectsProjectsMineGetError = unknown;
 
 export type CreateProjectProjectsPostData = {
-    body: ProjectCreationPayload;
+    body: PublicProjectCreationPayload;
 };
 
 export type CreateProjectProjectsPostResponse = (unknown);

@@ -1,10 +1,10 @@
 <script lang="ts">
   import { EventsService, ProjectsService } from "$lib/client/sdk.gen";
-  import type { ProjectCreationPayload, Event } from "$lib/client";
+  import type { PublicProjectCreationPayload, Event } from "$lib/client";
   import { toast } from "svelte-sonner";
   import { handleError } from "$lib/misc";
 
-  let project: ProjectCreationPayload = $state({
+  let project: PublicProjectCreationPayload = $state({
     name: "",
     readme: "https://example.com",
     repo: "",
@@ -15,12 +15,7 @@
   });
   let events: Event[] = $state([]);
   let fetchedEvents = false;
-
-  // https://svelte.dev/tutorial/svelte/inspecting-state
-  // $inspect(project.event).with(console.debug);
-  // $inspect(events);
-  // $inspect(project)
-
+  
   async function fetchEvents() {
     try {
       toast("Fetching events; please wait");

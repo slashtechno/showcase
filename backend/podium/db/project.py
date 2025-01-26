@@ -1,8 +1,6 @@
-from podium.constants import RECORD_REGEX
-from pydantic import BaseModel, HttpUrl, Field, StringConstraints
-from pydantic.json_schema import SkipJsonSchema
-from typing import Annotated, List, Optional
-from annotated_types import Len
+from podium.constants import SingleRecordField
+from pydantic import BaseModel, HttpUrl, StringConstraints
+from typing import Annotated, Optional
 
 
 class ProjectBase(BaseModel):
@@ -12,7 +10,11 @@ class ProjectBase(BaseModel):
     image_url: HttpUrl
     demo: HttpUrl
     description: Optional[str] = None
-    owner: Annotated[SkipJsonSchema[List[str]], Field()] = None
+    # event: Annotated[
+    #     List[Annotated[str, StringConstraints(pattern=RECORD_REGEX)]],
+    #     Len(min_length=1, max_length=1),
+    # ]
+    event: SingleRecordField
 
     def model_dump(self, *args, **kwargs):
         data = super().model_dump(*args, **kwargs)
@@ -22,19 +24,21 @@ class ProjectBase(BaseModel):
         data["demo"] = str(self.demo)
         return data
     
+class PublicProjectCreationPayload(ProjectBase):
+    ...
+
 class ProjectUpdate(ProjectBase):
     ...
 
 
-# https://docs.pydantic.dev/1.10/usage/schema/#field-customization
-class ProjectCreationPayload(ProjectBase):
-    # https://docs.pydantic.dev/latest/api/types/#pydantic.types.constr--__tabbed_1_2
-    event: Annotated[
-        List[Annotated[str, StringConstraints(pattern=RECORD_REGEX)]],
-        Len(min_length=1, max_length=1),
-    ]
+class PrivateProjectCreationPayload(ProjectBase):
+    owner: SingleRecordField
+    join_code: str
+    
 
-
-class Project(ProjectCreationPayload):
+class Project(ProjectBase):
     id: str
     points: int = 0
+
+class OwnerProject(PrivateProjectCreationPayload, Project):
+    pass

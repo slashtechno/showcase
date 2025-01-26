@@ -40,7 +40,6 @@ class User(UserBase):
     attending_events: constants.MultiRecordField = []
     referral: constants.MultiRecordField = []
 
-
 class CurrentUser(BaseModel):
     email: str
     

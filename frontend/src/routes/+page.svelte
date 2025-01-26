@@ -44,7 +44,7 @@
       <AttendEvent />
     </section>
     <div class="flex justify-center">
-    <a class="btn btn-wide btn-primary" href="/projects">Update projects</a>
+    <a class="btn btn-wide btn-primary" href="/projects">Your projects</a>
     <!-- <a class="btn btn-block btn-primary" href="/projects">Update my projects</a> -->
   </div>
   {/if}
