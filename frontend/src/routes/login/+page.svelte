@@ -25,6 +25,8 @@
     state: "",
     zip_code: "",
     country: "",
+    // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date
+    dob: "",
   });
 
   async function eitherLoginOrSignUp() {
@@ -103,6 +105,7 @@
         state: "",
         zip_code: "",
         country: "",
+        dob: "",
       };
     } catch (error) {
       handleError(error);
@@ -311,6 +314,20 @@
             bind:value={userInfo.country}
           />
         </label>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Date of Birth</span>
+            <span class="label-text-alt">Hack Club is only for students {'<='}18</span>
+          </div>
+          <input
+            id="dob"
+            type="date"
+            class="input input-bordered grow"
+            bind:value={userInfo.dob}
+          />
+        </label>
+
+            
       {/if}
       <div class="flex justify-center">
         <button type="submit" class="btn btn-primary mt-4" disabled={isLoading}>

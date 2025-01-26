@@ -88,8 +88,26 @@ export type RecordDict = {
     };
 };
 
-export type User = {
+export type User_Input = {
     email: string;
+};
+
+export type User_Output = {
+    first_name: string;
+    last_name: string;
+    email: string;
+    street_1: string;
+    street_2?: (string | null);
+    city: string;
+    state: string;
+    zip_code: string;
+    country: string;
+    dob: string;
+    id: string;
+    votes: Array<(string)>;
+    projects: Array<(string)>;
+    owned_events: Array<(string)>;
+    attending_events: Array<(string)>;
 };
 
 /**
@@ -114,6 +132,7 @@ export type UserSignupPayload = {
     state: string;
     zip_code: string;
     country: string;
+    dob: string;
 };
 
 export type ValidationError = {
@@ -134,7 +153,7 @@ export type Vote = {
 };
 
 export type RequestLoginRequestLoginPostData = {
-    body: User;
+    body: User_Input;
 };
 
 export type RequestLoginRequestLoginPostResponse = (unknown);
@@ -260,6 +279,10 @@ export type GetProjectProjectsProjectIdGetData = {
 export type GetProjectProjectsProjectIdGetResponse = (unknown);
 
 export type GetProjectProjectsProjectIdGetError = (HTTPValidationError);
+
+export type GetCurrentUserUsersCurrentGetResponse = (User_Output);
+
+export type GetCurrentUserUsersCurrentGetError = unknown;
 
 export type CreateUserUsersPostData = {
     body: UserSignupPayload;
