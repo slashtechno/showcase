@@ -225,27 +225,33 @@ def vote(vote: Vote, current_user: Annotated[CurrentUser, Depends(get_current_us
     if vote.event_id in user["fields"].get("votes", []):
         raise HTTPException(status_code=400, detail="User has already voted in event")
 
-    # Update the votes (increment the `points` field of the nominated projects by 1)
+    # Check if the user is trying to vote for their own project(s) or if a project doesn't exist
+    projects = []
     for project_id in vote.projects:
-        # If the validation didn't properly check if the project exists, just use a try-except block
+        # Frankly, this try-except block is a bit redundant since the model_validator should catch it
         try:
             # Get the project record
             project = db.projects.get(project_id)
+            # Appending to a list so it can be used later without needing to fetch the project again
+            projects.append(project)
             # Check if the user is the owner and raise an error if they are
             if user_id in project["fields"].get("owner", []):
                 raise HTTPException(
                     status_code=400, detail="User cannot vote for their own project"
                 )
-            # Increment the points field by 1
-            db.projects.update(
-                project_id, {"points": project["fields"].get("points", 0) + 1}
-            )
         except HTTPError as e:
             raise (
                 HTTPException(status_code=404, detail="Project not found")
                 if e.response.status_code == 404
                 else e
             )
+
+    # Update the votes (increment the `points` field of the nominated projects by 1)
+    for project in projects:
+        # Increment the points field by 1
+        db.projects.update(
+            project["id"], {"points": project["fields"].get("points", 0) + 1}
+        )
 
     # Update the user's votes
     db.users.update(
