@@ -29,8 +29,10 @@ class UserBase(BaseModel):
         # Convert dob to YYYY-MM-DD
         data["dob"] = self.dob.strftime("%Y-%m-%d")
         return data
-class UserSignupPayload(UserBase):
-    ...
+
+
+class UserSignupPayload(UserBase): ...
+
 
 class User(UserBase):
     id: Annotated[str, StringConstraints(pattern=constants.RECORD_REGEX)]
@@ -40,9 +42,11 @@ class User(UserBase):
     attending_events: constants.MultiRecordField = []
     referral: constants.MultiRecordField = []
 
+
 class CurrentUser(BaseModel):
     email: str
-    
+
+
 # TODO: make this part of CurrentUser or something, since this is used way too much
 def get_user_record_id_by_email(email: str) -> Optional[str]:
     users_table = tables["users"]

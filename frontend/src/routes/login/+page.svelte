@@ -188,7 +188,11 @@
           placeholder="example@example.com"
           onblur={async () => {
             // If the signup field is expanded and the email currently entered into the field may be valid, check if the signup fields should be hidden since the user already exists
-            if (expandedDueTo != userInfo.email && userInfo.email && showSignupFields) {
+            if (
+              expandedDueTo != userInfo.email &&
+              userInfo.email &&
+              showSignupFields
+            ) {
               const userExists = await checkUserExists();
               if (userExists) {
                 showSignupFields = false;
@@ -315,7 +319,9 @@
         <label class="form-control">
           <div class="label">
             <span class="label-text">Date of Birth</span>
-            <span class="label-text-alt">Hack Club is only for students {'<='}18</span>
+            <span class="label-text-alt"
+              >Hack Club is only for students {"<="}18</span
+            >
           </div>
           <input
             id="dob"
@@ -324,8 +330,6 @@
             bind:value={userInfo.dob}
           />
         </label>
-
-            
       {/if}
       <div class="flex justify-center">
         <button type="submit" class="btn btn-primary mt-4" disabled={isLoading}>

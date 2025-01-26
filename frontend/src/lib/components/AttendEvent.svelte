@@ -6,7 +6,7 @@
 
   let toSend: AttendEventEventsAttendPostData = $state({
     query: { join_code: "", referral: "" },
-  })
+  });
 
   async function attendEvent() {
     try {
@@ -36,17 +36,19 @@
       />
     </label>
     <label class="form-control">
-          <div class="label">
-            <span class="label-text">How did you hear about this event?</span>
-            <span class="label-text-alt">Optional</span>
-          </div>
-          <input
-            type="text"
-            class="input input-bordered grow"
-            placeholder="Friend, social media, etc."
-            bind:value={toSend.query.referral}
-          />
-        </label>
-    <button type="submit" class="btn-block btn btn-primary"> Join the adventure! </button>
+      <div class="label">
+        <span class="label-text">How did you hear about this event?</span>
+        <span class="label-text-alt">Optional</span>
+      </div>
+      <input
+        type="text"
+        class="input input-bordered grow"
+        placeholder="Friend, social media, etc."
+        bind:value={toSend.query.referral}
+      />
+    </label>
+    <button type="submit" class="btn-block btn btn-primary">
+      Join the adventure!
+    </button>
   </form>
 </div>

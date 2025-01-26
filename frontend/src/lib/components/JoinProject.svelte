@@ -4,10 +4,10 @@
 
   import { ProjectsService } from "$lib/client";
   import type { JoinProjectProjectsJoinPostData } from "$lib/client";
-  
+
   let toSend: JoinProjectProjectsJoinPostData = $state({
-    query: { join_code: ""},
-  })
+    query: { join_code: "" },
+  });
 
   async function attendEvent() {
     try {
@@ -35,6 +35,8 @@
         class="w-full input input-bordered"
       />
     </label>
-    <button type="submit" class="btn-block btn btn-primary"> Join the development of something great! </button>
+    <button type="submit" class="btn-block btn btn-primary">
+      Join the development of something great!
+    </button>
   </form>
 </div>

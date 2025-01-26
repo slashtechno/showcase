@@ -9,7 +9,7 @@
 
   // let events: Event[] = $state([]);
   // let fetchedEvents = false;
-  
+
   // async function fetchEvents() {
   //   try {
   //     toast("Fetching events; please wait");
@@ -22,7 +22,10 @@
   //   }
   // }
 
-  let {projects, events}: {projects: Array<PrivateProject>, events:Array<Event>} = $props();
+  let {
+    projects,
+    events,
+  }: { projects: Array<PrivateProject>; events: Array<Event> } = $props();
 
   const emptyProjectUpdate: ProjectUpdate = {
     name: "",
@@ -39,10 +42,10 @@
     owner: [""],
     event: [""],
     id: "",
-  }
-  let project: ProjectUpdate = $state(emptyProjectUpdate)
-  let chosenProject: Project = $state(emptyProject)
-  $inspect(project)
+  };
+  let project: ProjectUpdate = $state(emptyProjectUpdate);
+  let chosenProject: Project = $state(emptyProject);
+  $inspect(project);
   let fetchedProjects = false;
 
   let showDeleteAlert = $state(false);
@@ -64,13 +67,13 @@
     showDeleteAlert = false;
     try {
       await ProjectsService.deleteProjectProjectsProjectIdDelete({
-      path: { project_id: chosenProject.id },
+        path: { project_id: chosenProject.id },
         throwOnError: true,
       });
       toast("Project deleted successfully");
       // Reset the fields
-      project = emptyProjectUpdate
-      chosenProject = emptyProject
+      project = emptyProjectUpdate;
+      chosenProject = emptyProject;
       // Fetch the projects again if the user wants to perform another update to reflect the deletion
       fetchedProjects = false;
     } catch (err) {
@@ -88,7 +91,7 @@
   // onMount(() => {
   //   fetchEvents();
   // });
-  
+
   async function updateProject() {
     try {
       await ProjectsService.updateProjectProjectsProjectIdPut({
@@ -98,8 +101,8 @@
       });
       toast("Project updated successfully");
       // Reset the fields
-      project = emptyProjectUpdate
-      chosenProject = emptyProject
+      project = emptyProjectUpdate;
+      chosenProject = emptyProject;
       // fetch the projects again if the user wants to perform another update
       fetchedProjects = false;
     } catch (err) {
@@ -204,7 +207,9 @@
     </label>
     <label class="form-control">
       <div class="label">
-        <span class="label-text">Rough estimate of how many hours your team spent on this project</span>
+        <span class="label-text"
+          >Rough estimate of how many hours your team spent on this project</span
+        >
       </div>
       <input
         type="number"
@@ -214,17 +219,16 @@
         min="0"
       />
       <div class="label">
-        <span class="label-text-alt"> This is only used for statistics, so please be honest!</span>
+        <span class="label-text-alt">
+          This is only used for statistics, so please be honest!</span
+        >
       </div>
     </label>
     <label class="form-control">
       <div class="label">
         <span class="label-text">Event</span>
       </div>
-      <select
-        bind:value={project.event[0]}
-        class="select select-bordered"
-      >
+      <select bind:value={project.event[0]} class="select select-bordered">
         <option value="" disabled selected>Select an event</option>
         {#each events as event}
           <option value={event.id}>{event.name}</option>
@@ -232,16 +236,16 @@
       </select>
     </label>
     {#if chosenProject.id}
-    <button type="submit" class="btn btn-block mt-4 btn-primary">
-      Update Project
-    </button>
-    <button
-    class="btn btn-block mt-4 btn-warning"
-    type="button"
-    onclick={() => confirmDeleteProject()}
-    >
-    Delete Project
-  </button>
-  {/if}
-</form>
+      <button type="submit" class="btn btn-block mt-4 btn-primary">
+        Update Project
+      </button>
+      <button
+        class="btn btn-block mt-4 btn-warning"
+        type="button"
+        onclick={() => confirmDeleteProject()}
+      >
+        Delete Project
+      </button>
+    {/if}
+  </form>
 </div>

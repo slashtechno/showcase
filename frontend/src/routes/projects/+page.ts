@@ -16,16 +16,16 @@ export const load: PageLoad = async ({ params, fetch, depends }) => {
 
   let events: Array<Event> = [];
   let projects: Array<PrivateProject> = [];
-  
+
   try {
-      const { data } = await EventsService.getAttendingEventsEventsGet({
-        throwOnError: true,
-      });
-      events = data.attending_events
-    } catch (err) {
-      console.error(err);
-      throw error(500, "Failed to load events");
-    }
+    const { data } = await EventsService.getAttendingEventsEventsGet({
+      throwOnError: true,
+    });
+    events = data.attending_events;
+  } catch (err) {
+    console.error(err);
+    throw error(500, "Failed to load events");
+  }
 
   try {
     const { data } = await ProjectsService.getProjectsProjectsMineGet({
@@ -39,6 +39,6 @@ export const load: PageLoad = async ({ params, fetch, depends }) => {
 
   return {
     events,
-    projects
-  }
+    projects,
+  };
 };

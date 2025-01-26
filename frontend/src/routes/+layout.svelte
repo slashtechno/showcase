@@ -66,7 +66,9 @@
         peer-judging platform for
         <a href="https://hackathons.hackclub.com/">hackathons</a>. If you
         encounter issues, feel free to
-        <a href="https://github.com/hackclub/podium/issues">report</a> them. Need help? Ask on the <a href="https://hackclub.com/slack">Slack</a> or email <a href="mailto:team@hackclub.com">team@hackclub.com</a>.
+        <a href="https://github.com/hackclub/podium/issues">report</a> them.
+        Need help? Ask on the <a href="https://hackclub.com/slack">Slack</a> or
+        email <a href="mailto:team@hackclub.com">team@hackclub.com</a>.
       </p>
       <p class="text-right">
         <a href="https://github.com/slashtechno">-Angad Behl</a>

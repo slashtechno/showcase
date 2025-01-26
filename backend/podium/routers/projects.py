@@ -68,23 +68,26 @@ def create_project(
         **project.model_dump(),
         join_code=join_code,
         owner=owner,
-        id="", # Placeholder to prevent an unnecessary class
+        id="",  # Placeholder to prevent an unnecessary class
     )
     return db.projects.create(full_project.model_dump(exclude={"id"}))["fields"]
 
+
 @router.post("/join")
 def join_project(
-    join_code: Annotated[str, Query(description="A unique code used to join a project as a collaborator")],
+    join_code: Annotated[
+        str, Query(description="A unique code used to join a project as a collaborator")
+    ],
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ):
     user_id = db.user.get_user_record_id_by_email(current_user.email)
     if user_id is None:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     project = db.projects.first(formula=match({"join_code": join_code.upper()}))
     if project is None:
         raise HTTPException(status_code=404, detail="No project found")
-    
+
     project = Project(
         id=project["id"],
         **project["fields"],
@@ -92,19 +95,18 @@ def join_project(
 
     # Ensure the user isn't already a collaborator
     if user_id in project.collaborators or user_id in project.owner:
-        raise HTTPException(status_code=400, detail="User is already a collaborator or owner of the project")
-    
+        raise HTTPException(
+            status_code=400,
+            detail="User is already a collaborator or owner of the project",
+        )
+
     # Ensure the user is part of the event that the project is associated with
     event_attendees = db.events.get(project.event[0])["fields"].get("attendees", [])
     if user_id not in event_attendees:
         raise HTTPException(status_code=403, detail="User not part of event")
 
-    db.events.update(
-        project.id, 
-        {
-            "collaborators": project.collaborators + [user_id]
-        }
-    )
+    db.events.update(project.id, {"collaborators": project.collaborators + [user_id]})
+
 
 # Update project
 @router.put("/{project_id}")

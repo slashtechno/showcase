@@ -7,7 +7,7 @@
 </script>
 
 <div class="p-4 mx-auto space-y-4">
-<!-- <div > -->
+  <!-- <div > -->
   <section class="space-y-8 p-4">
     <h2>Your projects</h2>
     <ul>
@@ -27,7 +27,7 @@
   </section>
   <section>
     <h2 class="text-xl font-semibold mb-4">Update Projects</h2>
-    <UpdateProject projects={data.projects} events={data.events}/>
+    <UpdateProject projects={data.projects} events={data.events} />
   </section>
 </div>
 

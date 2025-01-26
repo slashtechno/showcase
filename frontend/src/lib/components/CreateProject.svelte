@@ -16,7 +16,7 @@
   });
   let events: Event[] = $state([]);
   let fetchedEvents = false;
-  
+
   async function fetchEvents() {
     try {
       toast("Fetching events; please wait");
@@ -116,7 +116,9 @@
     </label>
     <label class="form-control">
       <div class="label">
-        <span class="label-text">Rough estimate of how many hours your team spent on this project</span>
+        <span class="label-text"
+          >Rough estimate of how many hours your team spent on this project</span
+        >
       </div>
       <input
         type="number"
@@ -126,7 +128,9 @@
         min="0"
       />
       <div class="label">
-        <span class="label-text-alt"> This is only used for statistics, so please be honest!</span>
+        <span class="label-text-alt">
+          This is only used for statistics, so please be honest!</span
+        >
       </div>
     </label>
     <label class="form-control">
@@ -146,6 +150,8 @@
         {/each}
       </select>
     </label>
-    <button type="submit" class="btn btn-block btn-primary mt-4"> Create Project </button>
+    <button type="submit" class="btn btn-block btn-primary mt-4">
+      Create Project
+    </button>
   </form>
 </div>
