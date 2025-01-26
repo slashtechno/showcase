@@ -32,6 +32,7 @@
     demo: "",
     description: "",
     event: [""],
+    hours_spent: 0,
   };
   const emptyProject: Project = {
     ...emptyProjectUpdate,
@@ -200,6 +201,21 @@
         placeholder="Repository URL"
         class="input input-bordered grow"
       />
+    </label>
+    <label class="form-control">
+      <div class="label">
+        <span class="label-text">Rough estimate of how many hours your team spent on this project</span>
+      </div>
+      <input
+        type="number"
+        bind:value={project.hours_spent}
+        placeholder="Hours spent"
+        class="input input-bordered grow"
+        min="0"
+      />
+      <div class="label">
+        <span class="label-text-alt"> This is only used for statistics, so please be honest!</span>
+      </div>
     </label>
     <label class="form-control">
       <div class="label">
