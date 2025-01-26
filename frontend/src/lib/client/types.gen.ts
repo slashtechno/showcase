@@ -97,7 +97,7 @@ export type User_Output = {
     last_name: string;
     email: string;
     street_1: string;
-    street_2?: (string | null);
+    street_2: (string | null);
     city: string;
     state: string;
     zip_code: string;
@@ -127,7 +127,7 @@ export type UserSignupPayload = {
     last_name: string;
     email: string;
     street_1: string;
-    street_2?: (string | null);
+    street_2: (string | null);
     city: string;
     state: string;
     zip_code: string;
@@ -202,6 +202,10 @@ export type AttendEventEventsAttendPostData = {
          * A unique code used to join an event
          */
         join_code: string;
+        /**
+         * How did you hear about this event?
+         */
+        referral: string;
     };
 };
 

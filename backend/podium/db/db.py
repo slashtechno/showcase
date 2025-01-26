@@ -23,6 +23,9 @@ def main():
     tables["projects"] = get_table(
         api, settings.airtable_base_id, settings.airtable_projects_table_id
     )
+    tables["referrals"] = get_table(
+        api, settings.airtable_base_id, settings.airtable_referrals_table_id
+    )
 
 
 main()

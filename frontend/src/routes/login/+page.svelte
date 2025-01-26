@@ -245,6 +245,7 @@
         <label class="form-control">
           <div class="label">
             <span class="label-text">Address line 2</span>
+            <span class="label-text-alt">Optional</span>
           </div>
           <input
             id="street_2"
@@ -253,9 +254,6 @@
             placeholder="Apt 4B"
             bind:value={userInfo.street_2}
           />
-          <div class="label">
-            <span class="label-text-alt">Optional</span>
-          </div>
         </label>
         <label class="form-control">
           <div class="label">

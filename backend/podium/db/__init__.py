@@ -7,7 +7,9 @@ from podium.db import user as user
 from podium.db.project import ProjectCreationPayload as ProjectCreationPayload
 from podium.db.project import ProjectUpdate as ProjectUpdate
 from podium.db.project import ProjectBase as ProjectBase
+from podium.db.referral import ReferralBase as ReferralBase
 
 events = tables["events"]
 users = tables["users"]
 projects = tables["projects"]
+referrals = tables["referrals"]

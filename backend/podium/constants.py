@@ -6,3 +6,7 @@ from pydantic import StringConstraints
 
 RECORD_REGEX = r"^rec\w*$"
 MultiRecordField = List[Annotated[str, StringConstraints(pattern=RECORD_REGEX)]]
+SingleRecordField = Annotated[
+        List[Annotated[str, StringConstraints(pattern=RECORD_REGEX)]],
+        Len(min_length=1, max_length=1),
+    ]

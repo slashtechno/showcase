@@ -13,7 +13,7 @@ class UserBase(BaseModel):
     last_name: str
     email: EmailStr
     street_1: str
-    street_2: Optional[str] = None
+    street_2: Optional[str] = ""
     city: str
     state: str
     # str but only allow digits
@@ -34,10 +34,11 @@ class UserSignupPayload(UserBase):
 
 class User(UserBase):
     id: Annotated[str, StringConstraints(pattern=constants.RECORD_REGEX)]
-    votes: constants.MultiRecordField
-    projects: constants.MultiRecordField
-    owned_events: constants.MultiRecordField
-    attending_events: constants.MultiRecordField
+    votes: constants.MultiRecordField = []
+    projects: constants.MultiRecordField = []
+    owned_events: constants.MultiRecordField = []
+    attending_events: constants.MultiRecordField = []
+    referral: constants.MultiRecordField = []
 
 
 class CurrentUser(BaseModel):
