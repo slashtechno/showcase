@@ -1,11 +1,14 @@
+import datetime
 from typing import Annotated, Optional
 from pydantic import BaseModel, EmailStr, StringConstraints
+
+from podium import constants
 
 from podium.db import tables
 from pyairtable.formulas import match
 
 
-class UserSignupPayload(BaseModel):
+class UserBase(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
@@ -17,6 +20,25 @@ class UserSignupPayload(BaseModel):
     zip_code: Annotated[str, StringConstraints(pattern=r"^\d*$")]
     # https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
     country: Annotated[str, StringConstraints(pattern=r"^[A-Z]{2}$")]
+    # YYYY-MM-DD or unix time is probably the best
+    # Airtable returns 2025-01-25 :)
+    dob: datetime.date
+
+    def model_dump(self, *args, **kwargs):
+        data = super().model_dump(*args, **kwargs)
+        # Convert dob to YYYY-MM-DD
+        data["dob"] = self.dob.strftime("%Y-%m-%d")
+        return data
+class UserSignupPayload(UserBase):
+    ...
+
+class User(UserBase):
+    id: Annotated[str, StringConstraints(pattern=constants.RECORD_REGEX)]
+    votes: constants.MultiRecordField
+    projects: constants.MultiRecordField
+    owned_events: constants.MultiRecordField
+    attending_events: constants.MultiRecordField
+
 
 class CurrentUser(BaseModel):
     email: str

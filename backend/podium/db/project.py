@@ -1,3 +1,4 @@
+from podium.constants import RECORD_REGEX
 from pydantic import BaseModel, HttpUrl, Field, StringConstraints
 from pydantic.json_schema import SkipJsonSchema
 from typing import Annotated, List, Optional
@@ -29,7 +30,7 @@ class ProjectUpdate(ProjectBase):
 class ProjectCreationPayload(ProjectBase):
     # https://docs.pydantic.dev/latest/api/types/#pydantic.types.constr--__tabbed_1_2
     event: Annotated[
-        List[Annotated[str, StringConstraints(pattern=r"^rec\w*$")]],
+        List[Annotated[str, StringConstraints(pattern=RECORD_REGEX)]],
         Len(min_length=1, max_length=1),
     ]
 
