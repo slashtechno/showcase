@@ -7,12 +7,13 @@
   import type { HTTPValidationError } from "$lib/client/types.gen";
   import { handleError } from "$lib/misc";
   import type { UserSignupPayload } from "$lib/client/types.gen";
-
   // rest is the extra props passed to the component
   let { ...rest } = $props();
 
   let isLoading = $state(false);
   let showSignupFields = $state(false);
+  let expandedDueTo = "";
+  $inspect(showSignupFields);
   // Consolidate user-related variables into a single object
   let userInfo: UserSignupPayload = $state({
     email: "",
@@ -28,10 +29,10 @@
 
   async function eitherLoginOrSignUp() {
     // If showSignupFields is true, the user is signing up and signupAndLogin should be called. Otherwise, the user is logging in and login should be called.
-    if (showSignupFields) {
-      signupAndLogin();
-    } else {
+    if (!showSignupFields) {
       login();
+    } else {
+      signupAndLogin();
     }
   }
 
@@ -42,7 +43,6 @@
         query: { email: userInfo.email },
         throwOnError: true,
       });
-      console.log("User exists:", data?.exists);
       if (data?.exists) {
         showSignupFields = false;
         return true;
@@ -74,6 +74,7 @@
         userInfo.email = "";
       } else {
         toast("You don't exist (yet)! Let's change that.");
+        expandedDueTo = userInfo.email;
         showSignupFields = true;
       }
     } finally {
@@ -181,8 +182,18 @@
           type="email"
           class="input input-bordered grow"
           bind:value={userInfo.email}
-          onblur={checkUserExists}
           placeholder="example@example.com"
+          onblur={async () => {
+            // If the signup field is expanded and the email currently entered into the field may be valid, check if the signup fields should be hidden since the user already exists
+            if (expandedDueTo != userInfo.email && userInfo.email && showSignupFields) {
+              const userExists = await checkUserExists();
+              if (userExists) {
+                showSignupFields = false;
+              } else {
+                // If the user still doesn't exist, keep the signup fields open
+              }
+            }
+          }}
         />
         <div class="label">
           <span class="label-text-alt"> We'll send you a magic link </span>
