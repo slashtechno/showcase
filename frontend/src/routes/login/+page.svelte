@@ -35,16 +35,36 @@
     }
   }
 
+  async function checkUserExists(): Promise<boolean> {
+    isLoading = true;
+    try {
+      const { data } = await UsersService.userExistsUsersExistsGet({
+        query: { email: userInfo.email },
+        throwOnError: true,
+      });
+      console.log("User exists:", data?.exists);
+      if (data?.exists) {
+        showSignupFields = false;
+        return true;
+      } else {
+        return false;
+        // If the user doesn't exist, login() will toast and show the signup fields
+      }
+    } catch (error) {
+      handleError(error);
+      return false;
+    } finally {
+      isLoading = false;
+    }
+  }
+
   // Function to handle login
   async function login() {
     isLoading = true;
     // Even though error handling is done in the API, the try-finally block is used to ensure the loading state is reset
     try {
-      const { data, error } = await UsersService.userExistsUsersExistsGet({
-        query: { email: userInfo.email },
-        throwOnError: false,
-      });
-      if (data?.exists) {
+      const userExists = await checkUserExists();
+      if (userExists) {
         // Request magic link for the provided email if the user exists
         await AuthService.requestLoginRequestLoginPost({
           body: { email: userInfo.email },
@@ -52,8 +72,6 @@
         toast(`Magic link sent to ${userInfo.email}`);
         // Clear field
         userInfo.email = "";
-      } else if (error) {
-        handleError(error);
       } else {
         toast("You don't exist (yet)! Let's change that.");
         showSignupFields = true;
@@ -163,6 +181,7 @@
           type="email"
           class="input input-bordered grow"
           bind:value={userInfo.email}
+          onblur={checkUserExists}
           placeholder="example@example.com"
         />
         <div class="label">
@@ -291,8 +310,6 @@
   {/if}
   <!-- TODO: Make this use a var -->
   <div class="text-center mt-4">
-    <a href="/" class="btn-sm btn-secondary btn"
-      >← Back to Home</a
-    >
+    <a href="/" class="btn-sm btn-secondary btn">← Back to Home</a>
   </div>
 </div>
