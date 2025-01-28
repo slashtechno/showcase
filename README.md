@@ -1,4 +1,4 @@
-# [Podium](https://podium.hackclub.com/), a peer-judging platform for Hackathons
+# [Podium](https://podium.hackclub.com/), a peer-judging platform for hackathons
 
 ## For Attendees
 
