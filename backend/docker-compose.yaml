@@ -4,8 +4,8 @@ services:
   podium:
     container_name: podium
     build: .
-    ports:
-      - "80:8000"
+    # ports:
+      # - "8000:8000"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
       interval: 30s
