@@ -5,12 +5,12 @@ __pycache__/
 
 # Ignore virtual environments
 venv/
-.env
 .venv/
 
 # Ignore local settings
-settings.toml
+# settings.toml
 .secrets.toml
+.env
 
 # Ignore other unnecessary files
 .git
