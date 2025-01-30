@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ./settings.toml:/app/settings.toml
+      # - ./.secrets.toml:/app/.secrets.toml
+    tty: true

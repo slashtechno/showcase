@@ -1,0 +1,19 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environments
+venv/
+.env
+.venv/
+
+# Ignore local settings
+settings.toml
+.secrets.toml
+
+# Ignore other unnecessary files
+.git
+.gitignore
+Dockerfile
+docker-compose.yml
