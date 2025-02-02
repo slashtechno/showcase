@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
   import { user, validateToken } from "$lib/user.svelte";
   import { AuthService, UsersService } from "$lib/client/sdk.gen";
-  import { goto } from '$app/navigation';
+  import { goto } from "$app/navigation";
   import type { HTTPValidationError } from "$lib/client/types.gen";
   import { handleError } from "$lib/misc";
   import type { UserSignupPayload } from "$lib/client/types.gen";
@@ -28,7 +28,7 @@
     dob: "",
   });
 
-  let redirectUrl: string 
+  let redirectUrl: string;
 
   async function eitherLoginOrSignUp() {
     // If showSignupFields is true, the user is signing up and signupAndLogin should be called. Otherwise, the user is logging in and login should be called.
@@ -71,7 +71,7 @@
         // Request magic link for the provided email if the user exists
         await AuthService.requestLoginRequestLoginPost({
           body: { email: userInfo.email },
-          query: { redirect: redirectUrl ?? ""},
+          query: { redirect: redirectUrl ?? "" },
           throwOnError: true,
         });
         toast(`Magic link sent to ${userInfo.email}`);
@@ -84,8 +84,7 @@
       }
     } catch (error) {
       handleError(error);
-    } 
-    finally {
+    } finally {
       isLoading = false;
     }
   }
@@ -143,7 +142,7 @@
         if (redirectUrl) {
           goto(redirectUrl);
         } else {
-          goto('/');
+          goto("/");
         }
       }
     } finally {

@@ -7,7 +7,6 @@
   import { afterNavigate, goto } from "$app/navigation";
   import { onMount } from "svelte";
 
-
   let toSend: JoinProjectProjectsJoinPostData = $state({
     query: { join_code: "" },
   });
@@ -27,11 +26,11 @@
     }
   }
 
-  onMount(() => { 
+  onMount(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const join_code = urlParams.get("join_code");
     if (join_code) {
-      toSend.query.join_code = join_code
+      toSend.query.join_code = join_code;
       joinProject();
       // Clear the query param
       const url = new URL(window.location.href);

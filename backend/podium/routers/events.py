@@ -250,6 +250,7 @@ def make_votable(
 
     db.events.update(event_id, {"votable": votable})
 
+
 # @router.post("/{event_id}/vote")
 @router.post("/vote")
 def vote(vote: Vote, current_user: Annotated[CurrentUser, Depends(get_current_user)]):

@@ -4,7 +4,7 @@
   import { handleError, invalidateEvents } from "$lib/misc";
   import type { AttendEventEventsAttendPostData } from "$lib/client";
   import { afterNavigate, goto, invalidate } from "$app/navigation";
-    import { onMount } from "svelte";
+  import { onMount } from "svelte";
   let toSend: AttendEventEventsAttendPostData = $state({
     query: { join_code: "", referral: "" },
   });
@@ -25,11 +25,11 @@
     }
   }
 
-  onMount(() => { 
+  onMount(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const join_code = urlParams.get("join_code");
     if (join_code) {
-      toSend.query.join_code = join_code
+      toSend.query.join_code = join_code;
       toSend.query.referral = urlParams.get("referral") ?? "Joined from link";
       attendEvent();
       // Clear the query param
@@ -38,7 +38,6 @@
       goto(url.toString(), { replaceState: true, noScroll: true });
     }
   });
-
 </script>
 
 <div class="p-4 max-w-md mx-auto">

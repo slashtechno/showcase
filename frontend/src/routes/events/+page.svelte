@@ -13,9 +13,7 @@
     try {
       console.log(value, eventId);
       await EventsService.makeVotableEventsMakeVotablePost({
-        query: { votable: value,
-          event_id: eventId
-        },
+        query: { votable: value, event_id: eventId },
         throwOnError: true,
       });
     } catch (err) {
@@ -57,11 +55,12 @@
                 type="checkbox"
                 class="checkbox"
                 checked={event.votable}
-                onchange={(e) => onVotableCheck(
-                  (e.target as HTMLInputElement).checked,
-                  event.id
-                )}
-                /></td
+                onchange={(e) =>
+                  onVotableCheck(
+                    (e.target as HTMLInputElement).checked,
+                    event.id,
+                  )}
+              /></td
             >
           </tr>
         {/each}
