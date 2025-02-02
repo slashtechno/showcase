@@ -11,7 +11,7 @@ from pydantic.json_schema import SkipJsonSchema
 from requests import HTTPError
 
 from podium.routers.auth import get_current_user
-from podium.db.user import CurrentUser
+from podium.db.user import CurrentUser, User
 from podium import db
 from podium.db import (
     EventCreationPayload,
@@ -183,6 +183,7 @@ class Vote(BaseModel):
     @model_validator(mode="after")
     def validate_projects(self) -> Self:
         try:
+            # TODO: Validate event via Pydantic
             self.event = db.events.get(self.event_id)
         except HTTPError as e:
             raise (
@@ -190,6 +191,8 @@ class Vote(BaseModel):
                 if e.response.status_code == 404
                 else e
             )
+        if not self.event["fields"].get("votable", False):
+            raise HTTPException(status_code=400, detail="Event is not votable yet")
         if len(self.projects) < 2:
             raise HTTPException(
                 status_code=400, detail="At least 2 projects are required"
@@ -225,6 +228,27 @@ class Vote(BaseModel):
                 )
         return self
 
+
+@router.post("/make-votable")
+def make_votable(
+    event_id: Annotated[str, Query(title="Event ID")],
+    votable: Annotated[bool, Query(description="Whether the event is votable or not")],
+    current_user: Annotated[CurrentUser, Depends(get_current_user)],
+):
+    """
+    Make an event votable. This means that users can vote for their favorite projects in the event.
+    """
+    user_id = db.user.get_user_record_id_by_email(current_user.email)
+    if user_id is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    user = db.users.get(user_id)
+    user = User.model_validate({"id": user["id"], **user["fields"]})
+    # Check if the user is the owner of the event
+    if event_id not in user.owned_events:
+        # This also ensures the event exists since it has to exist to be in the user's owned events
+        raise HTTPException(status_code=403, detail="User is not an owner of the event")
+
+    db.events.update(event_id, {"votable": votable})
 
 # @router.post("/{event_id}/vote")
 @router.post("/vote")

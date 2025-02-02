@@ -9,6 +9,7 @@ export type ComplexEvent = {
     description?: (string | null);
     join_code: string;
     id: string;
+    votable?: boolean;
     attendees?: Array<(string)>;
 };
 
@@ -16,6 +17,7 @@ export type Event = {
     name: string;
     description?: (string | null);
     id: string;
+    votable?: boolean;
 };
 
 export type EventCreationPayload = {
@@ -258,6 +260,20 @@ export type AttendEventEventsAttendPostData = {
 export type AttendEventEventsAttendPostResponse = (unknown);
 
 export type AttendEventEventsAttendPostError = (HTTPValidationError);
+
+export type MakeVotableEventsMakeVotablePostData = {
+    query: {
+        event_id: string;
+        /**
+         * Whether the event is votable or not
+         */
+        votable: boolean;
+    };
+};
+
+export type MakeVotableEventsMakeVotablePostResponse = (unknown);
+
+export type MakeVotableEventsMakeVotablePostError = (HTTPValidationError);
 
 export type VoteEventsVotePostData = {
     body: Vote;

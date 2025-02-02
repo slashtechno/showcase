@@ -18,6 +18,7 @@ class EventCreationPayload(BaseModel):
 
 class Event(EventCreationPayload):
     id: str
+    votable: bool = False
 
 
 # Maybe rename to FullEvent? In the frontend it's OwnedEvent since that's the only time a normal user should see all event information (if they own it)

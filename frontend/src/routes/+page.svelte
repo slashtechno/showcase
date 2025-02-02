@@ -4,7 +4,6 @@
   import CreateProject from "$lib/components/CreateProject.svelte";
   import AttendEvent from "$lib/components/AttendEvent.svelte";
   import { user, signOut } from "$lib/user.svelte";
-  import Page from "./events/+page.svelte";
 </script>
 
 <div class="space-y-8 p-4">
@@ -44,10 +43,10 @@
       </div>
     </section>
 
-    <section>
+    <!-- <section>
       <h2 class="text-xl font-semibold mb-4">Attend Event</h2>
       <AttendEvent />
-    </section>
+    </section> -->
   {/if}
 </div>
 
