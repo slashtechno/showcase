@@ -15,19 +15,25 @@
       <thead>
         <tr>
           <th>Project Name</th>
-          <th>Join Code</th>
           <th>Description</th>
+          <th>Join Code</th>
         </tr>
       </thead>
       <tbody>
         {#each data.projects as project}
           <tr>
             <td>{project.name}</td>
-            <td>{project.join_code}</td>
             <td>{project.description}</td>
+            <td
+              ><a
+                href={`/projects/?join_code=${project.join_code}`}
+                data-sveltekit-noscroll>{project.join_code}</a
+              ></td
+            >
           </tr>
         {/each}
       </tbody>
+    </table>
   </section>
   <section>
     <h2 class="text-xl font-semibold mb-4">Create Project</h2>
@@ -46,5 +52,8 @@
 <style>
   section {
     @apply p-6 rounded-lg shadow-sm border-accent border-2 border-dotted border-opacity-50;
+  }
+  a {
+    @apply underline rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1 underline-offset-2 decoration-accent;
   }
 </style>

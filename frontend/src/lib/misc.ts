@@ -46,3 +46,6 @@ export function setSystemTheme() {
 export function invalidateEvents(){
   invalidate((url) => url.pathname.startsWith("/events"));
 }
+export function invalidateProjects(){
+  invalidate((url) => url.pathname.startsWith("/projects"));
+}
