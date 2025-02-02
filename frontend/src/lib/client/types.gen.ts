@@ -197,6 +197,9 @@ export type Vote = {
 
 export type RequestLoginRequestLoginPostData = {
     body: User_Input;
+    query: {
+        redirect: string;
+    };
 };
 
 export type RequestLoginRequestLoginPostResponse = (unknown);

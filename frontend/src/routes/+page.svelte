@@ -44,10 +44,10 @@
       </div>
     </section>
 
-    <!-- <section>
+    <section>
       <h2 class="text-xl font-semibold mb-4">Attend Event</h2>
       <AttendEvent />
-    </section> -->
+    </section>
   {/if}
 </div>
 

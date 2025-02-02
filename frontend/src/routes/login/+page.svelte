@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import { user, validateToken } from "$lib/user.svelte";
   import { AuthService, UsersService } from "$lib/client/sdk.gen";
+  import { goto } from '$app/navigation';
   import type { HTTPValidationError } from "$lib/client/types.gen";
   import { handleError } from "$lib/misc";
   import type { UserSignupPayload } from "$lib/client/types.gen";
@@ -13,8 +14,6 @@
   let isLoading = $state(false);
   let showSignupFields = $state(false);
   let expandedDueTo = "";
-  $inspect(showSignupFields);
-  // Consolidate user-related variables into a single object
   let userInfo: UserSignupPayload = $state({
     email: "",
     first_name: "",
@@ -28,6 +27,8 @@
     // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date
     dob: "",
   });
+
+  let redirectUrl: string 
 
   async function eitherLoginOrSignUp() {
     // If showSignupFields is true, the user is signing up and signupAndLogin should be called. Otherwise, the user is logging in and login should be called.
@@ -70,6 +71,8 @@
         // Request magic link for the provided email if the user exists
         await AuthService.requestLoginRequestLoginPost({
           body: { email: userInfo.email },
+          query: { redirect: redirectUrl ?? ""},
+          throwOnError: true,
         });
         toast(`Magic link sent to ${userInfo.email}`);
         // Clear field
@@ -79,7 +82,10 @@
         expandedDueTo = userInfo.email;
         showSignupFields = true;
       }
-    } finally {
+    } catch (error) {
+      handleError(error);
+    } 
+    finally {
       isLoading = false;
     }
   }
@@ -132,6 +138,13 @@
         // Just verify the new token since that will store it too. If this isn't valid, there's an issue since that means the server is returning a bad token.
         await validateToken(data.access_token);
         toast("Login successful");
+
+        // Redirect to the original URL if present
+        if (redirectUrl) {
+          goto(redirectUrl);
+        } else {
+          goto('/');
+        }
       }
     } finally {
       isLoading = false;
@@ -143,6 +156,7 @@
   onMount(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
+    redirectUrl = urlParams.get("redirect") ?? "";
     if (token) {
       console.log("Token found in URL:", token);
       verifyMagicLink(token);

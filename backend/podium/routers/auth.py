@@ -52,13 +52,15 @@ def create_access_token(
     return encoded_jwt
 
 
-async def send_magic_link(email: str):
+async def send_magic_link(email: str, redirect: str = ""):
     token_data = {"sub": email}
     token = create_access_token(
         data=token_data, expires_delta=timedelta(minutes=15), token_type="magic_link"
     )
 
     magic_link = f"{settings.production_url}/login?token={token}"
+    if redirect:
+        magic_link += f"&redirect={redirect}"
 
     message = Mail(
         from_email=settings.sendgrid_from_email,
@@ -81,13 +83,14 @@ async def send_magic_link(email: str):
 
 
 @router.post("/request-login")
-async def request_login(user: User):
+# https://fastapi.tiangolo.com/tutorial/query-param-models/
+async def request_login(user: User, redirect: Annotated[str, Query()]):
     """Send a magic link to the user's email. If the user has not yet signed up, an error will be raised"""
     # Check if the user exists
     if db.user.get_user_record_id_by_email(user.email) is None:
         raise HTTPException(status_code=404, detail="User not found")
         return  # not needed
-    await send_magic_link(user.email)
+    await send_magic_link(user.email, redirect=redirect)
 
 
 class MagicLinkVerificationResponse(BaseModel):
