@@ -21,7 +21,7 @@
           toggle={() => {}}
           selectable={false}
         />
-        <p class="text-neutral-content mt-2">Points: {project.points}</p>
+        <div class="badge badge-info badge-lg">Points: {project.points}</div>
       </div>
     {/each}
   </div>
