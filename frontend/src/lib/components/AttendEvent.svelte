@@ -1,9 +1,9 @@
 <script lang="ts">
   import { EventsService } from "$lib/client/sdk.gen";
   import { toast } from "svelte-sonner";
-  import { handleError } from "$lib/misc";
+  import { handleError, invalidateEvents } from "$lib/misc";
   import type { AttendEventEventsAttendPostData } from "$lib/client";
-
+  import { afterNavigate, goto, invalidate } from "$app/navigation";
   let toSend: AttendEventEventsAttendPostData = $state({
     query: { join_code: "", referral: "" },
   });
@@ -15,6 +15,7 @@
         throwOnError: true,
       });
       toast("Joined event successfully");
+      invalidateEvents();
       // Reset
       toSend.query.join_code = "";
       toSend.query.referral = "";
@@ -22,6 +23,21 @@
       handleError(err);
     }
   }
+
+  afterNavigate(() => { 
+    const urlParams = new URLSearchParams(window.location.search);
+    const join_code = urlParams.get("join_code");
+    if (join_code) {
+      toSend.query.join_code = join_code
+      toSend.query.referral = urlParams.get("referral") ?? "Joined from link";
+      attendEvent();
+      // Clear the query param
+      const url = new URL(window.location.href);
+      url.searchParams.delete("join_code");
+      goto(url.toString(), { replaceState: true, noScroll: true });
+    }
+  });
+
 </script>
 
 <div class="p-4 max-w-md mx-auto">

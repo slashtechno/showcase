@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { handleError } from "$lib/misc";
+  import { handleError, invalidateEvents } from "$lib/misc";
   import { EventsService } from "$lib/client";
   import { toast } from "svelte-sonner";
   import { invalidate } from "$app/navigation";
@@ -16,7 +16,7 @@
         throwOnError: true,
       });
       toast("Event created successfully");
-      invalidate((url) => url.pathname.startsWith("/events"));
+      invalidateEvents();
       // invalidate("events:events")
       // Clear the form
       eventName = "";

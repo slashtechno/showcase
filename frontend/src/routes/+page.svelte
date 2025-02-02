@@ -43,15 +43,11 @@
         </a>
       </div>
     </section>
-    <section>
-      <h2 class="text-xl font-semibold mb-4">Create Project</h2>
-      <CreateProject />
-    </section>
 
-    <section>
+    <!-- <section>
       <h2 class="text-xl font-semibold mb-4">Attend Event</h2>
       <AttendEvent />
-    </section>
+    </section> -->
   {/if}
 </div>
 

@@ -1,6 +1,7 @@
 import type { HTTPValidationError } from "$lib/client/types.gen";
 import { toast } from "svelte-sonner";
 import { lightTheme, darkTheme } from "$lib/themes";
+import { invalidate } from "$app/navigation";
 
 type ErrorWithDetail = {
   detail: string;
@@ -40,4 +41,8 @@ export function setSystemTheme() {
   } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
     document.documentElement.setAttribute("data-theme", lightTheme);
   }
+}
+
+export function invalidateEvents(){
+  invalidate((url) => url.pathname.startsWith("/events"));
 }

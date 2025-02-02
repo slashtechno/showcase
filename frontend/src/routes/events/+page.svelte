@@ -1,6 +1,7 @@
 <svelte:options runes />
 
 <script lang="ts">
+    import AttendEvent from "$lib/components/AttendEvent.svelte";
   import CreateEvent from "$lib/components/CreateEvent.svelte";
   import type { PageData } from "./$types";
 
@@ -10,30 +11,50 @@
 <div class="space-y-8 p-4">
   <section>
     <h2 class="text-xl font-semibold mb-4">Create Event</h2>
-    <CreateEvent />
+  <CreateEvent />
   </section>
   <section>
     <h2>Events you own</h2>
-    <ul>
-      {#each data.events.owned_events as event}
-        <li class="py-2">
-          <a href={`/events/${event.id}`}>{event.name}</a>
-          <span class="ml-4 bg-base-300 p-1 rounded"
-            >Join Code: {event.join_code}</span
-          >
-        </li>
-      {/each}
-    </ul>
+    <table class="table w-full table-zebra">
+      <thead>
+        <tr>
+          <th>Event Name</th>
+          <th>Description</th>
+          <th>Join Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each data.events.owned_events as event}
+          <tr>
+            <td><a href={`/events/${event.id}`}>{event.name}</a></td>
+            <td>{event.description}</td>
+            <!-- <span class="ml-4 bg-base-300 p-1 rounded"></span> -->
+            <td><a href={`/events/?join_code=${event.join_code}`} data-sveltekit-noscroll>{event.join_code}</a></td>
+          </tr>
+        {/each}
+      </tbody>
   </section>
   <section>
     <h2>Events you are attending</h2>
-    <ul>
-      {#each data.events.attending_events as event}
-        <li class="py-2">
-          <a href={`/events/${event.id}`}>{event.name}</a>
-        </li>
-      {/each}
-    </ul>
+    <table class="table w-full table-zebra">
+      <thead>
+        <tr>
+          <th>Event Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each data.events.attending_events as event}
+          <tr>
+            <td><a href={`/events/${event.id}`}>{event.name}</a></td>
+            <td>{event.description}</td>
+          </tr>
+        {/each}
+      </tbody>
+  </section>
+  <section>
+    <h2 class="text-xl font-semibold mb-4">Attend Event</h2>
+    <AttendEvent />
   </section>
 </div>
 
