@@ -11,6 +11,7 @@
   <!-- <div > -->
   <section class="space-y-8 p-4">
     <h2 class="text-xl font-semibold mb-4">Your projects</h2>
+    <div class="overflow-x-auto">
     <table class="table w-full table-zebra">
       <thead>
         <tr>
@@ -34,6 +35,7 @@
         {/each}
       </tbody>
     </table>
+  </div>
   </section>
   <section>
     <h2 class="text-xl font-semibold mb-4">Create Project</h2>

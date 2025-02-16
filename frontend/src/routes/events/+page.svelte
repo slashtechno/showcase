@@ -29,6 +29,7 @@
   </section>
   <section>
     <h2>Events you own</h2>
+    <div class="overflow-x-auto">
     <table class="table w-full table-zebra">
       <thead>
         <tr>
@@ -66,9 +67,11 @@
         {/each}
       </tbody>
     </table>
+  </div>
   </section>
   <section>
     <h2>Events you are attending</h2>
+    <div class="overflow-x-auto">
     <table class="table w-full table-zebra">
       <thead>
         <tr>
@@ -85,6 +88,7 @@
         {/each}
       </tbody>
     </table>
+  </div>
   </section>
   <section>
     <h2 class="text-xl font-semibold mb-4">Attend Event</h2>
