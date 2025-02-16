@@ -22,15 +22,11 @@
 <svelte:head>
   {#if page.data.title}
     <title>{page.data.title} | Podium</title>
-  {:else}
-    <title>Podium</title>
   {/if}
   {#if page.data.meta}
     {#each page.data.meta as { name, content }}
       <meta {name} {content} />
     {/each}
-  {:else}
-    <meta name="description" content="Podium" />
   {/if}
 </svelte:head>
 
