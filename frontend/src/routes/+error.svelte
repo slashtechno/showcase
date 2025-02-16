@@ -11,7 +11,8 @@
     <button
       class="btn btn-primary"
       onclick={() => {
-        goto(`/login?redirect=${encodeURIComponent(page.url.pathname)}`);
+        // Include the current path and search params in the redirect
+        goto(`/login?redirect=${encodeURIComponent(page.url.pathname + page.url.search)}`);
       }}
     >
       Login / Sign up
