@@ -105,7 +105,7 @@
   a {
     @apply underline rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1 underline-offset-2 decoration-accent;
   }
-  section {
-    @apply rounded-lg shadow-sm border-accent border-2 border-dotted border-opacity-50;
-  }
+  /* section { */
+    /* @apply rounded-lg shadow-lg; */
+  /* } */
 </style>

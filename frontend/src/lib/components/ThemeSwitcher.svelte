@@ -33,6 +33,19 @@
   <ul
     class="dropdown-content bg-base-300 rounded-box z-[1] w-52 p-1 shadow-2xl overflow-auto max-h-52 mr-0"
   >
+  <!-- Option to respect system theme by removing the theme from localStorage -->
+  <li>
+    <input
+      type="radio"
+      name="theme-dropdown"
+      class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+      aria-label="system"
+      onchange={() => {
+        localStorage.removeItem("theme");
+        setSystemTheme();
+      }}
+    />
+  </li>
     {#each themes as theme}
       <li>
         <!-- value={theme} -->
@@ -46,18 +59,5 @@
         />
       </li>
     {/each}
-    <!-- Option to respect system theme by removing the theme from localStorage -->
-    <li>
-      <input
-        type="radio"
-        name="theme-dropdown"
-        class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-        aria-label="system"
-        onchange={() => {
-          localStorage.removeItem("theme");
-          setSystemTheme();
-        }}
-      />
-    </li>
   </ul>
 </div>

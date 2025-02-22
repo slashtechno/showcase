@@ -8,7 +8,7 @@
   }
 </script>
 
-<div class="collapse bg-base-200 text-center collapse-arrow">
+<div class="collapse bg-base-200 text-center collapse-arrow max-w-2xl mx-auto">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">{title}</div>
     <div class="collapse-content">

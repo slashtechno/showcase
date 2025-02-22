@@ -6,7 +6,7 @@
   import { user, signOut } from "$lib/user.svelte";
 </script>
 
-<div class="space-y-8 p-4">
+<div class="space-y-8 p-4 max-w-2xl mx-auto flex flex-col justify-center min-h-screen">
   <section>
     <h2 class="text-xl font-semibold mb-4">Login</h2>
     {#if user.isAuthenticated}
@@ -52,6 +52,7 @@
 
 <style>
   section {
-    @apply p-6 rounded-lg shadow-sm border-accent border-2 border-dotted border-opacity-50;
+    /* @apply p-6 rounded-lg shadow-sm border-accent border-2 border-dotted border-opacity-50; */
+    @apply p-6 rounded-3xl shadow-sm border-accent border-2 border-dotted border-opacity-10;
   }
 </style>
