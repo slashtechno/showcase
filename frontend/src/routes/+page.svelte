@@ -15,11 +15,11 @@
         <p>
           You're signed in as <strong>{user.email}</strong>.
         </p>
-        <button class="btn mt-2" onclick={signOut}>Sign out</button>
+        <button class="btn mt-2 btn-primary" onclick={signOut}>Sign out</button>
       </div>
     {:else}
       <div class="flex justify-center my-4">
-        <a href="/login" class="btn">Login / Sign Up</a>
+        <a href="/login" class="btn btn-primary">Login / Sign Up</a>
       </div>
     {/if}
   </section>
@@ -53,6 +53,11 @@
 <style>
   section {
     /* @apply p-6 rounded-lg shadow-sm border-accent border-2 border-dotted border-opacity-50; */
-    @apply p-6 rounded-3xl shadow-sm border-accent border-2 border-dotted border-opacity-10;
+    @apply p-6 rounded-3xl shadow-2xl ring-2 ring-accent border-accent border-2 border-dotted border-opacity-10 bg-neutral;
   }
+
+  * {
+    @apply text-neutral-content;
+  }
+  
 </style>

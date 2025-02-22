@@ -40,7 +40,7 @@
 <div class="fixed bottom-4 left-4">
   <!-- Info Button -->
   <button
-    class="btn btn-info btn-square btn-sm font-serif font-light"
+    class="btn btn-info btn-square btn-md font-serif font-light"
     aria-label="Info"
     onclick={() => {
       showModal = true;
