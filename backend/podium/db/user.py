@@ -17,7 +17,8 @@ class UserBase(BaseModel):
     city: str
     state: str
     # str but only allow digits
-    zip_code: Annotated[str, StringConstraints(pattern=r"^\d*$")]
+    zip_code: Annotated[str, StringConstraints()]
+    # zip_code: Annotated[str, StringConstraints(pattern=r"^[\d|\s\w]*$")]
     # https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
     country: Annotated[str, StringConstraints(pattern=r"^[A-Z]{2}$")]
     # YYYY-MM-DD or unix time is probably the best
