@@ -1,17 +1,48 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
 
-  let { title, children }: { title: string, children: Snippet } = $props();
+  let { title, children }: { title: string; children: Snippet } = $props();
 
-  function stopPropagation(event: Event) {
-    event.stopPropagation();
+  let collapseDiv: HTMLDivElement;
+
+  let isOpen = $state(false);
+
+  function handleFocusIn() {
+    isOpen = true;
+    console.log("Focus in");
+  }
+
+  function handleFocusOut(event: FocusEvent) {
+    setTimeout(() => {
+      if (!collapseDiv.contains(document.activeElement)) {
+        isOpen = false;
+      }
+    }, 10); // Small delay to allow new focus to be set
   }
 </script>
 
-<div class="collapse bg-base-200 text-center collapse-arrow max-w-2xl mx-auto">
+<!-- <div class="collapse bg-base-200 text-center collapse-arrow max-w-2xl mx-auto">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">{title}</div>
     <div class="collapse-content">
       {@render children?.()}
     </div>
+  </div> -->
+
+<div
+  tabindex="0"
+  class="collapse bg-base-200 {isOpen ? 'collapse-open' : 'collapse-close'}"
+  role="button"
+  onfocusin={handleFocusIn}
+  onfocusout={handleFocusOut}
+  bind:this={collapseDiv}
+>
+  <div class="collapse-title text-xl font-medium text-center">
+    {title} 
   </div>
+  <!-- <div class="collapse-content" onmousedown={handleFocusIn} role="button"> -->
+  <!-- <div class="collapse-content" onfocusin={handleFocusIn} onblur={handleFocusOut} role="button" tabindex="0"> -->
+  <div class="collapse-content" role="button" tabindex="0">
+    {@render children?.()}
+  </div>
+</div>
