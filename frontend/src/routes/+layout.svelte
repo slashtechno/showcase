@@ -1,7 +1,7 @@
 <script lang="ts">
   import "../app.css";
   import { Toaster } from "svelte-sonner";
-  import { page } from "$app/state";
+  import { navigating, page } from "$app/state";
   let { children } = $props();
   import { onMount } from "svelte";
   import { themeChange } from "theme-change";
@@ -37,9 +37,16 @@
    <a href="/events" class="btn btn-xs ring-1 ring-opacity-45 ring-accent">Events</a>
   </div>
 </nav>
-<!--  Check for auth on all pages -->
-<!-- <CheckAuth /> -->
-{@render children()}
+
+
+{#if navigating.to}
+  <div class="flex items-center justify-center min-h-screen">
+    <span class="loading loading-ball loading-lg"></span>
+  </div>
+{:else}
+  {@render children()}
+{/if}
+
 
 <div class="fixed bottom-4 left-4">
   <!-- Info Button -->
