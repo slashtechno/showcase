@@ -31,7 +31,7 @@
 
 <div
   tabindex="0"
-  class="collapse bg-base-200 {isOpen ? 'collapse-open' : 'collapse-close'}"
+  class="collapse bg-base-200 collapse-arrow max-w-2xl mx-auto {isOpen ? 'collapse-open' : 'collapse-close'}"
   role="button"
   onfocusin={handleFocusIn}
   onfocusout={handleFocusOut}
