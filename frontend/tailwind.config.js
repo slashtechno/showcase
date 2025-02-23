@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import { themes } from "./src/lib/themes";
+import { themes } from "./src/lib/consts";
 export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
   theme: {

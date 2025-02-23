@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { themes } from "$lib/themes";
+  import { themes } from "$lib/consts";
   import { setSystemTheme } from "$lib/misc";
 </script>
 

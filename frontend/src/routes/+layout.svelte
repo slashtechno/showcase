@@ -6,7 +6,7 @@
   import { onMount } from "svelte";
   import { themeChange } from "theme-change";
   import ThemeSwitcher from "$lib/components/ThemeSwitcher.svelte";
-  import { setSystemTheme } from "$lib/misc";
+  import { setSystemTheme, returnLoadingText } from "$lib/misc";
   // import CheckAuth from '$lib/components/CheckAuth.svelte';
 
   onMount(() => {
@@ -40,8 +40,9 @@
 
 
 {#if navigating.to}
-  <div class="flex items-center justify-center min-h-screen">
-    <span class="loading loading-ball loading-lg"></span>
+  <div class="flex items-center justify-center min-h-screen flex-col">
+    <span class="loading loading-ball loading-lg mb-2"></span>
+    {returnLoadingText()}
   </div>
 {:else}
   {@render children()}

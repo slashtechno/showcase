@@ -1,6 +1,6 @@
 import type { HTTPValidationError } from "$lib/client/types.gen";
 import { toast } from "svelte-sonner";
-import { lightTheme, darkTheme } from "$lib/themes";
+import { lightTheme, darkTheme, loadingTextOptions } from "$lib/consts";
 import { invalidate } from "$app/navigation";
 
 type ErrorWithDetail = {
@@ -41,6 +41,12 @@ export function setSystemTheme() {
   } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
     document.documentElement.setAttribute("data-theme", lightTheme);
   }
+}
+
+export function returnLoadingText(): string {
+  return loadingTextOptions[
+    Math.floor(Math.random() * loadingTextOptions.length)
+  ]
 }
 
 export function invalidateEvents() {
