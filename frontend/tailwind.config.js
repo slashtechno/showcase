@@ -3,7 +3,11 @@ import { themes } from "./src/lib/themes";
 export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Phantom Sans', 'sans-serif'],
+      },
+    },
   },
 
   plugins: [require("@tailwindcss/typography"), require("daisyui")],
