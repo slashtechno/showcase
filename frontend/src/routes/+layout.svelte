@@ -38,8 +38,7 @@
   </div>
 </nav>
 
-
-{#if navigating.to}
+{#if navigating.to && navigating.type != "form"}
   <div class="flex items-center justify-center min-h-screen flex-col">
     <span class="loading loading-ball loading-lg mb-2"></span>
     {returnLoadingText()}
@@ -47,7 +46,6 @@
 {:else}
   {@render children()}
 {/if}
-
 
 <div class="fixed bottom-4 left-4">
   <!-- Info Button -->

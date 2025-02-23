@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@hey-api/client-fetch": "^0.5.7",
+    "countries-list": "^3.1.1",
     "svelte-sonner": "^0.3.28",
     "theme-change": "^2.5.0"
   }

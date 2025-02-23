@@ -8,11 +8,13 @@
   import type { HTTPValidationError } from "$lib/client/types.gen";
   import { handleError } from "$lib/misc";
   import type { UserSignupPayload } from "$lib/client/types.gen";
+  import { countries, } from 'countries-list'
   // rest is the extra props passed to the component
   let { ...rest } = $props();
 
   let isLoading = $state(false);
   let showSignupFields = $state(false);
+  $inspect(showSignupFields);
   let expandedDueTo = "";
   let userInfo: UserSignupPayload = $state({
     email: "",
@@ -27,8 +29,13 @@
     // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date
     dob: "",
   });
-
   let redirectUrl: string;
+
+  // Convert countries to a list of objects with name and code
+  const countryList = Object.entries(countries).map(([code, data]) => ({
+    code,
+    name: data.name,
+  })).sort((a, b) => a.name.localeCompare(b.name));
 
   async function eitherLoginOrSignUp() {
     // If showSignupFields is true, the user is signing up and signupAndLogin should be called. Otherwise, the user is logging in and login should be called.
@@ -314,20 +321,24 @@
         <label class="form-control">
           <div class="label">
             <span class="label-text">Country</span>
-            <span class="label-text-alt">
+            <!-- <span class="label-text-alt">
               <a
                 href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"
                 class="underline">ISO 3166-1 alpha-2</a
               >
-            </span>
+            </span> -->
           </div>
-          <input
+          <select
             id="country"
-            type="text"
-            class="input input-bordered grow"
-            placeholder="US"
+            class="select select-bordered grow"
             bind:value={userInfo.country}
-          />
+          >
+            {#each countryList as { code, name } (code)}
+              <option value={code} selected={userInfo.country == code}>
+                {name}
+              </option>
+            {/each}
+          </select>
         </label>
         <label class="form-control">
           <div class="label">
