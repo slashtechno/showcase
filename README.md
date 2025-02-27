@@ -50,6 +50,7 @@ Airtable is heavily relied upon. You need the following tables (change the IDs i
     * `email` - primary, email
     * `first_name` - single line text
     * `last_name` - single line text
+    * `phone` - phone number
     * `owned_event` - link to another record in the Events table
     * `attending_events` - link to another record in the Events table, multiple can be linked
     * `projects` - link to another record in the Projects table, multiple can be linked

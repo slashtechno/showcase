@@ -1,7 +1,6 @@
 import datetime
 from typing import Annotated, Optional
 from pydantic import BaseModel, EmailStr, StringConstraints
-
 from podium import constants
 
 from podium.db import tables
@@ -12,6 +11,9 @@ class UserBase(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
+    # International phone number format
+    phone: Annotated[str, StringConstraints(pattern=r"^\+[1-9]\d{1,14}$")]
+    # phone: Annotated[str, StringConstraints(pattern=r"^\+?[1-9]\d{1,14}$")]
     street_1: str
     street_2: Optional[str] = ""
     city: str

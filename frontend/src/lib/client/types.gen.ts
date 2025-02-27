@@ -140,6 +140,7 @@ export type User_Output = {
     first_name: string;
     last_name: string;
     email: string;
+    phone: string;
     street_1: string;
     street_2?: (string | null);
     city: string;
@@ -171,6 +172,7 @@ export type UserSignupPayload = {
     first_name: string;
     last_name: string;
     email: string;
+    phone: string;
     street_1: string;
     street_2?: (string | null);
     city: string;

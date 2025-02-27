@@ -20,6 +20,7 @@
     email: "",
     first_name: "",
     last_name: "",
+    phone: "",
     street_1: "",
     street_2: "",
     city: "",
@@ -111,6 +112,7 @@
         email: "",
         first_name: "",
         last_name: "",
+        phone: "",
         street_1: "",
         street_2: "",
         city: "",
@@ -253,7 +255,21 @@
             bind:value={userInfo.last_name}
           />
         </label>
-
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Phone</span>
+            <span class="label-text-alt text-warning">
+              International format without spaces or special characters
+            </span>
+          </div>
+          <input
+            id="phone"
+            type="tel"
+            class="input input-bordered grow"
+            placeholder="+15555555555"
+            bind:value={userInfo.phone}
+          />
+        </label>
         <label class="form-control">
           <div class="label">
             <span class="label-text">Address line 1</span>
