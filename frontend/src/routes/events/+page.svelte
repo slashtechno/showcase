@@ -25,7 +25,7 @@
 
 <div class="space-y-8 p-4">
   <section>
-    <Collapse title="Events you're attending">
+    <Collapse title="Events you're attending" expandByDefault>
     <div class="overflow-x-auto">
     <table class="table w-full table-zebra">
       <thead>

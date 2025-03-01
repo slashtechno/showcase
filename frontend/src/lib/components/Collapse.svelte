@@ -1,11 +1,24 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
+  import { onMount, type Snippet } from "svelte";
 
-  let { title, children }: { title: string; children: Snippet } = $props();
+  let {
+    title,
+    children,
+    expandByDefault = false,
+  }: { title: string; children: Snippet; expandByDefault?: boolean } = $props();
 
   let collapseDiv: HTMLDivElement;
 
   let isOpen = $state(false);
+
+  onMount(() => {
+    // If expandByDefault is true, focus the collapseDiv to open it
+    if (expandByDefault) {
+      setTimeout(() => {
+        collapseDiv.focus();
+      }, 10);
+    }
+  });
 
   function handleFocusIn() {
     isOpen = true;
@@ -31,14 +44,16 @@
 
 <div
   tabindex="0"
-  class="collapse bg-base-200 collapse-arrow max-w-2xl mx-auto {isOpen ? 'collapse-open' : 'collapse-close'}"
+  class="collapse bg-base-200 collapse-arrow max-w-2xl mx-auto {isOpen
+    ? 'collapse-open'
+    : 'collapse-close'}"
   role="button"
   onfocusin={handleFocusIn}
   onfocusout={handleFocusOut}
   bind:this={collapseDiv}
 >
   <div class="collapse-title text-xl font-medium text-center">
-    {title} 
+    {title}
   </div>
   <!-- <div class="collapse-content" onmousedown={handleFocusIn} role="button"> -->
   <!-- <div class="collapse-content" onfocusin={handleFocusIn} onblur={handleFocusOut} role="button" tabindex="0"> -->
