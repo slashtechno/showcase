@@ -258,8 +258,8 @@
         <label class="form-control">
           <div class="label">
             <span class="label-text">Phone</span>
-            <span class="label-text-alt text-warning">
-              International format without spaces or special characters
+            <span class="label-text-alt">
+              Optional, but recommended
             </span>
           </div>
           <input
@@ -269,6 +269,11 @@
             placeholder="+15555555555"
             bind:value={userInfo.phone}
           />
+          <div class="label">
+            <span class="label-text-alt">
+              International format without spaces or special characters
+            </span>
+          </div>
         </label>
         <label class="form-control">
           <div class="label">
