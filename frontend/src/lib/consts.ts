@@ -1,5 +1,5 @@
 export const themes = ["coffee", "night", "retro", "nord", "dracula", "scrapyard"];
-export const lightTheme = "retro";
+export const lightTheme = "nord";
 // export const darkTheme = "coffee";
 export const darkTheme = "night";
 export const loadingTextOptions = [
