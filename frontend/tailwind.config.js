@@ -16,9 +16,9 @@ export default {
       ...themes,
       {
         scrapyard: {
-          primary: "#337d78",
+          primary: "#f68987",
 
-          secondary: "#f68987",
+          secondary: "#337d78",
 
           accent: "#F3D24F",
 
