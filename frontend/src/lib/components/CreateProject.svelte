@@ -92,7 +92,7 @@
         body: project,
         throwOnError: true,
       });
-      toast.success("Project created successfully");
+      toast("Project created successfully");
       project = {
         name: "",
         readme: "https://example.com",
