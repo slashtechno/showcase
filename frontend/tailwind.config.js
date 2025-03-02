@@ -16,13 +16,13 @@ export default {
       ...themes,
       {
         scrapyard: {
-          primary: "#91ccf4",
+          primary: "#337d78",
 
-          secondary: "#F1A3BA",
+          secondary: "#f68987",
 
           accent: "#F3D24F",
 
-          neutral: "#47aea9",
+          neutral: "#fff536",
 
           "base-100": "#337d78",
           "base-200": "1e4947",
@@ -30,11 +30,11 @@ export default {
 
           info: "#00ffff",
 
-          success: "#00ff00",
+          success: "#92ccf4",
 
-          warning: "#f59e0b",
+          warning: "#fff536",
 
-          error: "#e11d48",
+          error: "#e74b3c",
         },
       },
     ],
