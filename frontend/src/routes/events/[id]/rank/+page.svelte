@@ -45,15 +45,13 @@
 </script>
 
 <!-- Basic information about voting -->
-<div class="p-4 bg-info text-center">
+<div class="p-4 bg-info text-center rounded-xl max-w-2xl mx-auto">
   <p class="text-info-content">
     Select your top {toSelect} projects in no particular order
   </p>
 </div>
 
 <div class="container mx-auto p-6">
-  <h1 class="text-2xl font-semibold mb-4">{event?.name}</h1>
-  <p class="text-gray-600 mb-6">{event?.description}</p>
   <div
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
   >

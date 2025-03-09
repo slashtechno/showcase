@@ -66,18 +66,18 @@
     <div class="modal-box">
       <h2 class="font-bold text-lg">About the Project</h2>
       <p class="py-4">
-        Podium is <a href="https://hackclub.com">Hack Club's </a><a
-          href="https://github.com/hackclub/podium">open-source</a
+        Podium is <a href="https://hackclub.com" class="hover-link">Hack Club's </a><a
+          href="https://github.com/hackclub/podium" class="hover-link">open-source</a
         >
         peer-judging platform for
-        <a href="https://hackathons.hackclub.com/">hackathons</a>. If you
+        <a href="https://hackathons.hackclub.com/" class="hover-link">hackathons</a>. If you
         encounter issues, feel free to
-        <a href="https://github.com/hackclub/podium/issues">report</a> them.
-        Need help? Ask on the <a href="https://hackclub.com/slack">Slack</a> or
-        email <a href="mailto:team@hackclub.com">team@hackclub.com</a>.
+        <a href="https://github.com/hackclub/podium/issues" class="hover-link">report</a> them.
+        Need help? Ask on the <a href="https://hackclub.com/slack" class="hover-link">Slack</a> or
+        email <a href="mailto:team@hackclub.com" class="hover-link">team@hackclub.com</a>.
       </p>
       <p class="text-right">
-        <a href="https://github.com/slashtechno">-Angad Behl</a>
+        <a href="https://github.com/slashtechno" class="hover-link">-Angad Behl</a>
       </p>
       <div class="modal-action">
         <button
@@ -97,10 +97,3 @@
 
 <!-- All pages should be able to show toasts -->
 <Toaster />
-
-<style>
-  .modal-box a {
-    @apply underline rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-0.5 underline-offset-2 decoration-accent;
-    /* @apply underline rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-0.5; */
-  }
-</style>

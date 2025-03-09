@@ -26,3 +26,10 @@
   font-style: normal;
   font-display: swap;
 }
+
+
+@layer components  {
+  .hover-link {
+    @apply underline rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1 underline-offset-2 decoration-accent;
+  }
+}

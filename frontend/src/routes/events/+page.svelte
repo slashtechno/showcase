@@ -37,7 +37,7 @@
       <tbody>
         {#each data.events.attending_events as event}
           <tr>
-            <td><a href={`/events/${event.id}`}>{event.name}</a></td>
+            <td><a href={`/events/${event.id}`} class="hover-link">{event.name}</a></td>
             <td>{event.description}</td>
           </tr>
         {/each}
@@ -71,13 +71,13 @@
       <tbody>
         {#each data.events.owned_events as event}
           <tr>
-            <td><a href={`/events/${event.id}`}>{event.name}</a></td>
+            <td><a href={`/events/${event.id}`} class="hover-link">{event.name}</a></td>
             <td>{event.description}</td>
             <!-- <span class="ml-4 bg-base-300 p-1 rounded"></span> -->
             <td
               ><a
                 href={`/events/?join_code=${event.join_code}`}
-                data-sveltekit-noscroll>{event.join_code}</a
+                data-sveltekit-noscroll class="hover-link">{event.join_code}</a
               ></td
             >
             <td
@@ -100,12 +100,3 @@
   </Collapse>
   </section>
 </div>
-
-<style>
-  a {
-    @apply underline rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1 underline-offset-2 decoration-accent;
-  }
-  /* section { */
-    /* @apply rounded-lg shadow-lg; */
-  /* } */
-</style>

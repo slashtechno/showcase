@@ -30,20 +30,20 @@ import Collapse from "$lib/components/Collapse.svelte";
             <td
               ><a
                 href={`/projects/?join_code=${project.join_code}`}
-                data-sveltekit-noscroll>{project.join_code}</a
+                data-sveltekit-noscroll  class="hover-link">{project.join_code}</a
               ></td
             >
             <td>{project.description}</td>
             <td
               ><a
                 href={project.repo}
-                data-sveltekit-noscroll>{project.repo}</a
+                data-sveltekit-noscroll  class="hover-link">{project.repo}</a
               ></td
             >
             <td
               ><a
                 href={project.demo}
-                data-sveltekit-noscroll>{project.demo}</a
+                data-sveltekit-noscroll class="hover-link">{project.demo}</a
               ></td>
           </tr>
         {/each}
@@ -73,7 +73,4 @@ import Collapse from "$lib/components/Collapse.svelte";
   /* section {
     @apply p-6 rounded-lg shadow-sm border-accent border-2 border-dotted border-opacity-50;
   } */
-  a {
-    @apply underline rounded transition-colors duration-300 hover:bg-primary hover:text-primary-content p-1 underline-offset-2 decoration-accent;
-  }
 </style>

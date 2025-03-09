@@ -4,11 +4,6 @@
   let { data }: { data: PageData } = $props();
 </script>
 
-<div class="text-center p-4">
-  <h1 class="text-2xl font-semibold">{data.event.name}</h1>
-  <p class="text-gray-600">{data.event.description}</p>
-  <!-- Link to /events/{data.id}/rank -->
-</div>
 <div class="flex justify-center flex-col mx-auto max-w-md space-y-4 mt-4">
   {#if data.event.partOfEvent}
   <a href={`/events/${data.event.id}/rank`} class="btn-primary btn"
