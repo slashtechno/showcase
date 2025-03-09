@@ -33,6 +33,7 @@
       toSend.query.referral = urlParams.get("referral") ?? "Joined from link";
       attendEvent();
       // Clear the query param
+      // TODO: import { page } from "$app/state"; page.url
       const url = new URL(window.location.href);
       url.searchParams.delete("join_code");
       goto(url.toString(), { replaceState: true, noScroll: true });

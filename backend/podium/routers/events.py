@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Path
 from typing import Annotated, Self, Set, Union, List
 from fastapi import Depends, HTTPException, Query
+from podium.db.event import PrivateEvent
 from pyairtable.formulas import match
 from pyairtable.api.types import RecordDict
 from secrets import token_urlsafe
@@ -15,7 +16,7 @@ from podium.db.user import CurrentUser, User
 from podium import db
 from podium.db import (
     EventCreationPayload,
-    ComplexEvent,
+    PrivateEvent,
     UserEvents,
     Event,
     ReferralBase,
@@ -25,13 +26,29 @@ from podium.db.project import Project
 router = APIRouter(prefix="/events", tags=["events"])
 
 
+# TODO: The only reason there is a different endpoint for an unauthenticated request to get an event is because Depends(get_current_user) will not return None if there is no token, it'll error
+@router.get("/unauthenticated/{event_id}")
+def get_event_unauthenticated(event_id: Annotated[str, Path(title="Event ID")]) -> Event:
+    """
+    Get an event by its ID. This is used for the public event page.
+    """
+    try:
+        event = db.events.get(event_id)
+    except HTTPError as e:
+        raise (
+                HTTPException(status_code=404, detail="Event not found")
+                if e.response.status_code == 404
+                else e
+            )
+    return Event.model_validate({"id": event["id"], **event["fields"]})
+
 @router.get("/{event_id}")
 def get_event(
     event_id: Annotated[str, Path(title="Event ID")],
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
-) -> Union[ComplexEvent, Event]:
+) -> Union[PrivateEvent, Event]:
     """
-    Get an event by its ID. If the user owns it, return a complex event. Otherwise, return a regular event.
+    Get an event by its ID. If the user owns it, return a PrivateEvent. Otherwise, return a regular event.
     """
 
     user_id = db.user.get_user_record_id_by_email(current_user.email)
@@ -39,13 +56,18 @@ def get_event(
         raise HTTPException(status_code=500, detail="User not found")
 
     user = db.users.get(user_id)
-    event = db.events.get(event_id)
 
-    if event is None:
-        raise HTTPException(status_code=404, detail="Event not found")
+    try:
+        event = db.events.get(event_id)
+    except HTTPError as e:
+        raise (
+                HTTPException(status_code=404, detail="Event not found")
+                if e.response.status_code == 404
+                else e
+            )
 
     if user["id"] in event["fields"].get("owner", []):
-        return ComplexEvent.model_validate({"id": event["id"], **event["fields"]})
+        return PrivateEvent.model_validate({"id": event["id"], **event["fields"]})
     elif user["id"] in event["fields"].get("attendees", []):
         return Event.model_validate({"id": event["id"], **event["fields"]})
     else:
@@ -68,8 +90,9 @@ def get_attending_events(
     user = db.users.get(user_id)
 
     # Eventually it might be better to return a user object. Otherwise, the client that the event owner is using would need to fetch the user. Since user emails probably shouldn't be public with just a record ID as a parameter, we would need to check if the person calling GET /users?user=ID has an event wherein that user ID is present. To avoid all this, the user object could be returned.
+    
     owned_events = [
-        ComplexEvent.model_validate({"id": event["id"], **event["fields"]})
+        PrivateEvent.model_validate({"id": event["id"], **event["fields"]})
         for event in [
             db.events.get(event_id)
             for event_id in user["fields"].get("owned_events", [])
@@ -95,35 +118,26 @@ def create_event(
     Create a new event. The current user is automatically added as an owner of the event.
     """
     # No matter what email the user provides, the owner is always the current user
-    event.owner = [db.user.get_user_record_id_by_email(current_user.email)]
+    owner = [db.user.get_user_record_id_by_email(current_user.email)]
     # If the owner is not found, return a 404. Since there might eventually be multiple owners, just check if any of them are None
-    if None in event.owner:
+    if None in owner:
         raise HTTPException(status_code=404, detail="User not found")
 
     # Generate a unique join code by continuously generating a new one until it doesn't match any existing join codes
     while True:
         join_code = token_urlsafe(3).upper()
         if not db.events.first(formula=match({"join_code": join_code})):
-            event.join_code = join_code
+            join_code = join_code
             break
 
-    db.events.create(event.model_dump())
-
-    # The issue with the approach below was that ComplexEvent requires an ID, which isn't available until the event is created. It might be better to just do it and reoplace model_validate with model_construct to prevent validation errors
-    # return db.events.create(
-    #     ComplexEvent.model_validate(
-    #         {
-    #             # Use information the user provided
-    #             **event.model_dump(),
-    #             # Add the owner and join code
-    #             "owner": owner,
-    #             "join_code": join_code,
-    #         }
-    #     ).model_dump(
-    #         exclude_unset=True
-    #     )
-    # )
-
+    # https://docs.pydantic.dev/latest/concepts/serialization/#model_copy
+    full_event = PrivateEvent(
+        **event.model_dump(),
+        join_code=join_code,
+        owner=owner,
+        id="",  # Placeholder to prevent an unnecessary class
+    )
+    db.events.create(full_event.model_dump(exclude={"id"}))["fields"]
 
 @router.post("/attend")
 def attend_event(
@@ -306,7 +320,14 @@ def get_leaderboard(event_id: Annotated[str, Path(title="Event ID")]) -> List[Pr
     """
     Get the leaderboard for an event. The leaderboard is a list of projects in the event, sorted by the number of votes they have received.
     """
-    event = db.events.get(event_id)
+    try:
+        event = db.events.get(event_id)
+    except HTTPError as e:
+        raise (
+                HTTPException(status_code=404, detail="Event not found")
+                if e.response.status_code == 404
+                else e
+            )
     projects = []
     for project_id in event["fields"].get("projects", []):
         try:

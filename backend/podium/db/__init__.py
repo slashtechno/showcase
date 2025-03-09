@@ -1,5 +1,5 @@
 from podium.db.db import tables
-from podium.db.event import ComplexEvent as ComplexEvent
+from podium.db.event import PrivateEvent as PrivateEvent
 from podium.db.event import EventCreationPayload as EventCreationPayload
 from podium.db.event import UserEvents as UserEvents
 from podium.db.event import Event as Event

@@ -4,20 +4,14 @@ export type CheckAuthResponse = {
     email: string;
 };
 
-export type ComplexEvent = {
-    name: string;
-    description?: (string | null);
-    join_code: string;
-    id: string;
-    votable?: boolean;
-    attendees?: Array<(string)>;
-};
-
 export type Event = {
     name: string;
     description?: (string | null);
     id: string;
     votable?: boolean;
+    owner: [
+        string
+    ];
 };
 
 export type EventCreationPayload = {
@@ -33,6 +27,18 @@ export type MagicLinkVerificationResponse = {
     access_token: string;
     token_type: string;
     email: string;
+};
+
+export type PrivateEvent = {
+    name: string;
+    description?: (string | null);
+    id: string;
+    votable?: boolean;
+    owner: [
+        string
+    ];
+    attendees?: Array<(string)>;
+    join_code: string;
 };
 
 export type PrivateProject = {
@@ -160,7 +166,7 @@ export type User_Output = {
  * Return information regarding what the events the user owns and what events they are attending. If they are only attending an event, don't return sensitive information like participants.
  */
 export type UserEvents = {
-    owned_events: Array<ComplexEvent>;
+    owned_events: Array<PrivateEvent>;
     attending_events: Array<Event>;
 };
 
@@ -224,13 +230,23 @@ export type ProtectedRouteProtectedRouteGetResponse = (CheckAuthResponse);
 
 export type ProtectedRouteProtectedRouteGetError = unknown;
 
+export type GetEventUnauthenticatedEventsUnauthenticatedEventIdGetData = {
+    path: {
+        event_id: string;
+    };
+};
+
+export type GetEventUnauthenticatedEventsUnauthenticatedEventIdGetResponse = (Event);
+
+export type GetEventUnauthenticatedEventsUnauthenticatedEventIdGetError = (HTTPValidationError);
+
 export type GetEventEventsEventIdGetData = {
     path: {
         event_id: string;
     };
 };
 
-export type GetEventEventsEventIdGetResponse = ((ComplexEvent | Event));
+export type GetEventEventsEventIdGetResponse = ((PrivateEvent | Event));
 
 export type GetEventEventsEventIdGetError = (HTTPValidationError);
 

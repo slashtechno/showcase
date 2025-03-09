@@ -1,4 +1,4 @@
-export const themes = ["coffee", "night", "retro", "nord", "dracula", "scrapyard"];
+export const themes = ["scrapyard", "coffee", "night", "retro", "nord", "dracula"];
 export const lightTheme = "nord";
 // export const darkTheme = "coffee";
 export const darkTheme = "night";
