@@ -17,21 +17,34 @@ import Collapse from "$lib/components/Collapse.svelte";
       <thead>
         <tr>
           <th>Project Name</th>
-          <th>Description</th>
           <th>Join Code</th>
+          <th>Description</th>
+          <th>Repository</th>
+          <th>Demo</th>
         </tr>
       </thead>
       <tbody>
         {#each data.projects as project}
           <tr>
             <td>{project.name}</td>
-            <td>{project.description}</td>
             <td
               ><a
                 href={`/projects/?join_code=${project.join_code}`}
                 data-sveltekit-noscroll>{project.join_code}</a
               ></td
             >
+            <td>{project.description}</td>
+            <td
+              ><a
+                href={project.repo}
+                data-sveltekit-noscroll>{project.repo}</a
+              ></td
+            >
+            <td
+              ><a
+                href={project.demo}
+                data-sveltekit-noscroll>{project.demo}</a
+              ></td>
           </tr>
         {/each}
       </tbody>

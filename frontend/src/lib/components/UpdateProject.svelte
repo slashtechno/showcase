@@ -97,7 +97,7 @@
       await ProjectsService.updateProjectProjectsProjectIdPut({
         path: { project_id: chosenProject.id },
         body: project,
-        throwOnError: true,
+      throwOnError: true,
       });
       toast("Project updated successfully");
       // Reset the fields
@@ -130,6 +130,9 @@
     <label class="form-control">
       <div class="label">
         <span class="label-text text-primary">Choose a project to update</span>
+        <span class="label-text-alt">
+          This will only show projects you own
+        </span>
       </div>
       <select
         bind:value={chosenProject}

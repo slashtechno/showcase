@@ -64,7 +64,7 @@
   </div>
   <!-- <div class="collapse-content" onmousedown={handleFocusIn} role="button"> -->
   <!-- <div class="collapse-content" onfocusin={handleFocusIn} onblur={handleFocusOut} role="button" tabindex="0"> -->
-  <div class="collapse-content" role="button" tabindex="0">
+  <div class="collapse-content overflow-x-auto" role="button" tabindex="0">
     {@render children?.()}
   </div>
 </div>

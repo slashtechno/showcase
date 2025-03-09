@@ -17,7 +17,7 @@ def get_projects(
     current_user: Annotated[CurrentUser, Depends(get_current_user)],
 ) -> list[PrivateProject]:
     """
-    Get the current user's projects.
+    Get the current user's projects and projects they are collaborating on.
     """
 
     user_id = db.user.get_user_record_id_by_email(current_user.email)
@@ -29,7 +29,9 @@ def get_projects(
         for project in [
             db.projects.get(project_id)
             for project_id in db.users.get(user_id)["fields"].get("projects", [])
-        ]
+        ] + 
+            [db.projects.get(project_id)
+            for project_id in db.users.get(user_id)["fields"].get("collaborations", [])]
     ]
     return projects
 
