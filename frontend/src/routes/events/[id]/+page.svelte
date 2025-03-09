@@ -10,7 +10,7 @@
   <!-- Link to /events/{data.id}/rank -->
 </div>
 <div class="flex justify-center flex-col mx-auto max-w-md space-y-4 mt-4">
-  {#if user.isAuthenticated}
+  {#if data.event.partOfEvent}
   <a href={`/events/${data.event.id}/rank`} class="btn-primary btn"
     >Rank Projects</a
   >
